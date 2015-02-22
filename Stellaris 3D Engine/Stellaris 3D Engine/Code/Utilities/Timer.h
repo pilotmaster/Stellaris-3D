@@ -22,10 +22,37 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	class CTimer
 	{
+	public:
+		// DECONSTRUCTOR
+		//---------------------------------
+		~CTimer();
+
+
+		// ACCESSORS
+		//---------------------------------
+		float GetTotalTime() const;			// Returns the total time passed in seconds
+		float GetDeltaTime() const;			// Returns change in time passed in seconds
+
+		CTimer* GetTimerInstace();			// Returns instance of the class. Ensures there is only one instance
+
+
+		// METHODS
+		//---------------------------------
+		void Reset();						// Resets the timer. Called before message loop
+		void Start();						// Starts the timer. Called after unpasuing app
+		void Stop();						// Pauses the timer. Called when app loses focus
+		void Tick();						// Increment the timer. Called every frame
+
 	private:
-		// -----------------------------------
-		// VARIABLES -------------------------
-		// =============
+		// PRIVATE CONSTRUCTOR
+		//---------------------------------
+		CTimer();
+
+
+		// ATTRIBUTES
+		//---------------------------------
+		CTimer* mpTimer;					// Self instance - ensures there is only 1
+
 		double mSecondsPerCount;			// How many counts are in a second - determined via QueryPerformance
 		double mDeltaTime;					// Time since last frame
 
@@ -36,26 +63,6 @@ namespace sge
 		__int64 mCurTime;
 
 		bool mAppIsStopped;			// Stores whether the app is not in focus
-
-	public:
-		// -----------------------------------
-		// CONSTRUCTOR -----------------------
-		// ===============
-		CTimer();
-
-		// -----------------------------------
-		// GETTERS ---------------------------
-		// ===========
-		float GetTotalTime() const;			// Returns the total time passed in seconds
-		float GetDeltaTime() const;			// Returns change in time passed in seconds
-
-		// -----------------------------------
-		// METHODS ---------------------------
-		// ===========
-		void Reset();						// Resets the timer. Called before message loop
-		void Start();						// Starts the timer. Called after unpasuing app
-		void Stop();						// Pauses the timer. Called when app loses focus
-		void Tick();						// Increment the timer. Called every frame
 	};
 }
 

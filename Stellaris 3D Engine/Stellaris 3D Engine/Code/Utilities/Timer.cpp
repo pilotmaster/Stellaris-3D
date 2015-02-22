@@ -8,12 +8,14 @@
 namespace sge
 {
 	//====================================================================================
-	// CONSTRUCTOR -----------------------------------------------------------------------
+	// CONSTRUCTOR & DESTRUCTR -----------------------------------------------------------
 	//------------------------------------------------------------------------------------
 	CTimer::CTimer()
 	{
 		// SET INITIALISATION VALUES ----------
 		//-------------------------------------
+		mpTimer = nullptr;
+
 		mSecondsPerCount = 0.0;
 		mDeltaTime = -1.0;
 
@@ -29,6 +31,16 @@ namespace sge
 		__int64 countsPerSecond;
 		QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSecond);
 		mSecondsPerCount = 1.0 / static_cast<double>(countsPerSecond);
+	}
+
+	CTimer::~CTimer()
+	{
+		// if timer exists, remove it
+		if (mpTimer)
+		{
+			delete mpTimer;
+			mpTimer = nullptr;
+		}
 	}
 
 
@@ -57,6 +69,18 @@ namespace sge
 	{
 		// Return the delta time
 		return static_cast<float>(mDeltaTime);
+	}
+
+	CTimer* CTimer::GetTimerInstace()
+	{
+		// Check if timer instance does not exist & create a new instance
+		if (!mpTimer)
+		{
+			mpTimer = new CTimer();
+		}
+
+		// Return timer instance
+		return mpTimer;
 	}
 
 
