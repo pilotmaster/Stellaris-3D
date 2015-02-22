@@ -57,6 +57,8 @@ namespace sge
 	{
 		PAINTSTRUCT ps;
 		HDC hdc;
+		CTimer* pTimer = CTimer::GetTimerInstace();
+
 
 		// Check the message which has been sent to the application
 		switch (msg)
@@ -66,13 +68,13 @@ namespace sge
 			{
 				// Pause the app if it becomes inactive
 				mWindowState.mIsPaused = true;
-				mpAppTimer->Stop();
+				pTimer->Stop();
 			}
 			else
 			{
 				// Ensure unpaused when active
-				mAppIsPaused = false;
-				mpAppTimer->Start();
+				mWindowState.mIsPaused = false;
+				pTimer->Start();
 			}
 			break;
 
@@ -80,54 +82,50 @@ namespace sge
 			mClientWidth = LOWORD(lParam);
 			mClientHeight = HIWORD(lParam);
 
-			// Check device
-			if (gpDevice)
+			if (wParam == SIZE_MINIMIZED)
 			{
-				if (wParam == SIZE_MINIMIZED)
+				// App is minimised
+				mWindowState.mIsPaused = true;
+				mWindowState.mIsMinimised = true;
+				mWindowState.mIsMaximised = false;
+			}
+			else if (wParam == SIZE_MAXIMIZED)
+			{
+				// App is maximised
+				mWindowState.mIsPaused = false;
+				mWindowState.mIsMinimised = false;
+				mWindowState.mIsMaximised = true;
+			}
+			else if (wParam == SIZE_RESTORED)
+			{
+				if (WindowMinimised())
 				{
-					// App is minimised
-					mAppIsPaused = true;
-					mAppIsMinimised = true;
-					mAppIsMaximised = false;
+					// Restoring from minimised
+					mWindowState.mIsPaused = false;
+					mWindowState.mIsMinimised = false;
 				}
-				else if (wParam == SIZE_MAXIMIZED)
+				else if (WindowMaximised())
 				{
-					// App is maximised
-					mAppIsPaused = false;
-					mAppIsMinimised = false;
-					mAppIsMaximised = true;
-				}
-				else if (wParam == SIZE_RESTORED)
-				{
-					if (mAppIsMinimised)
-					{
-						// Restoring from minimised
-						mAppIsPaused = false;
-						mAppIsMinimised = false;
-					}
-					else if (mAppIsMaximised)
-					{
-						// Restoring from maximised
-						mAppIsPaused = false;
-						mAppIsMaximised = false;
-					}
+					// Restoring from maximised
+					mWindowState.mIsPaused = false;
+					mWindowState.mIsMaximised = false;
 				}
 			}
 			break;
 
 		case WM_ENTERSIZEMOVE:
 			// User is resizing the window
-			mAppIsPaused = true;
-			mAppIsResizing = true;
-			mpAppTimer->Stop();
+			mWindowState.mIsPaused = true;
+			mWindowState.mIsResizing = true;
+			pTimer->Stop();
 			break;
 
 		case WM_EXITSIZEMOVE:
 			// User has released resize handles
 			// User is resizing the window
-			mAppIsPaused = false;
-			mAppIsResizing = false;
-			mpAppTimer->Start();
+			mWindowState.mIsPaused = false;
+			mWindowState.mIsResizing = false;
+			pTimer->Start();
 			break;
 
 		case WM_PAINT:
@@ -137,7 +135,7 @@ namespace sge
 
 		case WM_DESTROY:
 			// Message to quit the application
-			mAppIsRunning = false;
+			mWindowState.mIsRunning = false;
 			PostQuitMessage(0);
 			break;
 
@@ -171,7 +169,7 @@ namespace sge
 
 		default:
 			// hand over message to window handle
-			return DefWindowProc(hWnd, inMsg, wParam, lParam);
+			return DefWindowProc(hWnd, msg, wParam, lParam);
 			break;
 		}
 

@@ -49,7 +49,7 @@ namespace sge
 			return mWindowState.mIsMinimised;
 		}
 
-		inline bool WindowMaxmised()
+		inline bool WindowMaximised()
 		{
 			return mWindowState.mIsMaximised;
 		}

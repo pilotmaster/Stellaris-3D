@@ -33,7 +33,7 @@ namespace sge
 		float GetTotalTime() const;			// Returns the total time passed in seconds
 		float GetDeltaTime() const;			// Returns change in time passed in seconds
 
-		CTimer* GetTimerInstace();			// Returns instance of the class. Ensures there is only one instance
+		static CTimer* GetTimerInstace();			// Returns instance of the class. Ensures there is only one instance
 
 
 		// METHODS
@@ -51,7 +51,7 @@ namespace sge
 
 		// ATTRIBUTES
 		//---------------------------------
-		CTimer* mpTimer;					// Self instance - ensures there is only 1
+		static CTimer* mpTimer;					// Self instance - ensures there is only 1
 
 		double mSecondsPerCount;			// How many counts are in a second - determined via QueryPerformance
 		double mDeltaTime;					// Time since last frame
