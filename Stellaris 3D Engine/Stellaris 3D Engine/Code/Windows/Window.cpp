@@ -4,13 +4,25 @@
 
 #include "Window.h"
 
+sge::CWindow* sge::CWindow::mpWndInstance = nullptr;
+
 
 //====================================================================================
 // WINDOWS CALLBACK FUNCTION ---------------------------------------------------------
 //------------------------------------------------------------------------------------
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	// Window instance
+	sge::CWindow* pWindow = sge::CWindow::GetInstance();
 
+	if (pWindow->WindowRunning())
+	{
+		return pWindow->MsgProc(hwnd, msg, wParam, lParam);
+	}
+	else
+	{
+		return DefWindowProc(hwnd, msg, wParam, lParam);
+	}
 }
 
 
@@ -22,11 +34,11 @@ namespace sge
 	CWindow::CWindow()
 	{
 		// Default values
-		mWindowState.mIsMaximised = false;
-		mWindowState.mIsMinimised = false;
-		mWindowState.mIsPaused = false;
-		mWindowState.mIsResizing = false;
-		mWindowState.mIsRunning = false;
+		mIsMaximised = false;
+		mIsMinimised = false;
+		mIsPaused = false;
+		mIsResizing = false;
+		mIsRunning = false;
 
 		mHanWindow = 0;
 		mHanInstance = 0;
@@ -38,7 +50,11 @@ namespace sge
 
 	CWindow::~CWindow()
 	{
-
+		if (mpWndInstance)
+		{
+			delete mpWndInstance;
+			mpWndInstance = nullptr;
+		}
 	}
 
 
@@ -91,7 +107,7 @@ namespace sge
 		//------------------------------
 		mWndTitle = wndTitle;
 
-		mHanWindow = CreateWindow(L"DXAPP", mWndTitle.c_str, mWndStyle, CW_USEDEFAULT, CW_USEDEFAULT,
+		mHanWindow = CreateWindow(L"StellarisApp", mWndTitle.c_str(), mWndStyle, CW_USEDEFAULT, CW_USEDEFAULT,
 			width, height, NULL, NULL, mHanInstance, NULL);
 		// Check if the window itself was created
 		if (!mHanWindow)
@@ -106,7 +122,7 @@ namespace sge
 		UpdateWindow(mHanWindow);
 
 		// Everything succeeded
-		mWindowState.mIsRunning = true;
+		mIsRunning = true;
 		return true;
 	}
 
@@ -128,13 +144,13 @@ namespace sge
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
 				// Pause the app if it becomes inactive
-				mWindowState.mIsPaused = true;
+				mIsPaused = true;
 				pTimer->Stop();
 			}
 			else
 			{
 				// Ensure unpaused when active
-				mWindowState.mIsPaused = false;
+				mIsPaused = false;
 				pTimer->Start();
 			}
 			break;
@@ -146,46 +162,46 @@ namespace sge
 			if (wParam == SIZE_MINIMIZED)
 			{
 				// App is minimised
-				mWindowState.mIsPaused = true;
-				mWindowState.mIsMinimised = true;
-				mWindowState.mIsMaximised = false;
+				mIsPaused = true;
+				mIsMinimised = true;
+				mIsMaximised = false;
 			}
 			else if (wParam == SIZE_MAXIMIZED)
 			{
 				// App is maximised
-				mWindowState.mIsPaused = false;
-				mWindowState.mIsMinimised = false;
-				mWindowState.mIsMaximised = true;
+				mIsPaused = false;
+				mIsMinimised = false;
+				mIsMaximised = true;
 			}
 			else if (wParam == SIZE_RESTORED)
 			{
 				if (WindowMinimised())
 				{
 					// Restoring from minimised
-					mWindowState.mIsPaused = false;
-					mWindowState.mIsMinimised = false;
+					mIsPaused = false;
+					mIsMinimised = false;
 				}
 				else if (WindowMaximised())
 				{
 					// Restoring from maximised
-					mWindowState.mIsPaused = false;
-					mWindowState.mIsMaximised = false;
+					mIsPaused = false;
+					mIsMaximised = false;
 				}
 			}
 			break;
 
 		case WM_ENTERSIZEMOVE:
 			// User is resizing the window
-			mWindowState.mIsPaused = true;
-			mWindowState.mIsResizing = true;
+			mIsPaused = true;
+			mIsResizing = true;
 			pTimer->Stop();
 			break;
 
 		case WM_EXITSIZEMOVE:
 			// User has released resize handles
 			// User is resizing the window
-			mWindowState.mIsPaused = false;
-			mWindowState.mIsResizing = false;
+			mIsPaused = false;
+			mIsResizing = false;
 			pTimer->Start();
 			break;
 
@@ -196,7 +212,7 @@ namespace sge
 
 		case WM_DESTROY:
 			// Message to quit the application
-			mWindowState.mIsRunning = false;
+			mIsRunning = false;
 			PostQuitMessage(0);
 			break;
 

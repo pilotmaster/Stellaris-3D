@@ -4,6 +4,8 @@
 
 #include "Timer.h"
 
+sge::CTimer* sge::CTimer::mpTimer = nullptr;
+
 
 namespace sge
 {
@@ -14,8 +16,6 @@ namespace sge
 	{
 		// SET INITIALISATION VALUES ----------
 		//-------------------------------------
-		mpTimer = nullptr;
-
 		mSecondsPerCount = 0.0;
 		mDeltaTime = -1.0;
 
@@ -69,18 +69,6 @@ namespace sge
 	{
 		// Return the delta time
 		return static_cast<float>(mDeltaTime);
-	}
-
-	CTimer* CTimer::GetTimerInstace()
-	{
-		// Check if timer instance does not exist & create a new instance
-		if (!mpTimer)
-		{
-			mpTimer = new CTimer();
-		}
-
-		// Return timer instance
-		return mpTimer;
 	}
 
 

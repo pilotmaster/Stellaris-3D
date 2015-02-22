@@ -33,7 +33,17 @@ namespace sge
 		float GetTotalTime() const;			// Returns the total time passed in seconds
 		float GetDeltaTime() const;			// Returns change in time passed in seconds
 
-		static CTimer* GetTimerInstace();			// Returns instance of the class. Ensures there is only one instance
+		static CTimer* GetTimerInstace()			// Returns instance of the class. Ensures there is only one instance
+		{
+			// Check if timer instance does not exist & create a new instance
+			if (!mpTimer)
+			{
+				mpTimer = new CTimer();
+			}
+
+			// Return timer instance
+			return mpTimer;
+		}
 
 
 		// METHODS

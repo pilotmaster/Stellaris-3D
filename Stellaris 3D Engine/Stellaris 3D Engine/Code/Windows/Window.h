@@ -21,9 +21,8 @@ namespace sge
 	class CWindow
 	{
 	public:
-		// CONSTRUCTORS & DESTRUCTORS
+		// DESTRUCTOR
 		//---------------------------------
-		CWindow();
 		~CWindow();
 
 
@@ -39,29 +38,40 @@ namespace sge
 
 		// ACCESSORS
 		//---------------------------------
+		static CWindow* GetInstance()
+		{
+			// If an instance does not exist, create one
+			if (!mpWndInstance)
+			{
+				mpWndInstance = new CWindow();
+			}
+
+			return mpWndInstance;
+		}
+
 		inline bool WindowPaused()
 		{
-			return mWindowState.mIsPaused;
+			return mIsPaused;
 		}
 
 		inline bool WindowMinimised()
 		{
-			return mWindowState.mIsMinimised;
+			return mIsMinimised;
 		}
 
 		inline bool WindowMaximised()
 		{
-			return mWindowState.mIsMaximised;
+			return mIsMaximised;
 		}
 
 		inline bool WindowResizing()
 		{
-			return mWindowState.mIsResizing;
+			return mIsResizing;
 		}
 
 		inline bool WindowRunning()
 		{
-			return mWindowState.mIsRunning;
+			return mIsRunning;
 		}
 
 
@@ -71,16 +81,20 @@ namespace sge
 
 
 	private:
+		// PRIVATE CONSTRUCTOR
+		//---------------------------------
+		CWindow();
+
+		static CWindow* mpWndInstance;
+
+
 		// ATTRIBUTES
 		//---------------------------------
-		union UWindowStates
-		{
-			bool mIsPaused;
-			bool mIsMinimised;
-			bool mIsMaximised;
-			bool mIsResizing;
-			bool mIsRunning;
-		} mWindowState;
+		bool mIsPaused;
+		bool mIsMinimised;
+		bool mIsMaximised;
+		bool mIsResizing;
+		bool mIsRunning;
 
 		HWND mHanWindow;
 		HINSTANCE mHanInstance;
