@@ -4,3 +4,7 @@
 #include "Timer.h"
 #include "UserInput.h"
 
+namespace sge
+{
+
+}

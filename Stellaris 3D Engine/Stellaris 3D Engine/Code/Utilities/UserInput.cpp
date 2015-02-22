@@ -10,85 +10,87 @@
 //------------------------------------------------------------------------------------
 #include "UserInput.h"
 
-
-//====================================================================================
-// GLOBALS ---------------------------------------------------------------------------
-//------------------------------------------------------------------------------------
-EKeyState garrKeyStates[MAX_KEY_CODES];
-
-
-//====================================================================================
-// INITIALISATION --------------------------------------------------------------------
-//------------------------------------------------------------------------------------
-void InitialiseInput()
+namespace sge
 {
-	// Initialise the input data
-	for (int i = 0; i < MAX_KEY_CODES; ++i)
+	//====================================================================================
+	// GLOBALS ---------------------------------------------------------------------------
+	//------------------------------------------------------------------------------------
+	EKeyState garrKeyStates[MAX_KEY_CODES];
+
+
+	//====================================================================================
+	// INITIALISATION --------------------------------------------------------------------
+	//------------------------------------------------------------------------------------
+	void InitialiseInput()
 	{
-		garrKeyStates[i] = KEY_NOT_PRESSED;
+		// Initialise the input data
+		for (int i = 0; i < MAX_KEY_CODES; ++i)
+		{
+			garrKeyStates[i] = KEY_NOT_PRESSED;
+		}
 	}
-}
 
 
-//====================================================================================
-// KEY PRESS EVENTS ------------------------------------------------------------------
-//------------------------------------------------------------------------------------
-void KeyPressedEvent(EKeyState keyCode)
-{
-	if (garrKeyStates[keyCode] == KEY_NOT_PRESSED /*|| garrKeyStates[keyCode] == KEY_JUST_RELEASED*/)
+	//====================================================================================
+	// KEY PRESS EVENTS ------------------------------------------------------------------
+	//------------------------------------------------------------------------------------
+	void KeyPressedEvent(EKeyState keyCode)
 	{
-		garrKeyStates[keyCode] = KEY_PRESSED;
+		if (garrKeyStates[keyCode] == KEY_NOT_PRESSED /*|| garrKeyStates[keyCode] == KEY_JUST_RELEASED*/)
+		{
+			garrKeyStates[keyCode] = KEY_PRESSED;
+		}
+		else
+		{
+			garrKeyStates[keyCode] = KEY_HELD;
+		}
 	}
-	else
+
+	//void KeyReleaseEvent(EKeyState keyCode)
+	//{
+	//	garrKeyStates[keyCode] = KEY_JUST_RELEASED;
+	//}
+
+
+	//====================================================================================
+	// INPUT FUNCTIONS -------------------------------------------------------------------
+	//------------------------------------------------------------------------------------
+	bool KeyPressed(EKeyCode keyCode)
 	{
-		garrKeyStates[keyCode] = KEY_HELD;
-	}
-}
-
-//void KeyReleaseEvent(EKeyState keyCode)
-//{
-//	garrKeyStates[keyCode] = KEY_JUST_RELEASED;
-//}
-
-
-//====================================================================================
-// INPUT FUNCTIONS -------------------------------------------------------------------
-//------------------------------------------------------------------------------------
-bool KeyPressed(EKeyCode keyCode)
-{
-	if (garrKeyStates[keyCode] == KEY_PRESSED)
-	{
-		garrKeyStates[keyCode] = KEY_HELD;
-		return true;
-	}
-	return false;
-}
-
-bool KeyDown(EKeyCode keyCode)
-{
-	if (garrKeyStates[keyCode] == KEY_NOT_PRESSED /*|| garrKeyStates[keyCode] == KEY_JUST_RELEASED*/)
-	{
+		if (garrKeyStates[keyCode] == KEY_PRESSED)
+		{
+			garrKeyStates[keyCode] = KEY_HELD;
+			return true;
+		}
 		return false;
 	}
-	garrKeyStates[keyCode] = KEY_HELD;
-	return true;
-}
 
-//bool KeyReleased(EKeyCode keyCode)
-//{
-//	if (garrKeyStates[keyCode] == KEY_JUST_RELEASED)
-//	{
-//		garrKeyStates[keyCode] = KEY_NOT_PRESSED;
-//		return true;
-//	}
-//	return false;
-//}
-
-bool KeyNotDown(EKeyCode keyCode)
-{
-	if (/*garrKeyStates[keyCode] == KEY_JUST_RELEASED ||*/ garrKeyStates[keyCode] == KEY_NOT_PRESSED)
+	bool KeyDown(EKeyCode keyCode)
 	{
+		if (garrKeyStates[keyCode] == KEY_NOT_PRESSED /*|| garrKeyStates[keyCode] == KEY_JUST_RELEASED*/)
+		{
+			return false;
+		}
+		garrKeyStates[keyCode] = KEY_HELD;
 		return true;
 	}
-	return false;
+
+	//bool KeyReleased(EKeyCode keyCode)
+	//{
+	//	if (garrKeyStates[keyCode] == KEY_JUST_RELEASED)
+	//	{
+	//		garrKeyStates[keyCode] = KEY_NOT_PRESSED;
+	//		return true;
+	//	}
+	//	return false;
+	//}
+
+	bool KeyNotDown(EKeyCode keyCode)
+	{
+		if (/*garrKeyStates[keyCode] == KEY_JUST_RELEASED ||*/ garrKeyStates[keyCode] == KEY_NOT_PRESSED)
+		{
+			return true;
+		}
+		return false;
+	}
 }
