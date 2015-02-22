@@ -4,17 +4,18 @@
 
 #include "Window.h"
 
+
+//====================================================================================
+// WINDOWS CALLBACK FUNCTION ---------------------------------------------------------
+//------------------------------------------------------------------------------------
+LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+
+}
+
+
 namespace sge
 {
-	//====================================================================================
-	// WINDOWS CALLBACK FUNCTION ---------------------------------------------------------
-	//------------------------------------------------------------------------------------
-	LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-	{
-
-	}
-
-	
 	//====================================================================================
 	// CONSTRUCTOR & DESTRUCTOR ----------------------------------------------------------
 	//------------------------------------------------------------------------------------
@@ -46,7 +47,67 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	bool CWindow::InitialiseWindow(HINSTANCE hInstance, UINT wndWidth, UINT wndHeight, std::wstring wndTitle)
 	{
+		// Create a window class
+		WNDCLASS wc;
 
+
+		// SET WINDOW OBJECT PROPERTIES
+		//------------------------------
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.style = CS_HREDRAW | CS_VREDRAW;
+		wc.hInstance = mHanInstance;
+		wc.lpfnWndProc = MainWndProc;
+		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = L"StellarisApp";
+
+		// Register window class with OS
+		if (!RegisterClass(&wc))
+		{
+			// Failed to register class - return false
+			MessageBox(mHanWindow, L"Failed to register class with the OS.", L"CLASS NOT REGISTERED", MB_OK);
+			return false;
+		}
+
+
+		// CREATE VIEWPORT RECTANGLE
+		//------------------------------
+		mClientWidth = wndWidth;
+		mClientHeight = wndHeight;
+
+		// Rectangle for size of window
+		RECT r = { 0, 0, mClientWidth, mClientHeight };
+		// Create window rectangle based on size, style, and whether there is a menu
+		AdjustWindowRect(&r, mWndStyle, false);
+		// Determine correct height and width
+		float width = r.right - r.left;
+		float height = r.bottom - r.top;
+
+
+		// CREATE WINDOW
+		//------------------------------
+		mWndTitle = wndTitle;
+
+		mHanWindow = CreateWindow(L"DXAPP", mWndTitle.c_str, mWndStyle, CW_USEDEFAULT, CW_USEDEFAULT,
+			width, height, NULL, NULL, mHanInstance, NULL);
+		// Check if the window itself was created
+		if (!mHanWindow)
+		{
+			// Failed to create the window
+			MessageBox(mHanWindow, L"Failed to create window.", L"WINDOW CREATION ERROR", MB_OK);
+			return false;
+		}
+
+		// Show the window
+		ShowWindow(mHanWindow, SW_SHOW);
+		UpdateWindow(mHanWindow);
+
+		// Everything succeeded
+		mWindowState.mIsRunning = true;
+		return true;
 	}
 
 
