@@ -13,10 +13,42 @@
     <Filter Include="Code\Main">
       <UniqueIdentifier>{6d057a05-b1c5-4817-97ea-5b7fac623ee8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Utilities">
+      <UniqueIdentifier>{6be29416-64a9-40d5-85ee-fa94c80a1717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\DirectX">
+      <UniqueIdentifier>{db4c239b-0066-46ae-9029-5f012a2ee847}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Main\Main.cpp">
       <Filter>Code\Main</Filter>
     </ClCompile>
+    <ClCompile Include="UserInput.cpp">
+      <Filter>Code\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Code\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3DApp.cpp">
+      <Filter>Code\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Code\DirectX</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="UserInput.h">
+      <Filter>Code\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Code\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3DApp.h">
+      <Filter>Code\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Code\DirectX</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
