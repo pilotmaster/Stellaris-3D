@@ -24,30 +24,30 @@
     <ClCompile Include="Code\Main\Main.cpp">
       <Filter>Code\Main</Filter>
     </ClCompile>
-    <ClCompile Include="UserInput.cpp">
+    <ClCompile Include="Code\Utilities\Timer.cpp">
       <Filter>Code\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
+    <ClCompile Include="Code\Utilities\UserInput.cpp">
       <Filter>Code\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Direct3DApp.cpp">
+    <ClCompile Include="Code\DirectX\Direct3DApp.cpp">
       <Filter>Code\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="Engine.cpp">
+    <ClCompile Include="Code\DirectX\Engine.cpp">
       <Filter>Code\DirectX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UserInput.h">
+    <ClInclude Include="Code\Utilities\Timer.h">
       <Filter>Code\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
+    <ClInclude Include="Code\Utilities\UserInput.h">
       <Filter>Code\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Direct3DApp.h">
+    <ClInclude Include="Code\DirectX\Direct3DApp.h">
       <Filter>Code\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
+    <ClInclude Include="Code\DirectX\Engine.h">
       <Filter>Code\DirectX</Filter>
     </ClInclude>
   </ItemGroup>

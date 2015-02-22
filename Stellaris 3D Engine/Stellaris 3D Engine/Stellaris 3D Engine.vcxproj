@@ -11,17 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\DirectX\Direct3DApp.cpp" />
+    <ClCompile Include="Code\DirectX\Engine.cpp" />
     <ClCompile Include="Code\Main\Main.cpp" />
-    <ClCompile Include="Direct3DApp.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="UserInput.cpp" />
+    <ClCompile Include="Code\Utilities\Timer.cpp" />
+    <ClCompile Include="Code\Utilities\UserInput.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Direct3DApp.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="UserInput.h" />
+    <ClInclude Include="Code\DirectX\Direct3DApp.h" />
+    <ClInclude Include="Code\DirectX\Engine.h" />
+    <ClInclude Include="Code\Utilities\Timer.h" />
+    <ClInclude Include="Code\Utilities\UserInput.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6E6CEBB5-AEC8-45B9-846A-234DC780C45D}</ProjectGuid>
@@ -57,6 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\Stellaris 3D Engine\Code\DirectX;..\Stellaris 3D Engine\Code\Main;..\Stellaris 3D Engine\Code\Utilities;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
