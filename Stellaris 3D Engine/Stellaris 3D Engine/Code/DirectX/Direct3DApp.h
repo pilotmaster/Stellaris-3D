@@ -2,6 +2,9 @@
 // FILE:    Direct3DApp.h ------------------------------------------------------------
 //------------------------------------------------------------------------------------
 
+#ifndef _DIRECT_3D_APP_H_
+#define _DIRECT_3D_APP_H_
+
 #include <dxgi.h>
 #include <dxerr.h>
 #include <d3dx10.h>
@@ -11,10 +14,25 @@
 #include "..\Windows\Window.h"
 
 
+//====================================================================================
+// HELPER MACROS 
+//------------------------------------------------------------------------------------
+//#ifndef HR
+//#define HR(x) \
+//{ \
+//	HRESULT hr = x; \
+//if (FAILED(hr)) \
+//{ \
+//	DXTraceW(__FILE__, __LINE__, hr, L#x, TRUE); \
+//} \
+//}
+//#endif
+
+
 namespace sge
 {
 	//====================================================================================
-	// DIRECT3D APPLICATION CLASS --------------------------------------------------------
+	// DIRECT3D APPLICATION CLASS 
 	//------------------------------------------------------------------------------------
 	class CD3DApp
 	{
@@ -25,7 +43,7 @@ namespace sge
 		virtual ~CD3DApp();
 
 
-		// APPLICATION FUNCTION
+		// APPLICATION RUN FUNCTION
 		//---------------------------------
 		int Run();
 
@@ -35,6 +53,9 @@ namespace sge
 		bool InitialiseApplication(HINSTANCE hInstance);
 		virtual void Update() = 0;
 		virtual void Render() = 0;
+
+		bool InitialiseDirect3D();
+		void CalcFrameStats();
 
 
 		// ACCESSORS
@@ -73,6 +94,7 @@ namespace sge
 
 		// DIRECTX
 		//---------------------------------
+		ID3D10Device* mpDevice;
 		IDXGISwapChain* mpSwapChain;
 		ID3D10Texture2D* mpDepthStencilBuffer;
 		ID3D10DepthStencilState* mpDepthStencilState;
@@ -87,10 +109,12 @@ namespace sge
 		DirectX::XMFLOAT4X4 mOrthoMatrix;
 
 
+	private:
 		// PRIVATE FRAMEWORK METHODS
 		//---------------------------------
-		bool InitialiseWindow();
-		bool InitialiseDirect3D();
-		void CalcFrameStats();
+		
 	};
 }
+
+
+#endif /* _DIRECT_3D_APP_H_ */

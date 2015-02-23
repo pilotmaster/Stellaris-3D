@@ -6,6 +6,7 @@
 #define _WINDOW_H_
 
 #include <string>
+#include <sstream>
 
 #include "..\Utilities\Timer.h"
 #include "..\Utilities\UserInput.h"
@@ -16,7 +17,7 @@
 namespace sge
 {
 	//====================================================================================
-	// WINDOW CLASS ----------------------------------------------------------------------
+	// WINDOW CLASS 
 	//------------------------------------------------------------------------------------
 	class CWindow
 	{
@@ -97,7 +98,10 @@ namespace sge
 
 		// MUTATORS
 		//---------------------------------
-
+		inline void StopRunningWindow()
+		{
+			mIsRunning = false;
+		}
 
 
 	private:

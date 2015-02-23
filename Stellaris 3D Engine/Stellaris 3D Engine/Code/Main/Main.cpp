@@ -9,14 +9,21 @@
 //------------------------------------------------------------------------------------
 int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd)
 {
-	sge::CWindow* pWindow = sge::CWindow::GetInstance();
+	sge::CStellaris3D* pEngine = new sge::CStellaris3D();
 
-	pWindow->InitialiseWindow(hInstance, 1600U, 900U, L"Test");
-
-	while (pWindow->WindowRunning())
+	if (!pEngine->InitialiseEngine(hInstance))
 	{
-
+		delete pEngine;
+		return 0;
 	}
 
-	delete pWindow;
+	while (pEngine->EngineRunning())
+	{
+		// Run the application
+		pEngine->Run();
+	}
+
+	delete pEngine;
+
+	return 0;
 }

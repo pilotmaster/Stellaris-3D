@@ -8,7 +8,7 @@ sge::CWindow* sge::CWindow::mpWndInstance = nullptr;
 
 
 //====================================================================================
-// WINDOWS CALLBACK FUNCTION ---------------------------------------------------------
+// WINDOWS CALLBACK FUNCTION 
 //------------------------------------------------------------------------------------
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -29,7 +29,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 namespace sge
 {
 	//====================================================================================
-	// CONSTRUCTOR & DESTRUCTOR ----------------------------------------------------------
+	// CONSTRUCTOR & DESTRUCTOR 
 	//------------------------------------------------------------------------------------
 	CWindow::CWindow()
 	{
@@ -45,7 +45,7 @@ namespace sge
 		mClientWidth = 600;
 		mClientHeight = 480;
 		mWndTitle = L"";
-		mWndStyle = WS_OVERLAPPED;
+		mWndStyle = WS_OVERLAPPEDWINDOW;
 	}
 
 	CWindow::~CWindow()
@@ -59,12 +59,13 @@ namespace sge
 
 
 	//====================================================================================
-	// INITIALISATION --------------------------------------------------------------------
+	// INITIALISATION
 	//------------------------------------------------------------------------------------
 	bool CWindow::InitialiseWindow(HINSTANCE hInstance, UINT wndWidth, UINT wndHeight, std::wstring wndTitle)
 	{
 		// Create a window class
 		WNDCLASS wc;
+		mHanInstance = hInstance;
 
 
 		// SET WINDOW OBJECT PROPERTIES
@@ -128,7 +129,7 @@ namespace sge
 
 
 	//====================================================================================
-	// WINDOWS MESSAGE PROCEDURE ---------------------------------------------------------
+	// WINDOWS MESSAGE PROCEDURE 
 	//------------------------------------------------------------------------------------
 	LRESULT CWindow::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
