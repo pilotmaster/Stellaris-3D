@@ -16,7 +16,7 @@
 namespace sge
 {
 	//====================================================================================
-	// WINDOW CLASS -----------------------------------------------------------------------
+	// WINDOW CLASS ----------------------------------------------------------------------
 	//------------------------------------------------------------------------------------
 	class CWindow
 	{
@@ -47,6 +47,26 @@ namespace sge
 			}
 
 			return mpWndInstance;
+		}
+
+		inline HWND GetWindowHandle()
+		{
+			return mHanWindow;
+		}
+
+		inline std::wstring* GetWindowTitle()
+		{
+			return &mWndTitle;
+		}
+
+		inline UINT GetWindowWidth()
+		{
+			return mClientWidth;
+		}
+
+		inline UINT GetWindowHeight()
+		{
+			return mClientHeight;
 		}
 
 		inline bool WindowPaused()
