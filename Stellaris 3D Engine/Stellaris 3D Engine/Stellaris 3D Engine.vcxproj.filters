@@ -16,11 +16,14 @@
     <Filter Include="Code\Utilities">
       <UniqueIdentifier>{6be29416-64a9-40d5-85ee-fa94c80a1717}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Code\DirectX">
-      <UniqueIdentifier>{db4c239b-0066-46ae-9029-5f012a2ee847}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Code\Windows">
       <UniqueIdentifier>{c81b1dac-f2e3-410e-80bd-7e4606d6ef8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\DirectX App">
+      <UniqueIdentifier>{db4c239b-0066-46ae-9029-5f012a2ee847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Camera">
+      <UniqueIdentifier>{28d9a72d-0d1b-4ff1-b627-9582e8598820}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,13 +37,16 @@
       <Filter>Code\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Code\DirectX\Direct3DApp.cpp">
-      <Filter>Code\DirectX</Filter>
+      <Filter>Code\DirectX App</Filter>
     </ClCompile>
     <ClCompile Include="Code\DirectX\Engine.cpp">
-      <Filter>Code\DirectX</Filter>
+      <Filter>Code\DirectX App</Filter>
     </ClCompile>
     <ClCompile Include="Code\Windows\Window.cpp">
       <Filter>Code\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Camera\Camera.cpp">
+      <Filter>Code\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,13 +57,16 @@
       <Filter>Code\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Code\DirectX\Direct3DApp.h">
-      <Filter>Code\DirectX</Filter>
+      <Filter>Code\DirectX App</Filter>
     </ClInclude>
     <ClInclude Include="Code\DirectX\Engine.h">
-      <Filter>Code\DirectX</Filter>
+      <Filter>Code\DirectX App</Filter>
     </ClInclude>
     <ClInclude Include="Code\Windows\Window.h">
       <Filter>Code\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Camera\Camera.h">
+      <Filter>Code\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Camera\Camera.cpp" />
     <ClCompile Include="Code\DirectX\Direct3DApp.cpp" />
     <ClCompile Include="Code\DirectX\Engine.cpp" />
     <ClCompile Include="Code\Main\Main.cpp" />
@@ -19,6 +20,7 @@
     <ClCompile Include="Code\Windows\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Camera\Camera.h" />
     <ClInclude Include="Code\DirectX\Direct3DApp.h" />
     <ClInclude Include="Code\DirectX\Engine.h" />
     <ClInclude Include="Code\Utilities\Timer.h" />
