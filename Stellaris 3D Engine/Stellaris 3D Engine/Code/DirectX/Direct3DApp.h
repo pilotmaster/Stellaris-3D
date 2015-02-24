@@ -17,16 +17,16 @@
 //====================================================================================
 // HELPER MACROS 
 //------------------------------------------------------------------------------------
-//#ifndef HR
-//#define HR(x) \
-//{ \
-//	HRESULT hr = x; \
-//if (FAILED(hr)) \
-//{ \
-//	DXTraceW(__FILE__, __LINE__, hr, L#x, TRUE); \
-//} \
-//}
-//#endif
+#ifndef HR
+#define HR(x) \
+{ \
+	HRESULT hr = (x); \
+	if (FAILED(hr)) \
+	{ \
+		DXTraceW(__FILE__, __LINE__, hr, (L#x), TRUE); \
+	} \
+}
+#endif
 
 
 namespace sge

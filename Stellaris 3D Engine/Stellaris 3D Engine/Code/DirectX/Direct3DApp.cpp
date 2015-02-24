@@ -150,11 +150,8 @@ namespace sge
 		// CREATE RENDER TARGET VIEW
 		//------------------------------
 		ID3D10Texture2D* backBufferTex = NULL;
-		//HR(mpSwapChain->GetBuffer(NULL, __uuidof(ID3D10Texture2D), (LPVOID*)&backBufferTex));
-		//HR(mpDevice->CreateRenderTargetView(backBufferTex, NULL, &mpRenderTarget));
-
-		mpSwapChain->GetBuffer(NULL, __uuidof(ID3D10Texture2D), (LPVOID*)&backBufferTex);
-		mpDevice->CreateRenderTargetView(backBufferTex, NULL, &mpRenderTarget);
+		HR(mpSwapChain->GetBuffer(NULL, __uuidof(ID3D10Texture2D), (LPVOID*)&backBufferTex));
+		HR(mpDevice->CreateRenderTargetView(backBufferTex, NULL, &mpRenderTarget));
 
 		// Release back buffer pointer
 		backBufferTex->Release();
@@ -242,7 +239,7 @@ namespace sge
 			// Display data on title bar
 			std::wstringstream outp;
 			outp.precision(6);
-			outp << mpWindow->GetWindowTitle() << "      "
+			outp << *mpWindow->GetWindowTitle() << "      "
 				<< "FPS: " << fps << "      "
 				<< "FT: " << mspf;
 			SetWindowText(mpWindow->GetWindowHandle(), outp.str().c_str());
