@@ -47,6 +47,14 @@ namespace sge
 
 	void CStellaris3D::Render()
 	{
+		// CLEAR CURRENT SCENE
+		//---------------------------------
+		mpDevice->ClearRenderTargetView(mpRenderTarget, DirectX::Colors::LightBlue);
+		mpDevice->ClearDepthStencilView(mpDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0U);
 
+
+		// PRESENT SWAP CHAIN
+		//---------------------------------
+		HR(mpSwapChain->Present(0U, 0U));
 	}
 }
