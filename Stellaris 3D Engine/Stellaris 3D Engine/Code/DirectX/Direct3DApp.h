@@ -5,13 +5,8 @@
 #ifndef _DIRECT_3D_APP_H_
 #define _DIRECT_3D_APP_H_
 
-#include <dxgi.h>
-#include <dxerr.h>
-#include <d3dx10.h>
-#include <DirectXMath.h>
-#include <DirectXColors.h>
-
 #include "..\Windows\Window.h"
+#include "..\Entity\Camera.h"
 
 
 //====================================================================================

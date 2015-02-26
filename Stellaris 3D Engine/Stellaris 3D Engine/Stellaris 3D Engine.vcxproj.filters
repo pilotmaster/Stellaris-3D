@@ -25,6 +25,9 @@
     <Filter Include="Code\Camera">
       <UniqueIdentifier>{28d9a72d-0d1b-4ff1-b627-9582e8598820}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Entity">
+      <UniqueIdentifier>{c8c84e43-8945-4e65-bd96-5e56f3979d71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Main\Main.cpp">
@@ -45,7 +48,10 @@
     <ClCompile Include="Code\Windows\Window.cpp">
       <Filter>Code\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Camera\Camera.cpp">
+    <ClCompile Include="Code\Entity\Entity.cpp">
+      <Filter>Code\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Entity\Camera.cpp">
       <Filter>Code\Camera</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +71,10 @@
     <ClInclude Include="Code\Windows\Window.h">
       <Filter>Code\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Camera\Camera.h">
+    <ClInclude Include="Code\Entity\Entity.h">
+      <Filter>Code\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Entity\Camera.h">
       <Filter>Code\Camera</Filter>
     </ClInclude>
   </ItemGroup>
