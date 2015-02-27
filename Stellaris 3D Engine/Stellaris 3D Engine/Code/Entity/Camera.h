@@ -8,7 +8,10 @@
 #include "Entity.h"
 
 
-class CCamera
+//====================================================================================
+// CAMERA CLASS : CHILD OF ENTITY CLASS
+//------------------------------------------------------------------------------------
+class CCamera : public CEntity
 {
 public:
 	// CONSTRUCTOR & DESTRUCTOR
@@ -21,7 +24,6 @@ public:
 	// METHODS
 	//---------------------------------
 	void UpdateMatrices();
-	void Control();
 
 
 	// ACCESSORS
@@ -36,17 +38,13 @@ public:
 private:
 	// MATRICES
 	//---------------------------------
-	DirectX::XMFLOAT4X4 mWorldMatrix;
 	DirectX::XMFLOAT4X4 mViewMatrix;
 	DirectX::XMFLOAT4X4 mProjMatrix;
 	DirectX::XMFLOAT4X4 mViewProj;
 
 
-	// POSITIONS, ROTATIONS & SETTINGS
+	// CAMERA SETTINGS
 	//---------------------------------
-	DirectX::XMFLOAT3 mPosition;
-	DirectX::XMFLOAT3 mRotation;
-
 	float mNearClip;
 	float mFarClip;
 	float mFOV;
