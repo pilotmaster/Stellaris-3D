@@ -28,6 +28,12 @@
     <Filter Include="Code\Entity">
       <UniqueIdentifier>{c8c84e43-8945-4e65-bd96-5e56f3979d71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Scene Entities">
+      <UniqueIdentifier>{5e72ff81-f868-4419-a3eb-ee9f3ae14cff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Scene Management">
+      <UniqueIdentifier>{c0a5f356-566a-4f97-82bc-8c3ec87ff974}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Main\Main.cpp">
