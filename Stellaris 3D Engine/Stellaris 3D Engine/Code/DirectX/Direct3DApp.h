@@ -6,7 +6,7 @@
 #define _DIRECT_3D_APP_H_
 
 #include "..\Windows\Window.h"
-#include "..\Entity\Camera.h"
+#include "..\Scene Management\EntityManager.h"
 
 
 //====================================================================================

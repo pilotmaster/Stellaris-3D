@@ -13,9 +13,10 @@
   <ItemGroup>
     <ClCompile Include="Code\DirectX\Direct3DApp.cpp" />
     <ClCompile Include="Code\DirectX\Engine.cpp" />
-    <ClCompile Include="Code\Entity\Camera.cpp" />
-    <ClCompile Include="Code\Entity\Entity.cpp" />
     <ClCompile Include="Code\Main\Main.cpp" />
+    <ClCompile Include="Code\Scene Entities\Camera.cpp" />
+    <ClCompile Include="Code\Scene Entities\Entity.cpp" />
+    <ClCompile Include="Code\Scene Management\EntityManager.cpp" />
     <ClCompile Include="Code\Utilities\Timer.cpp" />
     <ClCompile Include="Code\Utilities\UserInput.cpp" />
     <ClCompile Include="Code\Windows\Window.cpp" />
@@ -23,8 +24,9 @@
   <ItemGroup>
     <ClInclude Include="Code\DirectX\Direct3DApp.h" />
     <ClInclude Include="Code\DirectX\Engine.h" />
-    <ClInclude Include="Code\Entity\Camera.h" />
-    <ClInclude Include="Code\Entity\Entity.h" />
+    <ClInclude Include="Code\Scene Entities\Camera.h" />
+    <ClInclude Include="Code\Scene Entities\Entity.h" />
+    <ClInclude Include="Code\Scene Management\EntityManager.h" />
     <ClInclude Include="Code\Utilities\Timer.h" />
     <ClInclude Include="Code\Utilities\UserInput.h" />
     <ClInclude Include="Code\Windows\Window.h" />

@@ -22,12 +22,6 @@
     <Filter Include="Code\DirectX App">
       <UniqueIdentifier>{db4c239b-0066-46ae-9029-5f012a2ee847}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Code\Camera">
-      <UniqueIdentifier>{28d9a72d-0d1b-4ff1-b627-9582e8598820}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Code\Entity">
-      <UniqueIdentifier>{c8c84e43-8945-4e65-bd96-5e56f3979d71}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Code\Scene Entities">
       <UniqueIdentifier>{5e72ff81-f868-4419-a3eb-ee9f3ae14cff}</UniqueIdentifier>
     </Filter>
@@ -54,11 +48,14 @@
     <ClCompile Include="Code\Windows\Window.cpp">
       <Filter>Code\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Entity\Entity.cpp">
-      <Filter>Code\Entity</Filter>
+    <ClCompile Include="Code\Scene Entities\Camera.cpp">
+      <Filter>Code\Scene Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Entity\Camera.cpp">
-      <Filter>Code\Camera</Filter>
+    <ClCompile Include="Code\Scene Entities\Entity.cpp">
+      <Filter>Code\Scene Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Scene Management\EntityManager.cpp">
+      <Filter>Code\Scene Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,11 +74,14 @@
     <ClInclude Include="Code\Windows\Window.h">
       <Filter>Code\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Entity\Entity.h">
-      <Filter>Code\Entity</Filter>
+    <ClInclude Include="Code\Scene Entities\Camera.h">
+      <Filter>Code\Scene Entities</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Entity\Camera.h">
-      <Filter>Code\Camera</Filter>
+    <ClInclude Include="Code\Scene Entities\Entity.h">
+      <Filter>Code\Scene Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Scene Management\EntityManager.h">
+      <Filter>Code\Scene Management</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
