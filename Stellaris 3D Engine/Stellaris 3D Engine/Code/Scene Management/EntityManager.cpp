@@ -34,6 +34,15 @@ namespace sge
 	//====================================================================================
 	// ENTITY MANAGER CLASS METHODS
 	//------------------------------------------------------------------------------------
+	void CEntityManager::UpdateEntities()
+	{
+		// Call the update function for each stored entity
+		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
+		{
+			miterEntityMap->second->UpdateMatrices();
+		}
+	}
+
 	bool CEntityManager::DestroyEntity(size_t key)
 	{
 		// Set the iterator to the searched entity

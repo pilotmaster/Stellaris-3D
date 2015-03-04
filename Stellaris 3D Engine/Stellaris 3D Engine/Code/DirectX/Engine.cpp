@@ -11,7 +11,8 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	CStellaris3D::CStellaris3D()
 	{
-
+		// Initialise entity manager
+		mpEntityManager = new CEntityManager();
 	}
 
 	CStellaris3D::~CStellaris3D()
@@ -42,7 +43,8 @@ namespace sge
 
 	void CStellaris3D::Update()
 	{
-
+		// Update entities in the entity manager
+		mpEntityManager->UpdateEntities();
 	}
 
 	void CStellaris3D::Render()

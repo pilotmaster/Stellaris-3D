@@ -32,6 +32,7 @@ namespace sge
 
 		// METHODS
 		//---------------------------------
+		void UpdateEntities();
 		bool DestroyEntity(size_t key);
 		void DestroyAllEntities();
 

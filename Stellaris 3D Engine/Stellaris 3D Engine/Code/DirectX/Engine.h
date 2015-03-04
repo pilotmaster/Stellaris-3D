@@ -31,7 +31,7 @@ namespace sge
 	private:
 		// CLASS VARIABLES
 		//---------------------------------
-
+		CEntityManager* mpEntityManager;
 	};
 }
 
