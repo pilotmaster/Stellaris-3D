@@ -31,11 +31,11 @@ namespace sge
 		CEntity::UpdateMatrices();
 
 		// Update the camera's matrices
-
 	}
 
 	void CCamera::Update()
 	{
-
+		// First update the matrices
+		UpdateMatrices();
 	}
 }

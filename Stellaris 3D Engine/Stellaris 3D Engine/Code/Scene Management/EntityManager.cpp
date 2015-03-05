@@ -34,12 +34,13 @@ namespace sge
 	//====================================================================================
 	// ENTITY MANAGER CLASS METHODS
 	//------------------------------------------------------------------------------------
-	void CEntityManager::UpdateEntities()
+	void CEntityManager::UpdateAndRenderEntities()
 	{
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 		{
-			miterEntityMap->second->UpdateMatrices();
+			miterEntityMap->second->Update();
+			miterEntityMap->second->Render();
 		}
 	}
 

@@ -27,12 +27,13 @@ namespace sge
 		//---------------------------------
 		CEntity(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-		~CEntity();
+		virtual ~CEntity();
 
 
 		// METHODS
 		//---------------------------------
 		virtual void UpdateMatrices();
+		virtual void Render();
 
 		virtual void Update() = 0;
 
@@ -187,11 +188,13 @@ namespace sge
 	private:
 		// MATRICES
 		//---------------------------------
-		DirectX::XMFLOAT4X4 mWorldMatrix;
+		DirectX::XMFLOAT4X4 mModelMatrix;
 
 
 		// ENTITY DATA
 		//---------------------------------
+		bool mHasGeometry;
+
 		DirectX::XMFLOAT3 mPosition;
 		DirectX::XMFLOAT3 mRotation;
 		DirectX::XMFLOAT3 mScale;
