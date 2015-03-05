@@ -28,6 +28,12 @@
     <Filter Include="Code\Scene Management">
       <UniqueIdentifier>{c0a5f356-566a-4f97-82bc-8c3ec87ff974}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Import\Math">
+      <UniqueIdentifier>{a388d62a-dfe9-45eb-8ee5-91a02654981c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Import\Common">
+      <UniqueIdentifier>{5705ef72-3074-4634-ae67-6ba35e87a06a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Main\Main.cpp">
@@ -57,6 +63,51 @@
     <ClCompile Include="Code\Scene Management\EntityManager.cpp">
       <Filter>Code\Scene Management</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Scene Entities\Model.cpp">
+      <Filter>Code\Scene Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\CImportXFile.cpp">
+      <Filter>Import</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\BaseMath.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CMatrix2x2.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CMatrix3x3.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CMatrix4x4.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CQuaternion.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CQuatTransform.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CVector2.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CVector3.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\CVector4.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Math\MathIO.cpp">
+      <Filter>Import\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Common\CFatalException.cpp">
+      <Filter>Import\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Common\MSDefines.cpp">
+      <Filter>Import\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Import\Common\Utility.cpp">
+      <Filter>Import\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Utilities\Timer.h">
@@ -82,6 +133,66 @@
     </ClInclude>
     <ClInclude Include="Code\Scene Management\EntityManager.h">
       <Filter>Code\Scene Management</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Scene Entities\Model.h">
+      <Filter>Code\Scene Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\CImportXFile.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Colour.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\MeshData.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\BaseMath.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CMatrix2x2.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CMatrix3x3.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CMatrix4x4.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CQuaternion.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CQuatTransform.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CVector2.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CVector3.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\CVector4.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\MathDX.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Math\MathIO.h">
+      <Filter>Import\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Common\CFatalException.h">
+      <Filter>Import\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Common\Error.h">
+      <Filter>Import\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Common\GenDefines.h">
+      <Filter>Import\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Common\MSDefines.h">
+      <Filter>Import\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Import\Common\Utility.h">
+      <Filter>Import\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

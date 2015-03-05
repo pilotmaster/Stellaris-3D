@@ -16,20 +16,55 @@
     <ClCompile Include="Code\Main\Main.cpp" />
     <ClCompile Include="Code\Scene Entities\Camera.cpp" />
     <ClCompile Include="Code\Scene Entities\Entity.cpp" />
+    <ClCompile Include="Code\Scene Entities\Model.cpp" />
     <ClCompile Include="Code\Scene Management\EntityManager.cpp" />
     <ClCompile Include="Code\Utilities\Timer.cpp" />
     <ClCompile Include="Code\Utilities\UserInput.cpp" />
     <ClCompile Include="Code\Windows\Window.cpp" />
+    <ClCompile Include="Import\CImportXFile.cpp" />
+    <ClCompile Include="Import\Common\CFatalException.cpp" />
+    <ClCompile Include="Import\Common\MSDefines.cpp" />
+    <ClCompile Include="Import\Common\Utility.cpp" />
+    <ClCompile Include="Import\Math\BaseMath.cpp" />
+    <ClCompile Include="Import\Math\CMatrix2x2.cpp" />
+    <ClCompile Include="Import\Math\CMatrix3x3.cpp" />
+    <ClCompile Include="Import\Math\CMatrix4x4.cpp" />
+    <ClCompile Include="Import\Math\CQuaternion.cpp" />
+    <ClCompile Include="Import\Math\CQuatTransform.cpp" />
+    <ClCompile Include="Import\Math\CVector2.cpp" />
+    <ClCompile Include="Import\Math\CVector3.cpp" />
+    <ClCompile Include="Import\Math\CVector4.cpp" />
+    <ClCompile Include="Import\Math\MathIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\DirectX\Direct3DApp.h" />
     <ClInclude Include="Code\DirectX\Engine.h" />
     <ClInclude Include="Code\Scene Entities\Camera.h" />
     <ClInclude Include="Code\Scene Entities\Entity.h" />
+    <ClInclude Include="Code\Scene Entities\Model.h" />
     <ClInclude Include="Code\Scene Management\EntityManager.h" />
     <ClInclude Include="Code\Utilities\Timer.h" />
     <ClInclude Include="Code\Utilities\UserInput.h" />
     <ClInclude Include="Code\Windows\Window.h" />
+    <ClInclude Include="Import\CImportXFile.h" />
+    <ClInclude Include="Import\Colour.h" />
+    <ClInclude Include="Import\Common\CFatalException.h" />
+    <ClInclude Include="Import\Common\Error.h" />
+    <ClInclude Include="Import\Common\GenDefines.h" />
+    <ClInclude Include="Import\Common\MSDefines.h" />
+    <ClInclude Include="Import\Common\Utility.h" />
+    <ClInclude Include="Import\Math\BaseMath.h" />
+    <ClInclude Include="Import\Math\CMatrix2x2.h" />
+    <ClInclude Include="Import\Math\CMatrix3x3.h" />
+    <ClInclude Include="Import\Math\CMatrix4x4.h" />
+    <ClInclude Include="Import\Math\CQuaternion.h" />
+    <ClInclude Include="Import\Math\CQuatTransform.h" />
+    <ClInclude Include="Import\Math\CVector2.h" />
+    <ClInclude Include="Import\Math\CVector3.h" />
+    <ClInclude Include="Import\Math\CVector4.h" />
+    <ClInclude Include="Import\Math\MathDX.h" />
+    <ClInclude Include="Import\Math\MathIO.h" />
+    <ClInclude Include="Import\MeshData.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6E6CEBB5-AEC8-45B9-846A-234DC780C45D}</ProjectGuid>
