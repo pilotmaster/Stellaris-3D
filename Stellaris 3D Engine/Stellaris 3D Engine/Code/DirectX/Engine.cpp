@@ -44,7 +44,7 @@ namespace sge
 	void CStellaris3D::Update()
 	{
 		// Update entities in the entity manager
-		mpEntityManager->UpdateAndRenderEntities();
+		mpEntityManager->UpdateAndRenderEntities(mpDevice, nullptr);
 	}
 
 	void CStellaris3D::Render()

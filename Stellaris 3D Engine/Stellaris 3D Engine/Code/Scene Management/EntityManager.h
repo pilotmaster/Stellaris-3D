@@ -32,7 +32,7 @@ namespace sge
 
 		// METHODS
 		//---------------------------------
-		void UpdateAndRenderEntities();
+		void UpdateAndRenderEntities(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
 		bool DestroyEntity(size_t key);
 		void DestroyAllEntities();
 

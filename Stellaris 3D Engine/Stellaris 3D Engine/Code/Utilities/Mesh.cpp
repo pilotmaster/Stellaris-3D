@@ -4,6 +4,7 @@
 
 #include "Mesh.h"
 #include "..\..\Import\CImportXFile.h"
+#include "..\Scene Entities\Model.h"
 
 
 namespace sge
@@ -174,10 +175,5 @@ namespace sge
 	{
 		CModel* pModel = nullptr;
 		return pModel;
-	}
-
-	void CMesh::Render(ID3D10EffectTechnique* pTech)
-	{
-
 	}
 }

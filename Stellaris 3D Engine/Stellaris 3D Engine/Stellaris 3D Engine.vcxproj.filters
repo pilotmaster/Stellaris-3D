@@ -37,6 +37,9 @@
     <Filter Include="Code\Common">
       <UniqueIdentifier>{7b1dedae-625b-48ac-9c81-81cbe95a1cf1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{3dfd9a48-61bc-4ad0-ba14-5018115e5476}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Main\Main.cpp">

@@ -33,9 +33,9 @@ namespace sge
 		// METHODS
 		//---------------------------------
 		virtual void UpdateMatrices();
-		virtual void Render();
 
 		virtual void Update() = 0;
+		virtual void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech) = 0;
 
 
 		// ACCESSORS

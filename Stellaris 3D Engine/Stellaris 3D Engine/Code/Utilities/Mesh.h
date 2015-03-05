@@ -38,15 +38,12 @@ namespace sge
 		CModel* CreateModel(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
-		// Render the mesh?? Maybe should be put in with model
-		void Render(ID3D10EffectTechnique* pTech);
-
 
 		// ACCESSORS
 		//---------------------------------
-		inline ID3D10Buffer* GetVertexBuffer()
+		inline ID3D10Buffer** GetVertexBuffer()
 		{
-			return mpVertexBuffer;
+			return &mpVertexBuffer;
 		}
 
 		inline ID3D10Buffer* GetIndexBuffer()
@@ -59,9 +56,9 @@ namespace sge
 			return mNumVertices;
 		}
 
-		inline UINT GetVertexSize()
+		inline UINT* GetVertexSize()
 		{
-			return mVertexSize;
+			return &mVertexSize;
 		}
 
 		inline UINT GetNumIndices()
@@ -82,16 +79,21 @@ namespace sge
 
 	private:
 		// VERTEX DATA
+		//---------------------------------
 		ID3D10Buffer* mpVertexBuffer;
 		UINT mNumVertices;
 
-		// DATA FOR VERTEX ELEMENTS
+
+		// VERTEX ELEMENTS DATA
+		//---------------------------------
 		static const UINT MAX_VERT_ELMNTS = 64;
 		D3D10_INPUT_ELEMENT_DESC mVertexElmnts[MAX_VERT_ELMNTS];
 		ID3D10InputLayout* mpInputLayout;
 		UINT mVertexSize;
 
+
 		// INDEX DATA
+		//---------------------------------
 		ID3D10Buffer* mpIndexBuffer;
 		UINT mNumIndices;
 

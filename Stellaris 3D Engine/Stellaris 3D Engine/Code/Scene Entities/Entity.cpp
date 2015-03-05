@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------------
 
 #include "Entity.h"
+#include "..\Utilities\UserInput.h"
 
 
 namespace sge
@@ -37,10 +38,5 @@ namespace sge
 
 		world = rotation * scale * translation;
 		DirectX::XMStoreFloat4x4(&mModelMatrix, world);
-	}
-
-	void CEntity::Render()
-	{
-
 	}
 }
