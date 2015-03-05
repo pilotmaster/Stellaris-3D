@@ -68,6 +68,11 @@
     <ClInclude Include="Import\Math\MathIO.h" />
     <ClInclude Include="Import\MeshData.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\GraphicsAssign1.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6E6CEBB5-AEC8-45B9-846A-234DC780C45D}</ProjectGuid>
     <RootNamespace>Stellaris3DEngine</RootNamespace>
