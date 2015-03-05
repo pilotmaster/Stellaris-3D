@@ -34,6 +34,9 @@
     <Filter Include="Import\Common">
       <UniqueIdentifier>{5705ef72-3074-4634-ae67-6ba35e87a06a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Common">
+      <UniqueIdentifier>{7b1dedae-625b-48ac-9c81-81cbe95a1cf1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Main\Main.cpp">
@@ -107,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="Import\Common\Utility.cpp">
       <Filter>Import\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Utilities\Mesh.cpp">
+      <Filter>Code\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="Import\Common\Utility.h">
       <Filter>Import\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utilities\Mesh.h">
+      <Filter>Code\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -18,6 +18,7 @@
     <ClCompile Include="Code\Scene Entities\Entity.cpp" />
     <ClCompile Include="Code\Scene Entities\Model.cpp" />
     <ClCompile Include="Code\Scene Management\EntityManager.cpp" />
+    <ClCompile Include="Code\Utilities\Mesh.cpp" />
     <ClCompile Include="Code\Utilities\Timer.cpp" />
     <ClCompile Include="Code\Utilities\UserInput.cpp" />
     <ClCompile Include="Code\Windows\Window.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="Code\Scene Entities\Entity.h" />
     <ClInclude Include="Code\Scene Entities\Model.h" />
     <ClInclude Include="Code\Scene Management\EntityManager.h" />
+    <ClInclude Include="Code\Utilities\Mesh.h" />
     <ClInclude Include="Code\Utilities\Timer.h" />
     <ClInclude Include="Code\Utilities\UserInput.h" />
     <ClInclude Include="Code\Windows\Window.h" />
