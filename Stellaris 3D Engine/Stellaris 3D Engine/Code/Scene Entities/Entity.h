@@ -25,7 +25,7 @@ namespace sge
 	public:
 		// CONSTRUCTOR & DESTRUCTOR
 		//---------------------------------
-		CEntity(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+		CEntity(UINT id, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		virtual ~CEntity();
 
@@ -193,6 +193,8 @@ namespace sge
 
 		// ENTITY DATA
 		//---------------------------------
+		UINT mEID;
+
 		bool mHasGeometry;
 
 		DirectX::XMFLOAT3 mPosition;

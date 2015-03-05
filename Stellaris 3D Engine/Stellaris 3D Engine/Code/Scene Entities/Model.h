@@ -20,7 +20,8 @@ namespace sge
 	public:
 		// CONSTRUCTOR & DESTRUCTOR
 		//---------------------------------
-		CModel();
+		CModel(UINT id, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 		~CModel();
 
 

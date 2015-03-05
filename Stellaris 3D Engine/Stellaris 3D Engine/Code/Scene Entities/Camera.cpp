@@ -10,8 +10,8 @@ namespace sge
 	//====================================================================================
 	// CAMERA CLASS CONSTRUCTOR & DESTRUCTOR
 	//------------------------------------------------------------------------------------
-	CCamera::CCamera(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, float fov, float nearClip, float farClip) :
-		CEntity(pos, rot), mFOV(fov), mNearClip(nearClip), mFarClip(farClip)
+	CCamera::CCamera(UINT id, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, float fov, float nearClip, float farClip) :
+		CEntity(id, pos, rot), mFOV(fov), mNearClip(nearClip), mFarClip(farClip)
 	{
 
 	}

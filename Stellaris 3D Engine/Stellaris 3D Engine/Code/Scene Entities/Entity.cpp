@@ -11,7 +11,7 @@ namespace sge
 	//====================================================================================
 	// ENTITY CLASS CONSTRUCTOR & DESTRUCTOR
 	//------------------------------------------------------------------------------------
-	CEntity::CEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale) :
+	CEntity::CEntity(UINT id, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale) :
 		mPosition(pos), mScale(scale), mRotation(rot)
 	{
 		mHasGeometry = false;
