@@ -18,8 +18,8 @@ namespace sge
 	public:
 		// CONSTRUCTOR & DESTRUCTOR
 		//---------------------------------
-		CCamera(UINT id, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-			float fov = DirectX::XM_PI / 4.0f, float nearClip = 0.1f, float farClip = 1000.0f);
+		CCamera(UINT id, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot,float fov = DirectX::XM_PI / 4.0f,
+			float nearClip = 0.1f, float farClip = 1000.0f);
 		~CCamera();
 
 

@@ -21,7 +21,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	
 	// SETUP
 	sge::CMesh* mshTest = pEngine->LoadMesh("Cube.x");
-	sge::CModel* mdlTest = mshTest->CreateModel();
+	
 
 
 	// ENGINE LOOP

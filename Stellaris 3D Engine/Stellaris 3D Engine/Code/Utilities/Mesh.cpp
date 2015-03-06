@@ -4,7 +4,6 @@
 
 #include "Mesh.h"
 #include "..\..\Import\CImportXFile.h"
-#include "..\Scene Entities\Model.h"
 #include "..\DirectX\Engine.h"
 
 
@@ -170,12 +169,6 @@ namespace sge
 		}
 
 		return true;
-	}
-
-	CModel* CMesh::CreateModel(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
-	{
-		CModel* pModel = nullptr;
-		return pModel;
 	}
 
 	void CMesh::Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech)

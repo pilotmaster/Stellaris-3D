@@ -28,11 +28,9 @@ namespace sge
 		// FACTORY FUNCTIONS
 		//---------------------------------
 		// Creates an entity of type camera and returns the created camera
-		CCamera* CreateCameraEntity(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-			DirectX::XMFLOAT3 orientation = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+		CCamera* CreateCameraEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation);
 		// Creates an entity of type model and returns the created model
-		CModel* CreateModelEntity(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-			DirectX::XMFLOAT3 orientation = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		CModel* CreateModelEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
 
 
 		// METHODS
