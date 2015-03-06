@@ -38,6 +38,9 @@ namespace sge
 		CModel* CreateModel(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
+		// Render the model using its mesh data & matrix data
+		void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
+
 
 		// ACCESSORS
 		//---------------------------------
