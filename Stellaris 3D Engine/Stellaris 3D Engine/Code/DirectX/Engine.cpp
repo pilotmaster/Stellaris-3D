@@ -33,7 +33,7 @@ namespace sge
 		}
 
 		// Initialise scene
-
+		mpBasicShader = new CShader(mpDevice);
 		
 		// Begin timer
 		CTimer::GetTimerInstace()->Reset();

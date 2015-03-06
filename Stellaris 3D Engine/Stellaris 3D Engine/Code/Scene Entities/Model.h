@@ -8,6 +8,7 @@
 
 #include "Entity.h"
 #include "..\Utilities\Mesh.h"
+#include "..\Shaders\Shader.h"
 
 
 namespace sge

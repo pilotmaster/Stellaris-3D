@@ -40,6 +40,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{3dfd9a48-61bc-4ad0-ba14-5018115e5476}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Shaders">
+      <UniqueIdentifier>{bac3a6e6-72b7-4800-ba1c-5f0d61a5edc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Main\Main.cpp">
@@ -116,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="Code\Utilities\Mesh.cpp">
       <Filter>Code\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Shaders\Shader.cpp">
+      <Filter>Code\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,9 +212,12 @@
     <ClInclude Include="Code\Utilities\Mesh.h">
       <Filter>Code\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Shaders\Shader.h">
+      <Filter>Code\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\GraphicsAssign1.fx">
+    <FxCompile Include="GraphicsAssign1.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

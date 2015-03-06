@@ -5,7 +5,10 @@
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 
+
 #include "Direct3DApp.h"
+#include "..\Shaders\Shader.h"
+
 
 namespace sge
 {
@@ -32,6 +35,7 @@ namespace sge
 		// CLASS VARIABLES
 		//---------------------------------
 		CEntityManager* mpEntityManager;
+		CShader* mpBasicShader;
 	};
 }
 
