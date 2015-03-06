@@ -17,7 +17,7 @@ namespace sge
 
 	CStellaris3D::~CStellaris3D()
 	{
-
+		if (mpEntityManager) delete mpEntityManager;
 	}
 
 
@@ -74,5 +74,11 @@ namespace sge
 		// Failed to create the mesh - return null
 		delete pMesh;
 		return nullptr;
+	}
+
+	CModel* CStellaris3D::CreateModel(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale)
+	{
+		// Request a new model from the entity manager and return its reuslt
+		return mpEntityManager->CreateModelEntity(pMesh, pos, rot, scale);
 	}
 }

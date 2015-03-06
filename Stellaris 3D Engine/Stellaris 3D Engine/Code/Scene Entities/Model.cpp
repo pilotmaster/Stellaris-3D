@@ -13,8 +13,14 @@ namespace sge
 	CModel::CModel(UINT id, CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale) :
 		CEntity(id, pos, rot, scale)
 	{
-		mHasGeometry = false;
-		mpMesh = nullptr;
+		if (pMesh)
+		{
+			mpMesh = pMesh;
+		}
+		else
+		{
+			mpMesh = nullptr;
+		}
 	}
 
 	CModel::~CModel()
@@ -35,12 +41,10 @@ namespace sge
 	void CModel::Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech)
 	{
 		// Before rendering, ensure model has geometry
-		if (mHasGeometry)
+		if (mpMesh)
 		{
-			return;
+			// Render the mesh
+			mpMesh->Render(pDevice, pTech);
 		}
-
-		// Render the mesh
-		mpMesh->Render(pDevice, pTech);
 	}
 }

@@ -30,7 +30,7 @@ namespace sge
 		// Creates an entity of type camera and returns the created camera
 		CCamera* CreateCameraEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation);
 		// Creates an entity of type model and returns the created model
-		CModel* CreateModelEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
+		CModel* CreateModelEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
 
 
 		// METHODS

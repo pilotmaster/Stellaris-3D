@@ -36,7 +36,6 @@ namespace sge
 	private:
 		// MODEL DATA
 		//---------------------------------
-		bool mHasGeometry;
 		CMesh* mpMesh;
 	};
 }

@@ -30,6 +30,20 @@ namespace sge
 		return pCamera;
 	}
 
+	CModel* CEntityManager::CreateModelEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation,
+		DirectX::XMFLOAT3 scale)
+	{
+		// Create an instance of the required model
+		CModel* pModel = new CModel(mNextEID, pMesh, pos, orientation, scale);
+
+		// Store the model in the hash map
+		mEntityMap.insert(EntityMap::value_type(mNextEID, pModel));
+
+		// Increment next entity ID and return the new model
+		mNextEID++;
+		return pModel;
+	}
+
 
 	//====================================================================================
 	// ENTITY MANAGER CLASS METHODS
