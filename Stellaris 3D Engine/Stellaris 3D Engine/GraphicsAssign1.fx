@@ -76,7 +76,9 @@ VS_BASIC_OUTPUT BasicTransform( VS_BASIC_INPUT vIn )
 //
 float4 OneColour( VS_BASIC_OUTPUT vOut ) : SV_Target
 {
-	return float4( ModelColour, 1.0 ); // Set alpha channel to 1.0 (opaque)
+	// Set model colour to white for now
+	float3 colour = float3(1.0f, 1.0f, 1.0f);
+	return float4( colour, 1.0 ); // Set alpha channel to 1.0 (opaque)
 }
 
 

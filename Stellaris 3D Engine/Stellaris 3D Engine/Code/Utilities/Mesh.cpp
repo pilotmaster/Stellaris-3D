@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "..\..\Import\CImportXFile.h"
 #include "..\Scene Entities\Model.h"
+#include "..\DirectX\Engine.h"
 
 
 namespace sge

@@ -8,6 +8,7 @@
 
 #include "Direct3DApp.h"
 #include "..\Shaders\Shader.h"
+#include "..\Utilities\Mesh.h"
 
 
 namespace sge
@@ -29,6 +30,11 @@ namespace sge
 		bool InitialiseEngine(HINSTANCE hInstance);
 		void Update();
 		void Render();
+
+
+		// METHODS
+		//---------------------------------
+		CMesh* LoadMesh(std::string fileName);
 
 
 	private:

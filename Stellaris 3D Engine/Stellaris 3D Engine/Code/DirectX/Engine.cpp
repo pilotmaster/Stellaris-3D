@@ -44,7 +44,7 @@ namespace sge
 	void CStellaris3D::Update()
 	{
 		// Update entities in the entity manager
-		mpEntityManager->UpdateAndRenderEntities(mpDevice, nullptr);
+		mpEntityManager->UpdateAndRenderEntities(mpDevice, mpBasicShader->GetTechnique());
 	}
 
 	void CStellaris3D::Render()
@@ -58,5 +58,21 @@ namespace sge
 		// PRESENT SWAP CHAIN
 		//---------------------------------
 		HR(mpSwapChain->Present(0U, 0U));
+	}
+
+
+	CMesh* CStellaris3D::LoadMesh(std::string fileName)
+	{
+		// Create new mesh & load it
+		CMesh* pMesh = new CMesh();
+		if (pMesh->LoadMesh(mpDevice, fileName, mpBasicShader->GetTechnique()))
+		{
+			// Succeeded in creating the mesh - return the new mesh
+			return pMesh;
+		}
+		
+		// Failed to create the mesh - return null
+		delete pMesh;
+		return nullptr;
 	}
 }

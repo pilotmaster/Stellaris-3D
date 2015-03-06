@@ -49,6 +49,7 @@ namespace sge
 				// No error message, which probably means the fx file was not found
 				MessageBox(NULL, L"Error loading FX file. Ensure you run this executable from the directory that contains the FX file.", L"Error", MB_OK);
 			}
+			PostQuitMessage(1);
 			return;
 		}
 

@@ -10,7 +10,7 @@ namespace sge
 	//====================================================================================
 	// MODEL CLASS CONSTRUCTOR & DESTRUCTOR
 	//------------------------------------------------------------------------------------
-	CModel::CModel(UINT id, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale) :
+	CModel::CModel(UINT id, CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale) :
 		CEntity(id, pos, rot, scale)
 	{
 		mHasGeometry = false;

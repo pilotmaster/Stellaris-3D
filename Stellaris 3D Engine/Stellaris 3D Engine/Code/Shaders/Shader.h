@@ -25,6 +25,14 @@ namespace sge
 		~CShader();
 
 
+		// ACCESSORS
+		//---------------------------------
+		ID3D10EffectTechnique* GetTechnique()
+		{
+			return mpFXTech;
+		}
+
+
 	protected:
 		// EFFECT VARIABLES
 		//---------------------------------
