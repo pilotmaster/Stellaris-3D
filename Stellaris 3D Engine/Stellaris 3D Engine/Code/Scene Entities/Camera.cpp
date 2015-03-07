@@ -28,8 +28,16 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	void CCamera::UpdateMatrices()
 	{
-		// Call parent's function as this overrides it by default
-		CEntity::UpdateMatrices();
+		// Update camera's matrices WITHOUT SCALE
+		DirectX::XMMATRIX world, rotation, translation;
+
+		world = DirectX::XMMatrixIdentity();
+		translation = world;
+		rotation = DirectX::XMMatrixRotationRollPitchYaw(mRotation.y, mRotation.x, mRotation.z);
+		translation = DirectX::XMMatrixTranslation(mPosition.x, mPosition.y, mPosition.z);
+
+		world = rotation * translation;
+		DirectX::XMStoreFloat4x4(&mModelMatrix, world);
 
 		// Create and store the camera's view matrix
 		DirectX::XMMATRIX matView = DirectX::XMMatrixInverse(NULL, DirectX::XMLoadFloat4x4(&mModelMatrix));

@@ -77,7 +77,7 @@ namespace sge
 		mpWindow = CWindow::GetInstance();
 		
 		// Create the window
-		if (!mpWindow->InitialiseWindow(hInstance, 1600, 900, L"Stellaris-3D"))
+		if (!mpWindow->InitialiseWindow(hInstance, 1280, 960, L"Stellaris-3D"))
 		{
 			// Failed to create window - show message & return false
 			MessageBox(mpWindow->GetWindowHandle(), L"Failed to initialise window!", L"WINDOW ERROR", MB_OK);
