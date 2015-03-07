@@ -145,7 +145,9 @@ namespace sge
 
 			// Convert to wstring & create resource file from the file
 			std::wstring wTexName(texName.begin(), texName.end());
-			mpMaterial->CreateDiffuseMap(pDevice, wTexName);
+			std::wstringstream wStrStream;
+			wStrStream << "Media\\" << wTexName;
+			mpMaterial->CreateDiffuseMap(pDevice, wStrStream.str());
 		}
 
 

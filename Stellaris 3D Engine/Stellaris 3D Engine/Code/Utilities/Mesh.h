@@ -7,6 +7,7 @@
 
 
 #include "Material.h"
+#include <sstream>
 
 
 namespace sge
