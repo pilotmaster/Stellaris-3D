@@ -8,12 +8,15 @@
 
 #include <unordered_map>
 
-#include "..\Scene Entities\Model.h"
+#include "..\Scene Entities\Light.h"
 #include "..\Scene Entities\Camera.h"
 
 
 namespace sge
 {
+	//====================================================================================
+	// ENTITY MANAGER CLASS
+	//------------------------------------------------------------------------------------
 	typedef std::unordered_map<size_t, CEntity*> EntityMap;
 
 	class CEntityManager
@@ -31,6 +34,9 @@ namespace sge
 		CCamera* CreateCameraEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, float fov, float nearClip, float farClip);
 		// Creates an entity of type model and returns the created model
 		CModel* CreateModelEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
+		// Create a new light
+		CLight* CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
+			DirectX::XMFLOAT3 lightColour);
 
 
 		// METHODS
@@ -41,10 +47,18 @@ namespace sge
 		void DestroyAllEntities();
 
 
+		// STATIC VARIABLES
+		//---------------------------------
+		static const int MAX_LIGHTS = 2;
+
+
 	private:
 		// An instance of the hash map used to store the entities
 		EntityMap mEntityMap;
 		EntityMap::iterator miterEntityMap;
+
+		// Array of light objects
+		CLight* mpLights[MAX_LIGHTS];
 
 		// The next ID which will be used as a key for the next entity that is placed into
 		// the hash map

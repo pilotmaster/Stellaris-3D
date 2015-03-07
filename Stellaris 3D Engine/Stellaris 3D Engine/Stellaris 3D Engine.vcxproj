@@ -16,6 +16,7 @@
     <ClCompile Include="Code\Main\Main.cpp" />
     <ClCompile Include="Code\Scene Entities\Camera.cpp" />
     <ClCompile Include="Code\Scene Entities\Entity.cpp" />
+    <ClCompile Include="Code\Scene Entities\Light.cpp" />
     <ClCompile Include="Code\Scene Entities\Model.cpp" />
     <ClCompile Include="Code\Scene Management\EntityManager.cpp" />
     <ClCompile Include="Code\Shaders\Shader.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="Code\DirectX\Engine.h" />
     <ClInclude Include="Code\Scene Entities\Camera.h" />
     <ClInclude Include="Code\Scene Entities\Entity.h" />
+    <ClInclude Include="Code\Scene Entities\Light.h" />
     <ClInclude Include="Code\Scene Entities\Model.h" />
     <ClInclude Include="Code\Scene Management\EntityManager.h" />
     <ClInclude Include="Code\Shaders\Shader.h" />

@@ -31,18 +31,19 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	// Model loading
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));
 
+	DirectX::XMFLOAT3 cubePos{ 0.0f, 10.0f, 0.0f };
 	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x");
-	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, DirectX::XMFLOAT3(0.0f, 10.0f, 0.0f));
+	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
 
 	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x");
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor);
 
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x");
-	sge::CModel* mdlLight1 = pEngine->CreateModel(mshLight);
-	sge::CModel* mdlLight2 = pEngine->CreateModel(mshLight, DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
+	sge::CLight* mdlLight1 = pEngine->CreateModel(mshLight);
+	sge::CLight* mdlLight2 = pEngine->CreateModel(mshLight, DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
 
 	// frame time variable
-	float delta = 0.0f; sge::CTimer::GetTimerInstace()->GetDeltaTime();
+	float delta = 0.0f;
 	float rotation = 0.0f;
 
 
@@ -61,7 +62,8 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 		// UPDATE MODEL POSITIONS
 		//---------------------------------
-		mdlLight1->SetPosition(DirectX::XMFLOAT3(cosf(rotation) * ORBIT_RADIUS, 10.0f, sinf(rotation) * ORBIT_RADIUS));
+		mdlCube->GetPosition(cubePos);
+		mdlLight1->SetPosition(DirectX::XMFLOAT3((cosf(rotation) * ORBIT_RADIUS) + cubePos.x, cubePos.y, (sinf(rotation) * ORBIT_RADIUS) + cubePos.z));
 
 
 		// CHECK FOR KEY PRESSES
