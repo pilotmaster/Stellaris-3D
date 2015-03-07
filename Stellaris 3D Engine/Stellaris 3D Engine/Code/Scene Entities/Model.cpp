@@ -38,13 +38,16 @@ namespace sge
 		UpdateMatrices();
 	}
 
-	void CModel::Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech)
+	void CModel::Render(ID3D10Device* pDevice, CShader* pShader)
 	{
 		// Before rendering, ensure model has geometry
 		if (mpMesh)
 		{
+			// Send model data over required by model's shader
+			pShader->GetFXWorldVar()->SetMatrix((float*)&mModelMatrix);
+
 			// Render the mesh
-			mpMesh->Render(pDevice, pTech);
+			mpMesh->Render(pDevice, pShader->GetTechnique());
 		}
 	}
 }

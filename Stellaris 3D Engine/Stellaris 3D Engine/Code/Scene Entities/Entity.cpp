@@ -4,6 +4,7 @@
 
 #include "Entity.h"
 #include "..\Utilities\UserInput.h"
+#include "..\Shaders\Shader.h"
 
 
 namespace sge

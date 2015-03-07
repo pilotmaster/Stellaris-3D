@@ -26,11 +26,20 @@ namespace sge
 		//---------------------------------
 		void UpdateMatrices();
 		void Update();
-		void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
+		void Render(ID3D10Device* pDevice, CShader* pShader);
 
 
 		// ACCESSORS
 		//---------------------------------
+		DirectX::XMFLOAT4X4 GetViewMatrix()
+		{
+			return mViewMatrix;
+		}
+
+		DirectX::XMFLOAT4X4 GetProjectionMatrix()
+		{
+			return mProjMatrix;
+		}
 
 
 		// MUTATORS

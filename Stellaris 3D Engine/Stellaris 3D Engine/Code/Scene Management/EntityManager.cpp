@@ -64,12 +64,16 @@ namespace sge
 		}
 	}
 
-	void CEntityManager::Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech)
+	void CEntityManager::Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader)
 	{
+		// Pass camera's data over to the shader
+		pShader->GetFXViewVar()->SetMatrix((float*)&pCamera->GetViewMatrix());
+		pShader->GetFXProjVar()->SetMatrix((float*)&pCamera->GetProjectionMatrix());
+
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 		{
-			miterEntityMap->second->Render(pDevice, pTech);
+			miterEntityMap->second->Render(pDevice, pShader);
 		}
 	}
 

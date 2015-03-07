@@ -57,7 +57,7 @@ namespace sge
 
 		// RENDER ENTITIES IN THE SCENE
 		//---------------------------------
-		mpEntityManager->Render(mpDevice, mpBasicShader->GetTechnique());
+		mpEntityManager->Render(mpDevice, pCamera, mpBasicShader);
 
 
 		// PRESENT SWAP CHAIN

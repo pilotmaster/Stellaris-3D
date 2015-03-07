@@ -36,7 +36,7 @@ namespace sge
 		// METHODS
 		//---------------------------------
 		void Update();
-		void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
+		void Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader);
 		bool DestroyEntity(size_t key);
 		void DestroyAllEntities();
 

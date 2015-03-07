@@ -20,6 +20,8 @@ namespace sge
 	//====================================================================================
 	// ENTITY CLASS
 	//------------------------------------------------------------------------------------
+	class CShader;
+
 	class CEntity
 	{
 	public:
@@ -34,7 +36,7 @@ namespace sge
 		virtual void UpdateMatrices();
 
 		virtual void Update() = 0;
-		virtual void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech) = 0;
+		virtual void Render(ID3D10Device* pDevice, CShader* pShader) = 0;
 
 
 		// ACCESSORS
