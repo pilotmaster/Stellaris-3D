@@ -24,7 +24,7 @@ namespace sge
 	//====================================================================================
 	// DIRECT3D APPLICATION CLASS RUN FUNCTION
 	//------------------------------------------------------------------------------------
-	int CD3DApp::Run()
+	bool CD3DApp::Run()
 	{
 		// Initialise message
 		MSG msg = { 0 };
@@ -44,7 +44,7 @@ namespace sge
 				mpWindow->StopRunningWindow();
 
 				// Return quit message - for error checking
-				return static_cast<int>(msg.wParam);
+				//return static_cast<int>(msg.wParam);
 			}
 		}
 		else
@@ -57,9 +57,6 @@ namespace sge
 
 				// Update application
 				Update();
-
-				// Render application
-				Render();
 			}
 			else
 			{
@@ -68,7 +65,7 @@ namespace sge
 			}
 		}
 
-		return -1; // No errors or quit message
+		return mpWindow->WindowRunning(); // No errors or quit message
 	}
 
 

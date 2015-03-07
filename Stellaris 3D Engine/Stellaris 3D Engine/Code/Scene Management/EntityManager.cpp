@@ -55,12 +55,20 @@ namespace sge
 	//====================================================================================
 	// ENTITY MANAGER CLASS METHODS
 	//------------------------------------------------------------------------------------
-	void CEntityManager::UpdateAndRenderEntities(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech)
+	void CEntityManager::Update()
 	{
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 		{
 			miterEntityMap->second->Update();
+		}
+	}
+
+	void CEntityManager::Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech)
+	{
+		// Call the update function for each stored entity
+		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
+		{
 			miterEntityMap->second->Render(pDevice, pTech);
 		}
 	}

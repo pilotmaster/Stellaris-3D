@@ -40,14 +40,13 @@ namespace sge
 
 		// APPLICATION RUN FUNCTION
 		//---------------------------------
-		int Run();
+		bool Run();
 
 
 		// FRAMEWORK METHODS
 		//---------------------------------
 		bool InitialiseApplication(HINSTANCE hInstance);
 		virtual void Update() = 0;
-		virtual void Render() = 0;
 
 		bool InitialiseDirect3D();
 		void CalcFrameStats();

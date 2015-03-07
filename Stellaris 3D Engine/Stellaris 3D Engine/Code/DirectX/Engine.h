@@ -29,7 +29,7 @@ namespace sge
 		//---------------------------------
 		bool InitialiseEngine(HINSTANCE hInstance);
 		void Update();
-		void Render();
+		void Render(CCamera* pCamera);
 
 
 		// METHODS

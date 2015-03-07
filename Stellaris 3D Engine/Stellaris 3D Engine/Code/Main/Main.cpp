@@ -28,10 +28,10 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 
 	// ENGINE LOOP
-	while (pEngine->EngineRunning())
+	while (pEngine->Run())
 	{
-		// Run the application
-		pEngine->Run();
+		// Render scene
+		pEngine->Render(camMain);
 	}
 
 	delete pEngine;

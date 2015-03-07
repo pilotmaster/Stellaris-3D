@@ -44,15 +44,20 @@ namespace sge
 	void CStellaris3D::Update()
 	{
 		// Update entities in the entity manager
-		mpEntityManager->UpdateAndRenderEntities(mpDevice, mpBasicShader->GetTechnique());
+		mpEntityManager->Update();
 	}
 
-	void CStellaris3D::Render()
+	void CStellaris3D::Render(CCamera* pCamera)
 	{
 		// CLEAR CURRENT SCENE
 		//---------------------------------
 		mpDevice->ClearRenderTargetView(mpRenderTarget, DirectX::Colors::LightBlue);
 		mpDevice->ClearDepthStencilView(mpDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0U);
+
+
+		// RENDER ENTITIES IN THE SCENE
+		//---------------------------------
+		mpEntityManager->Render(mpDevice, mpBasicShader->GetTechnique());
 
 
 		// PRESENT SWAP CHAIN
