@@ -226,10 +226,11 @@ namespace sge
 			// KEY PRESSES
 			//------------------------------
 		case WM_KEYDOWN:
-			KeyPressedEvent(static_cast<EKeyState>(wParam));
+			KeyDownEvent(static_cast<EKeyCode>(wParam));
 			break;
 
 		case WM_KEYUP:
+			KeyUpEvent(static_cast<EKeyCode>(wParam));
 			break;
 
 		case WM_LBUTTONDOWN:

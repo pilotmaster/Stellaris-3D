@@ -174,24 +174,39 @@ namespace sge
 
 		void Rotate(DirectX::XMFLOAT3& inAmount)
 		{
-			mRotation.x += inAmount.x;
-			mRotation.y += inAmount.y;
-			mRotation.z += inAmount.z;
+			mRotation.x += DirectX::XMConvertToRadians(inAmount.x);
+			mRotation.y += DirectX::XMConvertToRadians(inAmount.y);
+			mRotation.z += DirectX::XMConvertToRadians(inAmount.z);
 		}
 
 		inline void SetXRotation(float inX)
 		{
-			mRotation.x = inX;
+			mRotation.x = DirectX::XMConvertToRadians(inX);
+		}
+
+		inline void RotateX(float inX)
+		{
+			mRotation.x += DirectX::XMConvertToRadians(inX);
 		}
 
 		inline void SetYRotation(float inY)
 		{
-			mRotation.y = inY;
+			mRotation.y = DirectX::XMConvertToRadians(inY);
+		}
+
+		inline void RotateY(float inY)
+		{
+			mRotation.y += DirectX::XMConvertToRadians(inY);
 		}
 
 		inline void SetZRotation(float inZ)
 		{
-			mRotation.z = inZ;
+			mRotation.z = DirectX::XMConvertToRadians(inZ);
+		}
+
+		inline void RotateZ(float inZ)
+		{
+			mRotation.z += DirectX::XMConvertToRadians(inZ);
 		}
 
 		inline void SetScale(DirectX::XMFLOAT3& inScale)

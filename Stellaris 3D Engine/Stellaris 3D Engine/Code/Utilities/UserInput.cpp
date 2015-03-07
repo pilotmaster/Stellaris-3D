@@ -29,63 +29,44 @@ namespace sge
 	//====================================================================================
 	// KEY PRESS EVENTS ------------------------------------------------------------------
 	//------------------------------------------------------------------------------------
-	void KeyPressedEvent(EKeyState keyCode)
+	void KeyDownEvent(EKeyCode Key)
 	{
-		if (garrKeyStates[keyCode] == KEY_NOT_PRESSED /*|| garrKeyStates[keyCode] == KEY_JUST_RELEASED*/)
+		if (garrKeyStates[Key] == KEY_NOT_PRESSED)
 		{
-			garrKeyStates[keyCode] = KEY_PRESSED;
+			garrKeyStates[Key] = KEY_PRESSED;
 		}
 		else
 		{
-			garrKeyStates[keyCode] = KEY_HELD;
+			garrKeyStates[Key] = KEY_HELD;
 		}
 	}
 
-	//void KeyReleaseEvent(EKeyState keyCode)
-	//{
-	//	garrKeyStates[keyCode] = KEY_JUST_RELEASED;
-	//}
+	void KeyUpEvent(EKeyCode Key)
+	{
+		garrKeyStates[Key] = KEY_NOT_PRESSED;
+	}
 
 
 	//====================================================================================
 	// INPUT FUNCTIONS -------------------------------------------------------------------
 	//------------------------------------------------------------------------------------
-	bool KeyPressed(EKeyCode keyCode)
+	bool KeyHit(EKeyCode eKeyCode)
 	{
-		if (garrKeyStates[keyCode] == KEY_PRESSED)
+		if (garrKeyStates[eKeyCode] == KEY_PRESSED)
 		{
-			garrKeyStates[keyCode] = KEY_HELD;
+			garrKeyStates[eKeyCode] = KEY_HELD;
 			return true;
 		}
 		return false;
 	}
 
-	bool KeyDown(EKeyCode keyCode)
+	bool KeyHeld(EKeyCode eKeyCode)
 	{
-		if (garrKeyStates[keyCode] == KEY_NOT_PRESSED /*|| garrKeyStates[keyCode] == KEY_JUST_RELEASED*/)
+		if (garrKeyStates[eKeyCode] == KEY_NOT_PRESSED)
 		{
 			return false;
 		}
-		garrKeyStates[keyCode] = KEY_HELD;
+		garrKeyStates[eKeyCode] = KEY_HELD;
 		return true;
-	}
-
-	//bool KeyReleased(EKeyCode keyCode)
-	//{
-	//	if (garrKeyStates[keyCode] == KEY_JUST_RELEASED)
-	//	{
-	//		garrKeyStates[keyCode] = KEY_NOT_PRESSED;
-	//		return true;
-	//	}
-	//	return false;
-	//}
-
-	bool KeyNotDown(EKeyCode keyCode)
-	{
-		if (/*garrKeyStates[keyCode] == KEY_JUST_RELEASED ||*/ garrKeyStates[keyCode] == KEY_NOT_PRESSED)
-		{
-			return true;
-		}
-		return false;
 	}
 }

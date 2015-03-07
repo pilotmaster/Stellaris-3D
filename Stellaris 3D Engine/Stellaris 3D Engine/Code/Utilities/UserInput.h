@@ -17,7 +17,6 @@ namespace sge
 	enum EKeyState
 	{
 		KEY_NOT_PRESSED,
-		//KEY_JUST_RELEASED,
 		KEY_PRESSED,
 		KEY_HELD
 	};
@@ -177,26 +176,20 @@ namespace sge
 	// KEY EVENTS ------------------------------------------------------------------------
 	//------------------------------------------------------------------------------------
 	// Event called to indicate that a key has been pressed down
-	void KeyPressedEvent(EKeyState keyCode);
+	void KeyDownEvent(EKeyCode Key);
 
 	// Event called to indicate that a kay has been released
-	//void KeyReleaseEvent(EKeyState keyCode);
+	void KeyUpEvent(EKeyCode Key);
 
 
 	//====================================================================================
 	// KEY INPUT FUNCTIONS ---------------------------------------------------------------
 	//------------------------------------------------------------------------------------
 	// Returns true if a key is pressed down
-	bool KeyPressed(EKeyCode keyCode);
+	bool KeyHit(EKeyCode eKeyCode);
 
 	// Returns true if a key is held down for an extended amount of time
-	bool KeyDown(EKeyCode keyCode);
-
-	// Returns true if a key was just released
-	//bool KeyReleased(EKeyCode keyCode);
-
-	// Returns true if key is not being pressed
-	bool KeyNotDown(EKeyCode keyCode);
+	bool KeyHeld(EKeyCode eKeyCode);
 }
 
 
