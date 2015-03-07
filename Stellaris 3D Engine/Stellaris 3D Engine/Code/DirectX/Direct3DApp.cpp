@@ -225,16 +225,13 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	void CD3DApp::CalcFrameStats()
 	{
-		static int frameCount = 0;
 		static float timeElapsed = 0.0f;
-
-		frameCount++;
-
+		
 		// Compute averages over a second
 		if ((CTimer::GetTimerInstace()->GetTotalTime() - timeElapsed) >= 1.0f)
 		{
-			float fps = static_cast<float>(frameCount);
-			float mspf = 1000.0f / fps;
+			float mspf = CTimer::GetTimerInstace()->GetDeltaTime();
+			int fps = (int)(1.0f / mspf);
 
 			// Display data on title bar
 			std::wstringstream outp;
@@ -244,8 +241,6 @@ namespace sge
 				<< "FT: " << mspf;
 			SetWindowText(mpWindow->GetWindowHandle(), outp.str().c_str());
 
-			// Reset timer for next count
-			frameCount = 0;
 			timeElapsed += 1.0f;
 		}
 	}
