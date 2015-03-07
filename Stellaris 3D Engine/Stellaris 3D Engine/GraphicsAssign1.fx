@@ -29,8 +29,6 @@ struct VS_BASIC_OUTPUT
 //====================================================================================
 // GLOBAL VARIABLES
 //------------------------------------------------------------------------------------
-// All these variables are created & manipulated in the C++ code and passed into the shader here
-
 // The matrices (4x4 matrix of floats) for transforming from 3D model to 2D projection (used in vertex shader)
 float4x4 WorldMatrix;
 float4x4 ViewMatrix;
@@ -47,11 +45,11 @@ Texture2D DiffuseMap;
 // SAMPLER STATE DEFINITIONS
 //------------------------------------------------------------------------------------
 // Sampler to use with the above texture map. Specifies texture filtering and addressing mode to use when accessing texture pixels
-SamplerState TrilinearClamp
+SamplerState TrilinearWrap
 {
 	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 
@@ -59,15 +57,15 @@ SamplerState TrilinearClamp
 // VERTEX SHADERS
 //------------------------------------------------------------------------------------
 // Basic vertex shader to transform 3D model vertices to 2D and pass UVs to the pixel shader
-VS_BASIC_OUTPUT BasicTransform( VS_BASIC_INPUT vIn )
+VS_BASIC_OUTPUT BasicTransform(VS_BASIC_INPUT vIn)
 {
 	VS_BASIC_OUTPUT vOut;
 	
 	// Use world matrix passed from C++ to transform the input model vertex position into world space
 	float4 modelPos = float4(vIn.Pos, 1.0f); // Promote to 1x4 so we can multiply by 4x4 matrix, put 1.0 in 4th element for a point (0.0 for a vector)
-	float4 worldPos = mul( modelPos, WorldMatrix );
-	float4 viewPos  = mul( worldPos, ViewMatrix );
-	vOut.ProjPos    = mul( viewPos,  ProjMatrix );
+	float4 worldPos = mul(modelPos, WorldMatrix);
+	float4 viewPos = mul(worldPos, ViewMatrix);
+	vOut.ProjPos = mul(viewPos, ProjMatrix);
 	
 	// Pass texture coordinates (UVs) on to the pixel shader
 	vOut.UV = vIn.UV;
@@ -81,10 +79,10 @@ VS_BASIC_OUTPUT BasicTransform( VS_BASIC_INPUT vIn )
 //------------------------------------------------------------------------------------
 // A pixel shader that just outputs a single fixed colour
 //
-float4 OneColour( VS_BASIC_OUTPUT vOut ) : SV_Target
+float4 OneColour(VS_BASIC_OUTPUT vOut) : SV_Target
 {
 	// Calculate colour of texel based on the sampling of the texture
-	float4 diffuseColour = DiffuseMap.Sample(TrilinearClamp, vOut.UV);
+	float4 diffuseColour = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 
 	return diffuseColour;
 }
@@ -100,8 +98,8 @@ technique10 PlainColour
 {
     pass P0
     {
-        SetVertexShader( CompileShader( vs_4_0, BasicTransform() ) );
-        SetGeometryShader( NULL );                                   
-        SetPixelShader( CompileShader( ps_4_0, OneColour() ) );
+        SetVertexShader(CompileShader(vs_4_0, BasicTransform()));
+        SetGeometryShader(NULL);                                   
+        SetPixelShader(CompileShader(ps_4_0, OneColour()));
 	}
 }

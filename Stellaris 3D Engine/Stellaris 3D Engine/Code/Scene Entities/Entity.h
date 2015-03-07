@@ -109,7 +109,7 @@ namespace sge
 			mPosition = inPosition;
 		}
 
-		inline void Move(DirectX::XMFLOAT3& inAmount)
+		void Move(DirectX::XMFLOAT3& inAmount)
 		{
 			mPosition.x += inAmount.x;
 			mPosition.y += inAmount.y;
@@ -121,9 +121,33 @@ namespace sge
 			mPosition.x = inX;
 		}
 
+		inline void MoveX(float inX)
+		{
+			mPosition.x += inX;
+		}
+
+		void MoveLocalX(float inAmount)
+		{
+			mPosition.x += mModelMatrix._11 * inAmount;
+			mPosition.y += mModelMatrix._12 * inAmount;
+			mPosition.z += mModelMatrix._13 * inAmount;
+		}
+
 		inline void SetYPosition(float inY)
 		{
 			mPosition.y = inY;
+		}
+
+		inline void MoveY(float inY)
+		{
+			mPosition.x += inY;
+		}
+
+		void MoveLocalY(float inAmount)
+		{
+			mPosition.x += mModelMatrix._21 * inAmount;
+			mPosition.y += mModelMatrix._22 * inAmount;
+			mPosition.z += mModelMatrix._23 * inAmount;
 		}
 
 		inline void SetZPosition(float inZ)
@@ -131,12 +155,24 @@ namespace sge
 			mPosition.z = inZ;
 		}
 
+		inline void MoveZ(float inZ)
+		{
+			mPosition.x += inZ;
+		}
+
+		void MoveLocalZ(float inAmount)
+		{
+			mPosition.x += mModelMatrix._31 * inAmount;
+			mPosition.y += mModelMatrix._32 * inAmount;
+			mPosition.z += mModelMatrix._33 * inAmount;
+		}
+
 		inline void SetRotation(DirectX::XMFLOAT3& inRotation)
 		{
 			mRotation = inRotation;
 		}
 
-		inline void Rotate(DirectX::XMFLOAT3& inAmount)
+		void Rotate(DirectX::XMFLOAT3& inAmount)
 		{
 			mRotation.x += inAmount.x;
 			mRotation.y += inAmount.y;
@@ -163,7 +199,7 @@ namespace sge
 			mScale = inScale;
 		}
 
-		inline void Scale(DirectX::XMFLOAT3& inAmount)
+		void Scale(DirectX::XMFLOAT3& inAmount)
 		{
 			mScale.x += inAmount.x;
 			mScale.y += inAmount.y;
