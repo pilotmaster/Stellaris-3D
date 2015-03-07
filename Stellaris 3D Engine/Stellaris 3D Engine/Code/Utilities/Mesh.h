@@ -6,10 +6,7 @@
 #define _MESH_H_
 
 
-#include <D3DX10.h>
-#include <d3d10.h>
-#include <DirectXMath.h>
-#include <string>
+#include "Material.h"
 
 
 namespace sge
@@ -71,6 +68,11 @@ namespace sge
 			return mpInputLayout;
 		}
 
+		inline CMaterial* GetMaterial()
+		{
+			return mpMaterial;
+		}
+
 
 		// MUTATORS
 		//---------------------------------
@@ -97,9 +99,10 @@ namespace sge
 		ID3D10Buffer* mpIndexBuffer;
 		UINT mNumIndices;
 
-		// FOR LATER POTENTIAL TEXTURE CLASS
-		ID3D10ShaderResourceView* mpDiffuseMap;
-		ID3D10ShaderResourceView* mpNormalMap;
+
+		// MATERIAL DATA
+		//---------------------------------
+		CMaterial* mpMaterial;
 	};
 }
 

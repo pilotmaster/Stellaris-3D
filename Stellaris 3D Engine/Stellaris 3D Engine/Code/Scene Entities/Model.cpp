@@ -46,6 +46,12 @@ namespace sge
 			// Send model data over required by model's shader
 			pShader->GetFXWorldVar()->SetMatrix((float*)&mModelMatrix);
 
+			// If it has a texture, send it over
+			if (mpMesh->GetMaterial())
+			{
+				pShader->GetFXDiffuseMapVar()->SetResource(mpMesh->GetMaterial()->GetDiffuseMap());
+			}
+
 			// Render the mesh
 			mpMesh->Render(pDevice, pShader->GetTechnique());
 		}

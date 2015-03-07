@@ -23,8 +23,7 @@ namespace sge
 		mpIndexBuffer = nullptr;
 		mNumIndices = 0U;
 
-		mpDiffuseMap = nullptr;
-		mpNormalMap = nullptr;
+		mpMaterial = nullptr;
 	}
 
 	CMesh::~CMesh()
@@ -131,6 +130,24 @@ namespace sge
 			++numElts;
 		}
 		mVertexSize = offset;
+
+
+		// Get the textures from the .x file
+		if (mesh.GetNumMaterials() > 0)
+		{
+			// Create a texture
+			mpMaterial = new CMaterial();
+			
+			// Get the texture name
+			gen::SMeshMaterial pNewMat;
+			mesh.GetMaterial(0, &pNewMat);
+			std::string texName = pNewMat.textureFileNames[0];
+
+			// Convert to wstring & create resource file from the file
+			std::wstring wTexName(texName.begin(), texName.end());
+			mpMaterial->CreateDiffuseMap(pDevice, wTexName);
+		}
+
 
 		// Given the vertex element list, pass it to DirectX to create a vertex layout. We also need to pass an example of a technique that will
 		// render this model. We will only be able to render this model with techniques that have the same vertex input as the example we use here

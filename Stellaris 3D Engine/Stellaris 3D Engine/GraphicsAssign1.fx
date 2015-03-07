@@ -7,10 +7,9 @@
 //--------------------------------------------------------------------------------------
 
 
-//--------------------------------------------------------------------------------------
-// Structures
-//--------------------------------------------------------------------------------------
-
+//====================================================================================
+// STRUCTURES
+//------------------------------------------------------------------------------------
 // Standard input geometry data, more complex techniques (e.g. normal mapping) may need more
 struct VS_BASIC_INPUT
 {
@@ -27,9 +26,9 @@ struct VS_BASIC_OUTPUT
 };
 
 
-//--------------------------------------------------------------------------------------
-// Global Variables
-//--------------------------------------------------------------------------------------
+//====================================================================================
+// GLOBAL VARIABLES
+//------------------------------------------------------------------------------------
 // All these variables are created & manipulated in the C++ code and passed into the shader here
 
 // The matrices (4x4 matrix of floats) for transforming from 3D model to 2D projection (used in vertex shader)
@@ -44,12 +43,22 @@ float3 ModelColour;
 Texture2D DiffuseMap;
 
 
-//--------------------------------------------------------------------------------------
-// Vertex Shaders
-//--------------------------------------------------------------------------------------
+//====================================================================================
+// SAMPLER STATE DEFINITIONS
+//------------------------------------------------------------------------------------
+// Sampler to use with the above texture map. Specifies texture filtering and addressing mode to use when accessing texture pixels
+SamplerState TrilinearClamp
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Clamp;
+	AddressV = Clamp;
+};
 
+
+//====================================================================================
+// VERTEX SHADERS
+//------------------------------------------------------------------------------------
 // Basic vertex shader to transform 3D model vertices to 2D and pass UVs to the pixel shader
-//
 VS_BASIC_OUTPUT BasicTransform( VS_BASIC_INPUT vIn )
 {
 	VS_BASIC_OUTPUT vOut;
@@ -67,25 +76,23 @@ VS_BASIC_OUTPUT BasicTransform( VS_BASIC_INPUT vIn )
 }
 
 
-//--------------------------------------------------------------------------------------
-// Pixel Shaders
-//--------------------------------------------------------------------------------------
-
-
+//====================================================================================
+// PIXEL SHADERS
+//------------------------------------------------------------------------------------
 // A pixel shader that just outputs a single fixed colour
 //
 float4 OneColour( VS_BASIC_OUTPUT vOut ) : SV_Target
 {
-	// Set model colour to white for now
-	float3 colour = float3(1.0f, 0.0f, 1.0f);
-	return float4( colour, 1.0 ); // Set alpha channel to 1.0 (opaque)
+	// Calculate colour of texel based on the sampling of the texture
+	float4 diffuseColour = DiffuseMap.Sample(TrilinearClamp, vOut.UV);
+
+	return diffuseColour;
 }
 
 
-//--------------------------------------------------------------------------------------
-// Techniques
-//--------------------------------------------------------------------------------------
-
+//====================================================================================
+// TECHNIQUES
+//------------------------------------------------------------------------------------
 // Techniques are used to render models in our scene. They select a combination of vertex, geometry and pixel shader from those provided above. Can also set states.
 
 // Render models unlit in a single colour
