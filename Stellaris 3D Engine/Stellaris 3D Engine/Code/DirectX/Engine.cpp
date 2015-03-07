@@ -61,6 +61,11 @@ namespace sge
 	}
 
 
+	CCamera* CStellaris3D::CreateCamera(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, float fov, float nearClip, float farClip)
+	{
+		return mpEntityManager->CreateCameraEntity(pos, rot, fov, nearClip, farClip);
+	}
+
 	CMesh* CStellaris3D::LoadMesh(std::string fileName)
 	{
 		// Create new mesh & load it

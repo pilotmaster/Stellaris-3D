@@ -184,7 +184,7 @@ namespace sge
 		}
 
 
-	private:
+	protected:
 		// MATRICES
 		//---------------------------------
 		DirectX::XMFLOAT4X4 mModelMatrix;

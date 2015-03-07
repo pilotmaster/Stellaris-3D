@@ -20,8 +20,11 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 	
 	// SETUP
+	sge::CCamera* camMain = pEngine->CreateCamera();
+
+	DirectX::XMFLOAT3 pos{ 0.0f, 0.0f, 20.0f };
 	sge::CMesh* mshTest = pEngine->LoadMesh("Cube.x");
-	sge::CModel* mdlTest = pEngine->CreateModel(mshTest);
+	sge::CModel* mdlTest = pEngine->CreateModel(mshTest, pos);
 
 
 	// ENGINE LOOP

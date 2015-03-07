@@ -24,9 +24,16 @@ namespace sge
 	//====================================================================================
 	// ENTITY MANAGER CLASS FACTORY FUNCTIONS
 	//------------------------------------------------------------------------------------
-	CCamera* CEntityManager::CreateCameraEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation)
+	CCamera* CEntityManager::CreateCameraEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, float fov, float nearClip, float farClip)
 	{
-		CCamera* pCamera = nullptr;
+		// Create an instance of the camera
+		CCamera* pCamera = new CCamera(mNextEID, pos, orientation, fov, nearClip, farClip);
+
+		// Store the camera in the hash map
+		mEntityMap.insert(EntityMap::value_type(mNextEID, pCamera));
+
+		// Increment next entity ID and return the new camera
+		mNextEID++;
 		return pCamera;
 	}
 

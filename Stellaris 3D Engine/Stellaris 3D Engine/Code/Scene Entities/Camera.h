@@ -18,8 +18,7 @@ namespace sge
 	public:
 		// CONSTRUCTOR & DESTRUCTOR
 		//---------------------------------
-		CCamera(UINT id, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot,float fov = DirectX::XM_PI / 4.0f,
-			float nearClip = 0.1f, float farClip = 1000.0f);
+		CCamera(UINT id, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot,float fov, float nearClip, float farClip);
 		~CCamera();
 
 
@@ -27,6 +26,7 @@ namespace sge
 		//---------------------------------
 		void UpdateMatrices();
 		void Update();
+		void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
 
 
 		// ACCESSORS
@@ -43,7 +43,6 @@ namespace sge
 		//---------------------------------
 		DirectX::XMFLOAT4X4 mViewMatrix;
 		DirectX::XMFLOAT4X4 mProjMatrix;
-		DirectX::XMFLOAT4X4 mViewProj;
 
 
 		// CAMERA SETTINGS
