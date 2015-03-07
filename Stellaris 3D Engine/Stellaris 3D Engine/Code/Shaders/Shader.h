@@ -32,6 +32,26 @@ namespace sge
 			return mpFXTech;
 		}
 
+		ID3D10EffectMatrixVariable* GetFXWorldVar()
+		{
+			return mpFXVarWorldMat;
+		}
+
+		ID3D10EffectMatrixVariable* GetFXViewVar()
+		{
+			return mpFXVarViewMat;
+		}
+
+		ID3D10EffectMatrixVariable* GetFXProjVar()
+		{
+			return mpFXVarProjMat;
+		}
+
+		ID3D10EffectShaderResourceVariable* GetFXDiffuseMapVar()
+		{
+			return mpFXVarDiffuseMap;
+		}
+
 
 	protected:
 		// EFFECT VARIABLES
