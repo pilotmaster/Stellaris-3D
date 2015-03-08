@@ -84,6 +84,11 @@ namespace sge
 			return mpMaterial;
 		}
 
+		inline ERenderTypes GetRenderType()
+		{
+			return mRenderType;
+		}
+
 
 		// MUTATORS
 		//---------------------------------

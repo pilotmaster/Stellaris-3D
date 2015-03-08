@@ -133,6 +133,8 @@ float4 PSTintedTexture(VS_BASIC_OUTPUT vOut) : SV_Target
 	// Calculate colour of texel based on the sampling of the texture
 	float4 diffuseColour = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 
+	diffuseColour.rgb *= ModelColour;
+
 	return diffuseColour;
 }
 

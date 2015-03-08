@@ -52,4 +52,30 @@ namespace sge
 		mBrightnessColour.y = mColour.y * mBrightness;
 		mBrightnessColour.z = mColour.z * mBrightness;
 	}
+
+	void CLight::Render(ID3D10Device* pDevice, CShader* pShader)
+	{
+		// Before rendering, ensure model has geometry
+		if (mpMesh)
+		{
+			// Send model data over required by model's shader
+			pShader->GetFXWorldVar()->SetMatrix((float*)&mModelMatrix);
+
+			// Check if the model contains colour values
+			if (mpMesh->GetRenderType() == R_LIGHT)
+			{
+				// Send over colour data
+				pShader->GetFXModelColour()->SetRawValue(&mBrightnessColour, 0U, 12U);
+			}
+
+			// If it has a texture, send it over
+			if (mpMesh->GetMaterial())
+			{
+				pShader->GetFXDiffuseMapVar()->SetResource(mpMesh->GetMaterial()->GetDiffuseMap());
+			}
+
+			// Render the mesh
+			mpMesh->Render(pDevice);
+		}
+	}
 }
