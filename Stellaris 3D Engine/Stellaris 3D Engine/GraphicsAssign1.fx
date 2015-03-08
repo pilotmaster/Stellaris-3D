@@ -42,7 +42,7 @@ struct VS_LIGHTING_OUTPUT
 	float2 UV          : TEXCOORD0;
 };
 
-// Output for if there is going to be lighting on the item (without tangent)
+// Output required for normal mapping & possibly parallax mapping
 struct VS_NORMAL_MAP_OUTPUT
 {
 	float4 ProjPos      : SV_POSITION;
@@ -61,8 +61,9 @@ float4x4 WorldMatrix;
 float4x4 ViewMatrix;
 float4x4 ProjMatrix;
 
-// For coloured/tinted models
+// For additional effects
 float3 ModelColour;
+float Wiggle;
 
 // Information required for lighting
 static const int NUM_LIGHTS = 2;
@@ -106,6 +107,36 @@ VS_BASIC_OUTPUT VSBasicTransform(VS_BASIC_INPUT vIn)
 	float4 viewPos = mul(worldPos, ViewMatrix);
 	vOut.ProjPos = mul(viewPos, ProjMatrix);
 	
+	// Pass texture coordinates (UVs) on to the pixel shader
+	vOut.UV = vIn.UV;
+
+	return vOut;
+}
+
+// Vertex shader for fulfilling the 'wiggle' requirement of the assignment
+VS_BASIC_OUTPUT VSWiggleTransform(VS_BASIC_INPUT vIn)
+{
+	VS_BASIC_OUTPUT vOut;
+
+	// Use world matrix passed from C++ to transform the input model vertex position into world space
+	float4 modelPos = float4(vIn.Pos, 1.0f); // Promote to 1x4 so we can multiply by 4x4 matrix, put 1.0 in 4th element for a point (0.0 for a vector)
+	float4 worldPos = mul(modelPos, WorldMatrix);
+
+	// Normalise normal & determine worldNormal
+	float4 normal = float4(vIn.Normal, 0.0f);
+	float4 worldNormal = mul(normal, WorldMatrix);
+	worldNormal = normalize(worldNormal);
+
+	// Calculate new world positions based on the wiggle value
+	worldPos.x += sin(modelPos.y + Wiggle) * 0.1f;
+	worldPos.y += sin(modelPos.z + Wiggle) * 0.1f;
+	worldPos.z += sin(modelPos.x + Wiggle) * 0.1f;
+	worldPos += worldNormal * (sin(Wiggle) + 1.0f) * 0.1f;
+
+	// Calculate remaining values
+	float4 viewPos = mul(worldPos, ViewMatrix);
+	vOut.ProjPos = mul(viewPos, ProjMatrix);
+
 	// Pass texture coordinates (UVs) on to the pixel shader
 	vOut.UV = vIn.UV;
 
@@ -177,6 +208,21 @@ float4 PSTintedTexture(VS_BASIC_OUTPUT vOut) : SV_Target
 	float4 diffuseColour = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 
 	diffuseColour.rgb *= ModelColour;
+
+	return diffuseColour;
+}
+
+// Tints a texture toward a given model colour
+float4 PSTintedTextureWithWiggle(VS_BASIC_OUTPUT vOut) : SV_Target
+{
+	// Scroll UV co-ordinates based on the value of Wiggle
+	vOut.UV.r += Wiggle / 8.0f;
+	vOut.UV.g += Wiggle / 8.0f;
+	
+	// Calculate colour of texel based on the sampling of the texture
+	float4 diffuseColour = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
+
+	diffuseColour.rgb += ModelColour;
 
 	return diffuseColour;
 }
@@ -403,6 +449,21 @@ technique10 LitTextureTech
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_4_0, PSLitTexture()));
 
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+		SetDepthStencilState(DepthWritesOn, 0);
+	}
+}
+
+// Custom technique for doing the wiggle effect & scrolling UVs
+technique10 WiggleTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSWiggleTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSTintedTextureWithWiggle()));
+		
 		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetRasterizerState(CullBack);
 		SetDepthStencilState(DepthWritesOn, 0);

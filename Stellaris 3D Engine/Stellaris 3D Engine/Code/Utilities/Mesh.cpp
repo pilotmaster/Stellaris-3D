@@ -154,7 +154,7 @@ namespace sge
 			mpMaterial->CreateDiffuseMap(pDevice, wStrStream.str());
 
 			// Check if any additional textures are required
-			if (renderType == R_NORMAL_MAPPED)
+			if (renderType == FX_NORMAL_MAPPED)
 			{
 				// Use the currently laoded texture to work out the normal mapping texture
 				wTexName = wStrStream.str();

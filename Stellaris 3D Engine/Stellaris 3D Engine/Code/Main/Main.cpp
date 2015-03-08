@@ -35,16 +35,20 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));
 
 	DirectX::XMFLOAT3 cubePos{ 0.0f, 10.0f, 0.0f };
-	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::R_LIT_TEXTURED);
+	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::FX_LIT_TEXTURED);
 	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
 
-	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x", sge::R_LIT_TEXTURED);
+	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x", sge::FX_LIT_TEXTURED);
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor);
 
-	sge::CMesh* mshTeapot = pEngine->LoadMesh("Media\\Teapot.x", sge::R_NORMAL_MAPPED);
+	sge::CMesh* mshWiggleSphere = pEngine->LoadMesh("Media\\Sphere.x", sge::FX_WIGGLE);
+	sge::CModel* mdlWiggleSphere = pEngine->CreateModel(mshWiggleSphere, DirectX::XMFLOAT3(20.0f, 5.0f, -25.0f));
+	mdlWiggleSphere->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+
+	sge::CMesh* mshTeapot = pEngine->LoadMesh("Media\\Teapot.x", sge::FX_NORMAL_MAPPED);
 	sge::CModel* mdlTeapot = pEngine->CreateModel(mshTeapot, DirectX::XMFLOAT3(-20.0f, 5.0f, 25.0f));
 
-	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::R_LIGHT);
+	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::FX_LIGHT);
 	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight);
 	mdlLight1->SetLightBrightness(6.0f);
 
@@ -102,12 +106,19 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		DirectX::XMStoreFloat3(&light1RGB, vecLight1Colour);
 		mdlLight1->SetLightColour(light1RGB);
 
-		// Increment counter & calculate new brightness
+
+		// LIGHT 2 PULSATING ON & OFF
+		//---------------------------------
 		counter += delta;
 		sinBrightness = (sinf(counter) * brightnessMulti) + brightnessMulti;
 
 		// Use new brightness on light 2
 		mdlLight2->SetLightBrightness(sinBrightness);
+
+
+		// WIGGLING MODELS UPDATES
+		//---------------------------------
+		mdlWiggleSphere->IncrementWiggle(delta * 2.0f);
 
 
 		// CHECK FOR KEY PRESSES

@@ -7948,7 +7948,7 @@ Mesh {
       0.000000;0.000000;0.000000;;
 
       TextureFilename {
-        "stone1.jpg";
+        "BrainDiffuseSpecular.dds";
       }
     }
   }

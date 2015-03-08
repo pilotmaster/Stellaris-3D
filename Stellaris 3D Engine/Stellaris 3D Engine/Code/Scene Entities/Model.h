@@ -33,10 +33,38 @@ namespace sge
 		virtual void Render(ID3D10Device* pDevice, CShader* pShader);
 
 
+		// ACCESSORS
+		//---------------------------------
+		inline float GetWiggle()
+		{
+			return mWiggle;
+		}
+
+		inline DirectX::XMFLOAT3 GetModelColour()
+		{
+			return mModelColour;
+		}
+
+
+		// MUTATORS
+		//---------------------------------
+		inline void IncrementWiggle(float amount)
+		{
+			mWiggle += amount;
+		}
+
+		inline void SetModelColour(DirectX::XMFLOAT3 colour)
+		{
+			mModelColour = colour;
+		}
+
+
 	protected:
 		// MODEL DATA
 		//---------------------------------
 		CMesh* mpMesh;
+		DirectX::XMFLOAT3 mModelColour;
+		float mWiggle;
 	};
 }
 

@@ -87,15 +87,19 @@ namespace sge
 		
 		switch (renderType)
 		{
-		case R_LIT_TEXTURED:
+		case FX_LIT_TEXTURED:
 			pTechnique = mpBasicShader->GetLitTexTechnique();
 			break;
 
-		case R_LIGHT:
+		case FX_WIGGLE:
+			pTechnique = mpBasicShader->GetWiggleTechnique();
+			break;
+
+		case FX_LIGHT:
 			pTechnique = mpBasicShader->GetLightDrawTechnique();
 			break;
 
-		case R_NORMAL_MAPPED:
+		case FX_NORMAL_MAPPED:
 			pTechnique = mpBasicShader->GetNormalMappingTechnique();
 			needsTangents = true;
 			break;

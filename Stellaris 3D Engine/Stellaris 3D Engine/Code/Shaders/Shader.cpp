@@ -16,6 +16,7 @@ namespace sge
 		mpFX = nullptr;
 		mpFXLitTexTech = nullptr;
 		mpFXLightDrawTech = nullptr;
+		mpFXWiggleTech = nullptr;
 
 		mpFXVarDiffuseMap = nullptr;
 		mpFXVarNormalMap = nullptr;
@@ -31,6 +32,7 @@ namespace sge
 		mpFXVarCameraPosition = nullptr;
 
 		mpFXVarSpecularPower = nullptr;
+		mpFXVarWiggle = nullptr;
 
 
 		// Load in the shader
@@ -70,7 +72,8 @@ namespace sge
 		//---------------------------------
 		mpFXLitTexTech = mpFX->GetTechniqueByName("LitTextureTech");
 		mpFXLightDrawTech = mpFX->GetTechniqueByName("LightDrawTech");
-		mpFXNormalMappingTech = mpFX->GetTechniqueByName("NormalMappingTech");
+		mpFXWiggleTech = mpFX->GetTechniqueByName("WiggleTech");
+		mpFXNormalMappingTech = mpFX->GetTechniqueByName("NormalMappingTech"); 
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 		mpFXVarNormalMap = mpFX->GetVariableByName("NormalMap")->AsShaderResource();
@@ -86,6 +89,7 @@ namespace sge
 		mpFXVarCameraPosition = mpFX->GetVariableByName("CameraPos")->AsVector();
 
 		mpFXVarSpecularPower = mpFX->GetVariableByName("SpecularPower")->AsScalar();
+		mpFXVarWiggle = mpFX->GetVariableByName("Wiggle")->AsScalar();
 	}
 
 	CShader::~CShader()
@@ -110,6 +114,11 @@ namespace sge
 	ID3D10EffectTechnique* CShader::GetLightDrawTechnique()
 	{
 		return mpFXLightDrawTech;
+	}
+
+	ID3D10EffectTechnique* CShader::GetWiggleTechnique()
+	{
+		return mpFXWiggleTech;
 	}
 
 	ID3D10EffectTechnique* CShader::GetNormalMappingTechnique()
@@ -170,5 +179,10 @@ namespace sge
 	ID3D10EffectScalarVariable* CShader::GetFXSpecularPower()
 	{
 		return mpFXVarSpecularPower;
+	}
+
+	ID3D10EffectScalarVariable* CShader::GetFXWiggle()
+	{
+		return mpFXVarWiggle;
 	}
 }
