@@ -52,6 +52,31 @@ namespace sge
 			return mpFXVarDiffuseMap;
 		}
 
+		ID3D10EffectVectorVariable* GetFXLightPositions()
+		{
+			return mpFXVarLightPositions;
+		}
+
+		ID3D10EffectVectorVariable* GetFXLightColours()
+		{
+			return mpFXVarLightColours;
+		}
+
+		ID3D10EffectVectorVariable* GetFXAmbientColour()
+		{
+			return mpFXVarAmbientColour;
+		}
+
+		ID3D10EffectVectorVariable* GetFXCameraPosition()
+		{
+			return mpFXVarCameraPosition;
+		}
+
+		ID3D10EffectScalarVariable* GetFXSpecularPower()
+		{
+			return mpFXVarSpecularPower;
+		}
+
 
 	protected:
 		// EFFECT VARIABLES
