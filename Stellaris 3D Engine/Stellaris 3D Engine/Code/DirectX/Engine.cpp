@@ -54,7 +54,8 @@ namespace sge
 	{
 		// CLEAR CURRENT SCENE
 		//---------------------------------
-		mpDevice->ClearRenderTargetView(mpRenderTarget, DirectX::Colors::LightBlue);
+		float ambientColour[4] = { mAmbientColour.x, mAmbientColour.y, mAmbientColour.z, 1.0f };
+		mpDevice->ClearRenderTargetView(mpRenderTarget, ambientColour);
 		mpDevice->ClearDepthStencilView(mpDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0U);
 
 
