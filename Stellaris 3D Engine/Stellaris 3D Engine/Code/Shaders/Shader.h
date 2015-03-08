@@ -33,6 +33,7 @@ namespace sge
 		// Effect techniques
 		ID3D10EffectTechnique* GetLitTexTechnique();
 		ID3D10EffectTechnique* GetLightDrawTechnique();
+		ID3D10EffectTechnique* GetNormalMappingTechnique();
 
 		// Matrices
 		ID3D10EffectMatrixVariable* GetFXWorldVar();
@@ -41,6 +42,7 @@ namespace sge
 
 		// Textures
 		ID3D10EffectShaderResourceVariable* GetFXDiffuseMapVar();
+		ID3D10EffectShaderResourceVariable* GetFXNormalMapVar();
 
 		// Vectors
 		ID3D10EffectVectorVariable* GetFXLightPositions();
@@ -60,6 +62,7 @@ namespace sge
 
 		ID3D10EffectTechnique* mpFXLitTexTech;					// Technique for lighting a given texture
 		ID3D10EffectTechnique* mpFXLightDrawTech;				// Technique for rendering light models
+		ID3D10EffectTechnique* mpFXNormalMappingTech;			// Technique for rendering normal maps with lighting
 
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
@@ -74,6 +77,7 @@ namespace sge
 		ID3D10EffectScalarVariable* mpFXVarSpecularPower;
 
 		ID3D10EffectShaderResourceVariable* mpFXVarDiffuseMap;
+		ID3D10EffectShaderResourceVariable* mpFXVarNormalMap;
 	};
 }
 

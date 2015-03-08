@@ -52,6 +52,12 @@ namespace sge
 				pShader->GetFXDiffuseMapVar()->SetResource(mpMesh->GetMaterial()->GetDiffuseMap());
 			}
 
+			// If it has a normal map, send it over
+			if (mpMesh->GetMaterial()->GetNormalMap())
+			{
+				pShader->GetFXNormalMapVar()->SetResource(mpMesh->GetMaterial()->GetNormalMap());
+			}
+
 			// Render the mesh
 			mpMesh->Render(pDevice);
 		}

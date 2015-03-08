@@ -94,6 +94,11 @@ namespace sge
 		case R_LIGHT:
 			pTechnique = mpBasicShader->GetLightDrawTechnique();
 			break;
+
+		case R_NORMAL_MAPPED:
+			pTechnique = mpBasicShader->GetNormalMappingTechnique();
+			needsTangents = true;
+			break;
 		}
 
 		

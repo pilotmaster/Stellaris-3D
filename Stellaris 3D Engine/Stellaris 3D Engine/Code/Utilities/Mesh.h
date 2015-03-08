@@ -17,8 +17,7 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	enum ERenderTypes
 	{
-		R_COLOURED, R_TEXTURED, R_LIT_TEXTURED, R_LIGHT, R_SPECULAR_MAPPED, R_NORMAL_MAPPED,
-		R_PARALLAX, R_CELL_SHADED
+		R_COLOURED, R_TEXTURED, R_LIT_TEXTURED, R_LIGHT, R_NORMAL_MAPPED, R_PARALLAX, R_CELL_SHADED
 	};
 
 	

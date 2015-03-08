@@ -18,6 +18,8 @@ namespace sge
 		mpFXLightDrawTech = nullptr;
 
 		mpFXVarDiffuseMap = nullptr;
+		mpFXVarNormalMap = nullptr;
+
 		mpFXVarProjMat = nullptr;
 		mpFXVarViewMat = nullptr;
 		mpFXVarWorldMat = nullptr;
@@ -68,8 +70,10 @@ namespace sge
 		//---------------------------------
 		mpFXLitTexTech = mpFX->GetTechniqueByName("LitTextureTech");
 		mpFXLightDrawTech = mpFX->GetTechniqueByName("LightDrawTech");
+		mpFXNormalMappingTech = mpFX->GetTechniqueByName("NormalMappingTech");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
+		mpFXVarNormalMap = mpFX->GetVariableByName("NormalMap")->AsShaderResource();
 
 		mpFXVarProjMat = mpFX->GetVariableByName("ProjMatrix")->AsMatrix();
 		mpFXVarViewMat = mpFX->GetVariableByName("ViewMatrix")->AsMatrix();
@@ -108,6 +112,11 @@ namespace sge
 		return mpFXLightDrawTech;
 	}
 
+	ID3D10EffectTechnique* CShader::GetNormalMappingTechnique()
+	{
+		return mpFXNormalMappingTech;
+	}
+
 	ID3D10EffectMatrixVariable* CShader::GetFXWorldVar()
 	{
 		return mpFXVarWorldMat;
@@ -126,6 +135,11 @@ namespace sge
 	ID3D10EffectShaderResourceVariable* CShader::GetFXDiffuseMapVar()
 	{
 		return mpFXVarDiffuseMap;
+	}
+
+	ID3D10EffectShaderResourceVariable* CShader::GetFXNormalMapVar()
+	{
+		return mpFXVarNormalMap;
 	}
 
 	ID3D10EffectVectorVariable* CShader::GetFXLightPositions()

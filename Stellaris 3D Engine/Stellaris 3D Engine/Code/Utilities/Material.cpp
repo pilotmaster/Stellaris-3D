@@ -29,4 +29,9 @@ namespace sge
 	{
 		D3DX10CreateShaderResourceViewFromFile(pDevice, wTexName.c_str(), NULL, NULL, &mpDiffuseMap, NULL);
 	}
+
+	void CMaterial::CreateNormalMap(ID3D10Device* pDevice, std::wstring &wTexName)
+	{
+		D3DX10CreateShaderResourceViewFromFile(pDevice, wTexName.c_str(), NULL, NULL, &mpNormalMap, NULL);
+	}
 }

@@ -18,6 +18,14 @@ struct VS_BASIC_INPUT
 	float2 UV     : TEXCOORD0;
 };
 
+struct VS_NORMAL_MAP_INPUT
+{
+	float3 Pos     : POSITION;
+	float3 Normal  : NORMAL;
+	float3 Tangent : TANGENT;
+	float2 UV      : TEXCOORD0;
+};
+
 // Data output from vertex shader to pixel shader for simple techniques. Again different techniques have different requirements
 struct VS_BASIC_OUTPUT
 {
@@ -25,12 +33,23 @@ struct VS_BASIC_OUTPUT
     float2 UV          : TEXCOORD0;
 };
 
+// Output for if there is going to be lighting on the item (without tangent)
 struct VS_LIGHTING_OUTPUT
 {
 	float4 ProjPos     : SV_POSITION;
 	float3 WorldPos    : POSITION;
 	float3 WorldNormal : NORMAL;
 	float2 UV          : TEXCOORD0;
+};
+
+// Output for if there is going to be lighting on the item (without tangent)
+struct VS_NORMAL_MAP_OUTPUT
+{
+	float4 ProjPos      : SV_POSITION;
+	float3 WorldPos     : POSITION;
+	float3 ModelNormal  : NORMAL;
+	float3 ModelTangent : TANGENT;
+	float2 UV           : TEXCOORD0;
 };
 
 
@@ -58,6 +77,7 @@ float SpecularPower;
 
 // Diffuse texture map (the main texture colour) - may contain specular map in alpha channel
 Texture2D DiffuseMap;
+Texture2D NormalMap;
 
 
 //====================================================================================
@@ -87,6 +107,29 @@ VS_BASIC_OUTPUT VSBasicTransform(VS_BASIC_INPUT vIn)
 	vOut.ProjPos = mul(viewPos, ProjMatrix);
 	
 	// Pass texture coordinates (UVs) on to the pixel shader
+	vOut.UV = vIn.UV;
+
+	return vOut;
+}
+
+VS_NORMAL_MAP_OUTPUT VSNormalMapTransform(VS_NORMAL_MAP_INPUT vIn)
+{
+	VS_NORMAL_MAP_OUTPUT vOut;
+
+	// Use world matrix passed from C++ to transform the input model vertex position into world space
+	float4 modelPos = float4(vIn.Pos, 1.0f); // Promote to 1x4 so we can multiply by 4x4 matrix, put 1.0 in 4th element for a point (0.0 for a vector)
+	float4 worldPos = mul(modelPos, WorldMatrix);
+	vOut.WorldPos = worldPos.xyz;
+
+	// Use camera matrices to further transform the vertex from world space into view space (camera's point of view) and finally into 2D "projection" space for rendering
+	float4 viewPos = mul(worldPos, ViewMatrix);
+	vOut.ProjPos = mul(viewPos, ProjMatrix);
+
+	// Just send the model's normal and tangent untransformed (in model space). The pixel shader will do the matrix work on normals
+	vOut.ModelNormal = vIn.Normal;
+	vOut.ModelTangent = vIn.Tangent;
+
+	// Pass texture coordinates (UVs) on to the pixel shader, the vertex shader doesn't need them
 	vOut.UV = vIn.UV;
 
 	return vOut;
@@ -144,7 +187,7 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 {
 	// Can't guarantee the normals are length 1 now (because the world matrix may contain scaling), so renormalise
 	// If lighting in the pixel shader, this is also because the interpolation from vertex shader to pixel shader will also rescale normals
-	float3 WorldNormal = normalize(vOut.WorldNormal);
+	vOut.WorldNormal = normalize(vOut.WorldNormal);
 
 
 	// CALCULATE LIGHTING
@@ -155,16 +198,16 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	//// LIGHT 1
 	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
 	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
-	float3 DiffuseLight1 = (LightCol[0] * saturate(dot(WorldNormal.xyz, Light1Dir))) / Light1Dist;
+	float3 DiffuseLight1 = LightCol[0] * max(dot(vOut.WorldNormal.xyz, Light1Dir), 0.0f) / Light1Dist;
 	float3 halfway = normalize(Light1Dir + CameraDir);
-	float3 SpecularLight1 = LightCol[0] * pow(saturate(dot(WorldNormal.xyz, halfway)), SpecularPower);
+	float3 SpecularLight1 = LightCol[0] * pow(max(dot(vOut.WorldNormal.xyz, halfway), 0.0f), SpecularPower);
 
 	//// LIGHT 2
 	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
 	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
-	float3 DiffuseLight2 = (LightCol[1] * saturate(dot(WorldNormal.xyz, Light2Dir))) / Light2Dist;
+	float3 DiffuseLight2 = LightCol[1] * max(dot(vOut.WorldNormal.xyz, Light2Dir), 0.0f) / Light2Dist;
 	halfway = normalize(Light2Dir + CameraDir);
-	float3 SpecularLight2 = LightCol[1] * pow(saturate(dot(WorldNormal.xyz, halfway)), SpecularPower);
+	float3 SpecularLight2 = LightCol[1] * pow(max(dot(vOut.WorldNormal.xyz, halfway), 0.0f), SpecularPower);
 
 	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
 	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
@@ -174,10 +217,80 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	// SAMPLE THE PROVIDED TEXTURE
 	//---------------------------------
 	// Extract diffuse material colour for this pixel from a texture (using float3, so we get RGB - i.e. ignore any alpha in the texture)
-	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
+	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV).rgba;
 
 	// There is no material for a lit texture, so set a custom amount quite low
-	float3 SpecularMaterial = 0.05f;
+	float SpecularMaterial = DiffuseMaterial.a / 10.0f;
+
+
+	// COMBINE THE COLOURS
+	//---------------------------------
+	// Combine maps and lighting for final pixel colour
+	float4 combinedColour;
+	combinedColour.rgb = DiffuseMaterial * DiffuseLight + SpecularMaterial * SpecularLight;
+	combinedColour.a = 1.0f; // No alpha processing in this shader, so just set it to 1
+
+	return combinedColour;
+}
+
+// A pixel shader that just calculates lighting from multiple lights and adds that lighting to
+// a provided texture
+float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
+{
+	// CALCULATE WORLD NORMAL FROM TANGENTS
+	//---------------------------------
+	// Will use the model normal/tangent to calculate matrix for tangent space. The normals for each pixel are *interpolated* from the
+	// vertex normals/tangents. This means they will not be length 1, so they need to be renormalised (same as per-pixel lighting issue)
+	float3 modelNormal = normalize(vOut.ModelNormal);
+	float3 modelTangent = normalize(vOut.ModelTangent);
+
+	// Calculate bi-tangent to complete the three axes of tangent space - then create the *inverse* tangent matrix to convert *from*
+	// tangent space into model space. This is just a matrix built from the three axes (very advanced note - by default shader matrices
+	// are stored as columns rather than in rows as in the C++. This means that this matrix is created "transposed" from what we would
+	// expect. However, for a 3x3 rotation matrix the transpose is equal to the inverse, which is just what we require)
+	float3 modelBiTangent = cross(modelNormal, modelTangent);
+	float3x3 invTangentMatrix = float3x3(modelTangent, modelBiTangent, modelNormal);
+
+	// Get the texture normal from the normal map. The r,g,b pixel values actually store x,y,z components of a normal. However, r,g,b
+	// values are stored in the range 0->1, whereas the x, y & z components should be in the range -1->1. So some scaling is needed
+	float3 textureNormal = 2.0f * NormalMap.Sample(TrilinearWrap, vOut.UV) - 1.0f; // Scale from 0->1 to -1->1
+
+	// Now convert the texture normal into model space using the inverse tangent matrix, and then convert into world space using the world
+	// matrix. Normalise, because of the effects of texture filtering and in case the world matrix contains scaling
+	float3 WorldNormal = normalize(mul(mul(textureNormal, invTangentMatrix), WorldMatrix));
+
+
+	// CALCULATE LIGHTING
+	//---------------------------------
+	// Calculate direction of camera
+	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz); // Position of camera - position of current vertex (or pixel) (in world space)
+
+	//// LIGHT 1
+	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
+	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
+	float3 DiffuseLight1 = LightCol[0] * max(dot(WorldNormal.xyz, Light1Dir), 0.0f) / Light1Dist;
+	float3 halfway = normalize(Light1Dir + CameraDir);
+	float3 SpecularLight1 = LightCol[0] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+	
+	//// LIGHT 2
+	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
+	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
+	float3 DiffuseLight2 = LightCol[1] * max(dot(WorldNormal.xyz, Light2Dir), 0.0f) / Light2Dist;
+	halfway = normalize(Light2Dir + CameraDir);
+	float3 SpecularLight2 = LightCol[1] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+
+	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
+	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
+	float3 SpecularLight = SpecularLight1 + SpecularLight2;
+
+
+	// SAMPLE THE PROVIDED TEXTURE
+	//---------------------------------
+	// Extract diffuse material colour for this pixel from a texture (using float3, so we get RGB - i.e. ignore any alpha in the texture)
+	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV).rgba;
+	
+	// There is no material for a lit texture, so set a custom amount quite low
+	float SpecularMaterial = DiffuseMaterial.a / 10.0f;
 
 
 	// COMBINE THE COLOURS
@@ -290,6 +403,21 @@ technique10 LitTextureTech
 		SetVertexShader(CompileShader(vs_4_0, VSLightingTransform()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_4_0, PSLitTexture()));
+
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+		SetDepthStencilState(DepthWritesOn, 0);
+	}
+}
+
+// Technique for normal mapping
+technique10 NormalMappingTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSNormalMapTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSLitNormalMap()));
 
 		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetRasterizerState(CullBack);

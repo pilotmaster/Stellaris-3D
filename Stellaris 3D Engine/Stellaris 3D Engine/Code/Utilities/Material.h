@@ -30,6 +30,8 @@ namespace sge
 		//---------------------------------
 		// Creates a diffuse map from the mesh file
 		void CreateDiffuseMap(ID3D10Device* pDevice, std::wstring &wTexName);
+		// Creates a normal map from the mesh file
+		void CreateNormalMap(ID3D10Device* pDevice, std::wstring &wTexName);
 
 
 		// ACCESSORS

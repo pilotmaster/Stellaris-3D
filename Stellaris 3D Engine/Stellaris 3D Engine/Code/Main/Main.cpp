@@ -28,6 +28,9 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	const float ORBIT_RADIUS = 20.0f;
 	const float ORBIT_SPEED = 0.5f;
 
+	// Set ambient colour
+	pEngine->SetAmbientColour(DirectX::XMFLOAT3(0.05f, 0.1f, 0.2f));
+
 	// Model loading
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));
 
@@ -35,7 +38,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::R_LIT_TEXTURED);
 	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
 
-	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x", sge::R_LIT_TEXTURED);
+	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x", sge::R_NORMAL_MAPPED);
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor);
 
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::R_LIGHT);

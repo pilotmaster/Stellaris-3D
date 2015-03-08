@@ -61,12 +61,8 @@ namespace sge
 			// Send model data over required by model's shader
 			pShader->GetFXWorldVar()->SetMatrix((float*)&mModelMatrix);
 
-			// Check if the model contains colour values
-			if (mpMesh->GetRenderType() == R_LIGHT)
-			{
-				// Send over colour data
-				pShader->GetFXModelColour()->SetRawValue(&mBrightnessColour, 0U, 12U);
-			}
+			// Send over colour data
+			pShader->GetFXModelColour()->SetRawValue(&mBrightnessColour, 0U, 12U);
 
 			// If it has a texture, send it over
 			if (mpMesh->GetMaterial())
