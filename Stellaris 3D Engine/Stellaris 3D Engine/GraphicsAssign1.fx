@@ -217,7 +217,7 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	// SAMPLE THE PROVIDED TEXTURE
 	//---------------------------------
 	// Extract diffuse material colour for this pixel from a texture (using float3, so we get RGB - i.e. ignore any alpha in the texture)
-	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV).rgba;
+	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 
 	// There is no material for a lit texture, so set a custom amount quite low
 	float SpecularMaterial = DiffuseMaterial.a / 10.0f;
@@ -239,8 +239,7 @@ float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 {
 	// CALCULATE WORLD NORMAL FROM TANGENTS
 	//---------------------------------
-	// Will use the model normal/tangent to calculate matrix for tangent space. The normals for each pixel are *interpolated* from the
-	// vertex normals/tangents. This means they will not be length 1, so they need to be renormalised (same as per-pixel lighting issue)
+	// Normalize the model's normals and tangents
 	float3 modelNormal = normalize(vOut.ModelNormal);
 	float3 modelTangent = normalize(vOut.ModelTangent);
 
@@ -253,7 +252,7 @@ float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 
 	// Get the texture normal from the normal map. The r,g,b pixel values actually store x,y,z components of a normal. However, r,g,b
 	// values are stored in the range 0->1, whereas the x, y & z components should be in the range -1->1. So some scaling is needed
-	float3 textureNormal = 2.0f * NormalMap.Sample(TrilinearWrap, vOut.UV) - 1.0f; // Scale from 0->1 to -1->1
+	float3 textureNormal = 2.0f * NormalMap.Sample(TrilinearWrap, vOut.UV) - 1.0f;
 
 	// Now convert the texture normal into model space using the inverse tangent matrix, and then convert into world space using the world
 	// matrix. Normalise, because of the effects of texture filtering and in case the world matrix contains scaling
@@ -265,14 +264,14 @@ float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 	// Calculate direction of camera
 	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz); // Position of camera - position of current vertex (or pixel) (in world space)
 
-	//// LIGHT 1
+	// Light1
 	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
 	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
 	float3 DiffuseLight1 = LightCol[0] * max(dot(WorldNormal.xyz, Light1Dir), 0.0f) / Light1Dist;
 	float3 halfway = normalize(Light1Dir + CameraDir);
 	float3 SpecularLight1 = LightCol[0] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
 	
-	//// LIGHT 2
+	// Light2
 	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
 	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
 	float3 DiffuseLight2 = LightCol[1] * max(dot(WorldNormal.xyz, Light2Dir), 0.0f) / Light2Dist;
@@ -287,7 +286,7 @@ float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 	// SAMPLE THE PROVIDED TEXTURE
 	//---------------------------------
 	// Extract diffuse material colour for this pixel from a texture (using float3, so we get RGB - i.e. ignore any alpha in the texture)
-	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV).rgba;
+	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 	
 	// There is no material for a lit texture, so set a custom amount quite low
 	float SpecularMaterial = DiffuseMaterial.a / 10.0f;

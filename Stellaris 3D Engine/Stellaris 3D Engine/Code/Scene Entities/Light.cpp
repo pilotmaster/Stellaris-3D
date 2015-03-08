@@ -12,7 +12,7 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	CLight::CLight(UINT id, CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale,
 		DirectX::XMFLOAT3 lightColour) :
-		CModel(id, pMesh, pos, rot, scale), mColour(lightColour), mBrightness(1.0f)
+		CModel(id, pMesh, pos, rot, scale), mColour(lightColour), mBrightness(2.0f)
 	{
 		mBrightnessColour.x = mColour.x * mBrightness;
 		mBrightnessColour.y = mColour.y * mBrightness;
@@ -45,7 +45,7 @@ namespace sge
 		mBrightness = brightness;
 
 		// Use brightness as a scale modifier
-		SetScale(DirectX::XMFLOAT3(mBrightness, mBrightness, mBrightness));
+		SetScale(DirectX::XMFLOAT3(mBrightness / 2.0f, mBrightness / 2.0f, mBrightness / 2.0f));
 
 		// Adjust light colour based on brightness
 		mBrightnessColour.x = mColour.x * mBrightness;

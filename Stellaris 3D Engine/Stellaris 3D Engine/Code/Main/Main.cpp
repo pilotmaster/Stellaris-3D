@@ -46,7 +46,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::R_LIGHT);
 	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight);
-	mdlLight1->SetLightBrightness(2.0f);
+	mdlLight1->SetLightBrightness(6.0f);
 
 	sge::CLight* mdlLight2 = pEngine->CreateLight(mshLight, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
 	mdlLight2->SetLightBrightness(4.0f);
@@ -57,6 +57,10 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	DirectX::XMFLOAT3 light1RGB = { 1.0f, 1.0f, 1.0f };
 	mdlLight1->SetLightColour(light1RGB);
 	DirectX::XMFLOAT3 light1HSL;
+
+	const float brightnessMulti = 4.0f;		// Multiplier for determining brightness
+	float counter = 0.0f;					// Counter increments by a certain amount each frame & used to determine light brightness
+	float sinBrightness = 0.0f;				// Sin amount used for sine wave based on counter's value. Used as actual brightness
 
 	// frame time variable
 	float delta = 0.0f;
@@ -91,12 +95,19 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		// Increment HSL 'hue' value by an amount & loop round if it is greater than 1
 		light1HSL.x += delta / 10.0f;
 		light1HSL.y = 0.5f;
-		light1HSL.z = 0.3f;
+		light1HSL.z = 0.5f;
 
 		// Convert back to RGB & set the light to the new colour
 		vecLight1Colour = DirectX::XMColorHSLToRGB(DirectX::XMLoadFloat3(&light1HSL));
 		DirectX::XMStoreFloat3(&light1RGB, vecLight1Colour);
 		mdlLight1->SetLightColour(light1RGB);
+
+		// Increment counter & calculate new brightness
+		counter += delta;
+		sinBrightness = (sinf(counter) * brightnessMulti) + brightnessMulti;
+
+		// Use new brightness on light 2
+		mdlLight2->SetLightBrightness(sinBrightness);
 
 
 		// CHECK FOR KEY PRESSES
