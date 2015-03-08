@@ -38,8 +38,8 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::FX_LIT_TEXTURED);
 	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
 
-	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x", sge::FX_LIT_TEXTURED);
-	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor);
+	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Hills.x", sge::FX_PARALLAX);
+	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor, DirectX::XMFLOAT3(-30.0f, 0.0f, 0.0f));
 
 	sge::CMesh* mshWiggleSphere = pEngine->LoadMesh("Media\\Sphere.x", sge::FX_WIGGLE);
 	sge::CModel* mdlWiggleSphere = pEngine->CreateModel(mshWiggleSphere, DirectX::XMFLOAT3(20.0f, 5.0f, -25.0f));

@@ -35,6 +35,7 @@ namespace sge
 		ID3D10EffectTechnique* GetLightDrawTechnique();
 		ID3D10EffectTechnique* GetWiggleTechnique();
 		ID3D10EffectTechnique* GetNormalMappingTechnique();
+		ID3D10EffectTechnique* GetParallaxMappingTechnique();
 
 		// Matrices
 		ID3D10EffectMatrixVariable* GetFXWorldVar();
@@ -55,6 +56,7 @@ namespace sge
 		// Scalars
 		ID3D10EffectScalarVariable* GetFXSpecularPower();
 		ID3D10EffectScalarVariable* GetFXWiggle();
+		ID3D10EffectScalarVariable* GetFXParallaxDepth();
 
 
 	protected:
@@ -66,6 +68,7 @@ namespace sge
 		ID3D10EffectTechnique* mpFXLightDrawTech;				// Technique for rendering light models
 		ID3D10EffectTechnique* mpFXWiggleTech;					// Technique for the wiggle effect required by the assignment
 		ID3D10EffectTechnique* mpFXNormalMappingTech;			// Technique for rendering normal maps with lighting
+		ID3D10EffectTechnique* mpFXParallaxMappingTech;			// Technique for rendering normal maps with lighting & parallax effect
 
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
@@ -79,6 +82,7 @@ namespace sge
 
 		ID3D10EffectScalarVariable* mpFXVarSpecularPower;
 		ID3D10EffectScalarVariable* mpFXVarWiggle;
+		ID3D10EffectScalarVariable* mpFXVarParallaxDepth;
 
 		ID3D10EffectShaderResourceVariable* mpFXVarDiffuseMap;
 		ID3D10EffectShaderResourceVariable* mpFXVarNormalMap;

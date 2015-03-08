@@ -169,6 +169,21 @@ namespace sge
 				// Use the new name to load a normal map texture
 				mpMaterial->CreateNormalMap(pDevice, wTexName);
 			}
+			else if (renderType == FX_PARALLAX)
+			{
+				// Use the currently laoded texture to work out the normal mapping texture
+				wTexName = wStrStream.str();
+
+				// Loop through and replace the 'DiffuseSpecular' string with 'Normal'
+				size_t startPos = 0U;
+				while ((startPos = wTexName.find(L"DiffuseSpecular", startPos)) != std::wstring::npos)
+				{
+					wTexName.replace(startPos, strlen("DiffuseSpecular"), L"NormalDepth");
+				}
+
+				// Use the new name to load a normal map texture
+				mpMaterial->CreateNormalMap(pDevice, wTexName);
+			}
 		}
 
 

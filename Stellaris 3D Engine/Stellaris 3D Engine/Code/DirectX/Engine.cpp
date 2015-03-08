@@ -103,6 +103,11 @@ namespace sge
 			pTechnique = mpBasicShader->GetNormalMappingTechnique();
 			needsTangents = true;
 			break;
+
+		case FX_PARALLAX:
+			pTechnique = mpBasicShader->GetParallaxMappingTechnique();
+			needsTangents = true;
+			break;
 		}
 
 		

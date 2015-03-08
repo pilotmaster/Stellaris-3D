@@ -40,6 +40,11 @@ namespace sge
 			return mWiggle;
 		}
 
+		inline float GetParallaxDepth()
+		{
+			return mParallaxDepth;
+		}
+
 		inline DirectX::XMFLOAT3 GetModelColour()
 		{
 			return mModelColour;
@@ -51,6 +56,11 @@ namespace sge
 		inline void IncrementWiggle(float amount)
 		{
 			mWiggle += amount;
+		}
+
+		inline void SetParallaxDepth(float amount)
+		{
+			mParallaxDepth = amount;
 		}
 
 		inline void SetModelColour(DirectX::XMFLOAT3 colour)
@@ -65,6 +75,7 @@ namespace sge
 		CMesh* mpMesh;
 		DirectX::XMFLOAT3 mModelColour;
 		float mWiggle;
+		float mParallaxDepth;
 	};
 }
 

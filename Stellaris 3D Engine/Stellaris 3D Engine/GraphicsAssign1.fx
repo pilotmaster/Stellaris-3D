@@ -64,6 +64,7 @@ float4x4 ProjMatrix;
 // For additional effects
 float3 ModelColour;
 float Wiggle;
+float ParallaxDepth;
 
 // Information required for lighting
 static const int NUM_LIGHTS = 2;
@@ -279,8 +280,7 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	return combinedColour;
 }
 
-// A pixel shader that just calculates lighting from multiple lights and adds that lighting to
-// a provided texture
+// Performs normal mapping calculations as well as lighting
 float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 {
 	// CALCULATE WORLD NORMAL FROM TANGENTS
@@ -348,6 +348,94 @@ float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 	return combinedColour;
 }
 
+// Performs parallax mapping calculations as well as lighting
+float4 PSLitParallaxMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
+{
+	// CALCULATE WORLD NORMAL FROM TANGENTS
+	//---------------------------------
+	// Normalize the model's normals and tangents
+	float3 modelNormal = normalize(vOut.ModelNormal);
+	float3 modelTangent = normalize(vOut.ModelTangent);
+
+	// Calculate bi-tangent to complete the three axes of tangent space - then create the *inverse* tangent matrix to convert *from*
+	// tangent space into model space. This is just a matrix built from the three axes (very advanced note - by default shader matrices
+	// are stored as columns rather than in rows as in the C++. This means that this matrix is created "transposed" from what we would
+	// expect. However, for a 3x3 rotation matrix the transpose is equal to the inverse, which is just what we require)
+	float3 modelBiTangent = cross(modelNormal, modelTangent);
+	float3x3 invTangentMatrix = float3x3(modelTangent, modelBiTangent, modelNormal);
+
+
+	// CALCULATE PARALLAX MAPPING
+	//---------------------------------
+	// Get normalised vector to camera for parallax mapping and specular equation (this vector was calculated later in previous shaders)
+	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz);
+
+	// Transform camera vector from world into model space. Need *inverse* world matrix for this.
+	// Only need 3x3 matrix to transform vectors, to invert a 3x3 matrix we transpose it (flip it about its diagonal)
+	float3x3 invWorldMatrix = transpose(WorldMatrix);
+	float3 cameraModelDir = normalize(mul(CameraDir, invWorldMatrix)); // Normalise in case world matrix is scaled
+
+	// Then transform model-space camera vector into tangent space (texture coordinate space) to give the direction to offset texture
+	// coordinate, only interested in x and y components. Calculated inverse tangent matrix above, so invert it back for this step
+	float3x3 tangentMatrix = transpose(invTangentMatrix);
+	float2 textureOffsetDir = mul(cameraModelDir, tangentMatrix);
+
+	// Get the depth info from the normal map's alpha channel at the given texture coordinate
+	// Rescale from 0->1 range to -x->+x range, x determined by ParallaxDepth setting
+	float texDepth = ParallaxDepth * (NormalMap.Sample(TrilinearWrap, vOut.UV).a - 0.5f);
+
+	// Use the depth of the texture to offset the given texture coordinate - this corrected texture coordinate will be used from here on
+	float2 offsetTexCoord = vOut.UV + texDepth * textureOffsetDir;
+
+
+	// Get the texture normal from the normal map. The r,g,b pixel values actually store x,y,z components of a normal. However, r,g,b
+	// values are stored in the range 0->1, whereas the x, y & z components should be in the range -1->1. So some scaling is needed
+	float3 textureNormal = 2.0f * NormalMap.Sample(TrilinearWrap, offsetTexCoord) - 1.0f;
+
+	// Now convert the texture normal into model space using the inverse tangent matrix, and then convert into world space using the world
+	// matrix. Normalise, because of the effects of texture filtering and in case the world matrix contains scaling
+	float3 WorldNormal = normalize(mul(mul(textureNormal, invTangentMatrix), WorldMatrix));
+
+
+	// CALCULATE LIGHTING
+	//---------------------------------
+	// Light1
+	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
+	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
+	float3 DiffuseLight1 = LightCol[0] * max(dot(WorldNormal.xyz, Light1Dir), 0.0f) / Light1Dist;
+	float3 halfway = normalize(Light1Dir + CameraDir);
+	float3 SpecularLight1 = LightCol[0] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+
+	// Light2
+	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
+	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
+	float3 DiffuseLight2 = LightCol[1] * max(dot(WorldNormal.xyz, Light2Dir), 0.0f) / Light2Dist;
+	halfway = normalize(Light2Dir + CameraDir);
+	float3 SpecularLight2 = LightCol[1] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+
+	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
+	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
+	float3 SpecularLight = SpecularLight1 + SpecularLight2;
+
+
+	// SAMPLE THE PROVIDED TEXTURE
+	//---------------------------------
+	// Extract diffuse material colour for this pixel from a texture (using float3, so we get RGB - i.e. ignore any alpha in the texture)
+	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
+
+	// There is no material for a lit texture, so set a custom amount quite low
+	float SpecularMaterial = DiffuseMaterial.a / 10.0f;
+
+
+	// COMBINE THE COLOURS
+	//---------------------------------
+	// Combine maps and lighting for final pixel colour
+	float4 combinedColour;
+	combinedColour.rgb = DiffuseMaterial * DiffuseLight + SpecularMaterial * SpecularLight;
+	combinedColour.a = 1.0f; // No alpha processing in this shader, so just set it to 1
+
+	return combinedColour;
+}
 
 //====================================================================================
 // RASTERIZER STATES 
@@ -478,6 +566,21 @@ technique10 NormalMappingTech
 		SetVertexShader(CompileShader(vs_4_0, VSNormalMapTransform()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_4_0, PSLitNormalMap()));
+
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+		SetDepthStencilState(DepthWritesOn, 0);
+	}
+}
+
+// Technique for parallax mapping
+technique10 ParallaxMappingTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSNormalMapTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSLitParallaxMap()));
 
 		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetRasterizerState(CullBack);

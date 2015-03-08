@@ -11,7 +11,7 @@ namespace sge
 	// MODEL CLASS CONSTRUCTOR & DESTRUCTOR
 	//------------------------------------------------------------------------------------
 	CModel::CModel(UINT id, CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale) :
-		CEntity(id, pos, rot, scale), mWiggle(0.0f), mModelColour(DirectX::XMFLOAT3(0.1f, 0.3f, 0.9f))
+		CEntity(id, pos, rot, scale), mWiggle(0.0f), mParallaxDepth(0.08f), mModelColour(DirectX::XMFLOAT3(0.1f, 0.3f, 0.9f))
 	{
 		if (pMesh)
 		{
@@ -61,6 +61,7 @@ namespace sge
 			// Set model colour & wiggle values
 			pShader->GetFXWiggle()->SetFloat(mWiggle);
 			pShader->GetFXModelColour()->SetRawValue(&mModelColour, 0U, 12U);
+			pShader->GetFXParallaxDepth()->SetFloat(mParallaxDepth);
 
 			// Render the mesh
 			mpMesh->Render(pDevice);

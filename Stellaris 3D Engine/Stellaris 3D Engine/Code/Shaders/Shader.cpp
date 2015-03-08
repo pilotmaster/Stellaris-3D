@@ -17,6 +17,8 @@ namespace sge
 		mpFXLitTexTech = nullptr;
 		mpFXLightDrawTech = nullptr;
 		mpFXWiggleTech = nullptr;
+		mpFXNormalMappingTech = nullptr;
+		mpFXParallaxMappingTech = nullptr;
 
 		mpFXVarDiffuseMap = nullptr;
 		mpFXVarNormalMap = nullptr;
@@ -33,6 +35,7 @@ namespace sge
 
 		mpFXVarSpecularPower = nullptr;
 		mpFXVarWiggle = nullptr;
+		mpFXVarParallaxDepth = nullptr;
 
 
 		// Load in the shader
@@ -74,6 +77,7 @@ namespace sge
 		mpFXLightDrawTech = mpFX->GetTechniqueByName("LightDrawTech");
 		mpFXWiggleTech = mpFX->GetTechniqueByName("WiggleTech");
 		mpFXNormalMappingTech = mpFX->GetTechniqueByName("NormalMappingTech"); 
+		mpFXParallaxMappingTech = mpFX->GetTechniqueByName("ParallaxMappingTech");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 		mpFXVarNormalMap = mpFX->GetVariableByName("NormalMap")->AsShaderResource();
@@ -90,6 +94,7 @@ namespace sge
 
 		mpFXVarSpecularPower = mpFX->GetVariableByName("SpecularPower")->AsScalar();
 		mpFXVarWiggle = mpFX->GetVariableByName("Wiggle")->AsScalar();
+		mpFXVarParallaxDepth = mpFX->GetVariableByName("ParallaxDepth")->AsScalar();
 	}
 
 	CShader::~CShader()
@@ -124,6 +129,11 @@ namespace sge
 	ID3D10EffectTechnique* CShader::GetNormalMappingTechnique()
 	{
 		return mpFXNormalMappingTech;
+	}
+
+	ID3D10EffectTechnique* CShader::GetParallaxMappingTechnique()
+	{
+		return mpFXParallaxMappingTech;
 	}
 
 	ID3D10EffectMatrixVariable* CShader::GetFXWorldVar()
@@ -184,5 +194,10 @@ namespace sge
 	ID3D10EffectScalarVariable* CShader::GetFXWiggle()
 	{
 		return mpFXVarWiggle;
+	}
+
+	ID3D10EffectScalarVariable* CShader::GetFXParallaxDepth()
+	{
+		return mpFXVarParallaxDepth;
 	}
 }
