@@ -79,6 +79,13 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	void CEntityManager::Update()
 	{
+		for (int i = 0; i < mNextLightNum; i++)
+		{
+			mpLightColours[i] = mpLights[i]->GetLightColour();
+			mpLights[i]->GetPosition(mpLightPositions[i]);
+		}
+		
+		
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 		{
@@ -91,6 +98,15 @@ namespace sge
 		// Pass camera's data over to the shader
 		pShader->GetFXViewVar()->SetMatrix((float*)&pCamera->GetViewMatrix());
 		pShader->GetFXProjVar()->SetMatrix((float*)&pCamera->GetProjectionMatrix());
+
+		DirectX::XMFLOAT3 cameraPos;
+		pCamera->GetPosition(cameraPos);
+		pShader->GetFXCameraPosition()->SetRawValue(&cameraPos, 0U, 12U);
+		pShader->GetFXLightColours()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
+		pShader->GetFXLightPositions()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
+
+		pShader->GetFXSpecularPower()->SetFloat(1000.0f);
+		
 
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)

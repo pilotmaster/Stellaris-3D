@@ -47,11 +47,24 @@ namespace sge
 			DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 
+		// MUTATORS
+		//---------------------------------
+		inline void SetAmbientColour(DirectX::XMFLOAT3 colour)
+		{
+			mAmbientColour = colour;
+		}
+
+
 	private:
 		// CLASS VARIABLES
 		//---------------------------------
 		CEntityManager* mpEntityManager;
 		CShader* mpBasicShader;
+
+
+		// MISC VARIABLES
+		//---------------------------------
+		DirectX::XMFLOAT3 mAmbientColour;
 	};
 }
 

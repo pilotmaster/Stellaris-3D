@@ -60,8 +60,8 @@ namespace sge
 
 		// Array of light objects
 		CLight* mpLights[MAX_LIGHTS];
-		float mpLightColours[MAX_LIGHTS];
-		float mpLightPositions[MAX_LIGHTS];
+		DirectX::XMFLOAT3 mpLightColours[MAX_LIGHTS];
+		DirectX::XMFLOAT3 mpLightPositions[MAX_LIGHTS];
 
 		// The next ID which will be used as a key for the next entity that is placed into
 		// the hash map

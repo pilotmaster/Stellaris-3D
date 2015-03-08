@@ -64,7 +64,7 @@ namespace sge
 
 		// GET SHADER TECHNIQUES & VARIABLES
 		//---------------------------------
-		mpFXTech = mpFX->GetTechniqueByName("PlainColour");
+		mpFXTech = mpFX->GetTechniqueByName("LitTexture");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 
@@ -73,11 +73,11 @@ namespace sge
 		mpFXVarWorldMat = mpFX->GetVariableByName("WorldMatrix")->AsMatrix();
 
 		mpFXVarLightPositions = mpFX->GetVariableByName("LightPos")->AsVector();
-		mpFXVarLightColours = mpFX->GetVariableByName("lightCol")->AsVector();
+		mpFXVarLightColours = mpFX->GetVariableByName("LightCol")->AsVector();
 		mpFXVarAmbientColour = mpFX->GetVariableByName("AmbientColour")->AsVector();
 		mpFXVarCameraPosition = mpFX->GetVariableByName("CameraPos")->AsVector();
 
-		mpFXVarSpecularPower = mpFX->GetVariableByName("specularPower")->AsScalar();
+		mpFXVarSpecularPower = mpFX->GetVariableByName("SpecularPower")->AsScalar();
 	}
 
 	CShader::~CShader()

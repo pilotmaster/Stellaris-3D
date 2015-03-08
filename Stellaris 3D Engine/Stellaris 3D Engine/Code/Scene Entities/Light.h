@@ -31,7 +31,7 @@ namespace sge
 
 		// ACCESSORS
 		//---------------------------------
-		inline DirectX::XMFLOAT3 SetLightColour()
+		inline DirectX::XMFLOAT3 GetLightColour()
 		{
 			return mColour;
 		}

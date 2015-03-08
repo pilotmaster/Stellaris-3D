@@ -21,8 +21,16 @@ struct VS_BASIC_INPUT
 // Data output from vertex shader to pixel shader for simple techniques. Again different techniques have different requirements
 struct VS_BASIC_OUTPUT
 {
-    float4 ProjPos : SV_POSITION;
-    float2 UV      : TEXCOORD0;
+    float4 ProjPos     : SV_POSITION;
+    float2 UV          : TEXCOORD0;
+};
+
+struct VS_LIGHTING_OUTPUT
+{
+	float4 ProjPos     : SV_POSITION;
+	float3 WorldPos    : POSITION;
+	float3 WorldNormal : NORMAL;
+	float2 UV          : TEXCOORD0;
 };
 
 
@@ -36,13 +44,13 @@ float4x4 ProjMatrix;
 
 // Information required for lighting
 static const int NUM_LIGHTS = 2;
-float3 lightPos[NUM_LIGHTS];
-float3 lightCol[NUM_LIGHTS];
+float3 LightPos[NUM_LIGHTS];
+float3 LightCol[NUM_LIGHTS];
 float3 AmbientColour;
 
 float3 CameraPos;
 
-float specularPower;
+float SpecularPower;
 
 
 // Diffuse texture map (the main texture colour) - may contain specular map in alpha channel
@@ -65,7 +73,7 @@ SamplerState TrilinearWrap
 // VERTEX SHADERS
 //------------------------------------------------------------------------------------
 // Basic vertex shader to transform 3D model vertices to 2D and pass UVs to the pixel shader
-VS_BASIC_OUTPUT BasicTransform(VS_BASIC_INPUT vIn)
+VS_BASIC_OUTPUT VSBasicTransform(VS_BASIC_INPUT vIn)
 {
 	VS_BASIC_OUTPUT vOut;
 	
@@ -81,18 +89,93 @@ VS_BASIC_OUTPUT BasicTransform(VS_BASIC_INPUT vIn)
 	return vOut;
 }
 
+VS_LIGHTING_OUTPUT VSLightingTransform(VS_BASIC_INPUT vIn)
+{
+	VS_LIGHTING_OUTPUT vOut;
+
+	// Use world matrix passed from C++ to transform the input model vertex position into world space
+	float4 modelPos = float4(vIn.Pos, 1.0f); // Promote to 1x4 so we can multiply by 4x4 matrix, put 1.0 in 4th element for a point (0.0 for a vector)
+	float4 worldPos = mul(modelPos, WorldMatrix);
+	float4 viewPos = mul(worldPos, ViewMatrix);
+	vOut.ProjPos = mul(viewPos, ProjMatrix);
+
+	vOut.WorldPos = worldPos.xyz;
+
+	// Transform the vertex normal from model space into world space (almost same as first lines of code above)
+	float4 modelNormal = float4(vIn.Normal, 0.0f); // Set 4th element to 0.0 this time as normals are vectors
+	vOut.WorldNormal = mul(modelNormal, WorldMatrix).xyz;
+
+	// Pass texture coordinates (UVs) on to the pixel shader
+	vOut.UV = vIn.UV;
+
+	return vOut;
+}
+
 
 //====================================================================================
 // PIXEL SHADERS
 //------------------------------------------------------------------------------------
 // A pixel shader that just outputs a single fixed colour
-//
-float4 OneColour(VS_BASIC_OUTPUT vOut) : SV_Target
+float4 PSBasicTexture(VS_BASIC_OUTPUT vOut) : SV_Target
 {
 	// Calculate colour of texel based on the sampling of the texture
 	float4 diffuseColour = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 
 	return diffuseColour;
+}
+
+// A pixel shader that just outputs a single fixed colour
+float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
+{
+	// Can't guarantee the normals are length 1 now (because the world matrix may contain scaling), so renormalise
+	// If lighting in the pixel shader, this is also because the interpolation from vertex shader to pixel shader will also rescale normals
+	float3 WorldNormal = normalize(vOut.WorldNormal);
+
+
+	///////////////////////
+	// Calculate lighting
+
+	// Calculate direction of camera
+	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz); // Position of camera - position of current vertex (or pixel) (in world space)
+
+	//// LIGHT 1
+	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
+	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
+	float3 DiffuseLight1 = (LightCol[0] * saturate(dot(WorldNormal.xyz, Light1Dir))) / Light1Dist;
+	float3 halfway = normalize(Light1Dir + CameraDir);
+	float3 SpecularLight1 = LightCol[0] * pow(saturate(dot(WorldNormal.xyz, halfway)), SpecularPower);
+
+	//// LIGHT 2
+	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
+	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
+	float3 DiffuseLight2 = (LightCol[1] * saturate(dot(WorldNormal.xyz, Light2Dir))) / Light2Dist;
+	halfway = normalize(Light2Dir + CameraDir);
+	float3 SpecularLight2 = LightCol[1] * pow(saturate(dot(WorldNormal.xyz, halfway)), SpecularPower);
+
+	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
+	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
+	float3 SpecularLight = SpecularLight1 + SpecularLight2;
+
+
+	////////////////////
+	// Sample texture
+
+	// Extract diffuse material colour for this pixel from a texture (using float3, so we get RGB - i.e. ignore any alpha in the texture)
+	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
+
+	// Assume specular material colour is white (i.e. highlights are a full, untinted reflection of light)
+	float3 SpecularMaterial = DiffuseMaterial.a;
+
+
+	////////////////////
+	// Combine colours 
+
+	// Combine maps and lighting for final pixel colour
+	float4 combinedColour;
+	combinedColour.rgb = DiffuseMaterial * DiffuseLight + SpecularMaterial * SpecularLight;
+	combinedColour.a = 1.0f; // No alpha processing in this shader, so just set it to 1
+
+	return combinedColour;
 }
 
 
@@ -101,13 +184,24 @@ float4 OneColour(VS_BASIC_OUTPUT vOut) : SV_Target
 //------------------------------------------------------------------------------------
 // Techniques are used to render models in our scene. They select a combination of vertex, geometry and pixel shader from those provided above. Can also set states.
 
-// Render models unlit in a single colour
-technique10 PlainColour
+// Render models unlit with a provided simple texture
+technique10 PlainTexture
 {
     pass P0
     {
-        SetVertexShader(CompileShader(vs_4_0, BasicTransform()));
+		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
         SetGeometryShader(NULL);                                   
-        SetPixelShader(CompileShader(ps_4_0, OneColour()));
+		SetPixelShader(CompileShader(ps_4_0, PSBasicTexture()));
+	}
+}
+
+// Render models with lighting and simple texture
+technique10 LitTexture
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSLightingTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSLitTexture()));
 	}
 }

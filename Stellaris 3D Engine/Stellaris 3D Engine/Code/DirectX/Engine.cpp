@@ -13,6 +13,9 @@ namespace sge
 	{
 		// Initialise entity manager
 		mpEntityManager = new CEntityManager();
+
+		// Give a base ambient colour
+		mAmbientColour = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
 	}
 
 	CStellaris3D::~CStellaris3D()
@@ -57,6 +60,9 @@ namespace sge
 
 		// RENDER ENTITIES IN THE SCENE
 		//---------------------------------
+		// Use the basic shader to set the required variables
+		mpBasicShader->GetFXAmbientColour()->SetRawValue(&mAmbientColour, 0U, 12U);
+
 		mpEntityManager->Render(mpDevice, pCamera, mpBasicShader);
 
 
