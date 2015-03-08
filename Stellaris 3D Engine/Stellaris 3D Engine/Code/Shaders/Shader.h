@@ -58,9 +58,18 @@ namespace sge
 		//---------------------------------
 		ID3D10Effect* mpFX;
 		ID3D10EffectTechnique* mpFXTech;
+
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
 		ID3D10EffectMatrixVariable* mpFXVarProjMat;
+
+		ID3D10EffectVectorVariable* mpFXVarLightPositions;
+		ID3D10EffectVectorVariable* mpFXVarLightColours;
+		ID3D10EffectVectorVariable* mpFXVarAmbientColour;
+		ID3D10EffectVectorVariable* mpFXVarCameraPosition;
+
+		ID3D10EffectScalarVariable* mpFXVarSpecularPower;
+
 		ID3D10EffectShaderResourceVariable* mpFXVarDiffuseMap;
 	};
 }

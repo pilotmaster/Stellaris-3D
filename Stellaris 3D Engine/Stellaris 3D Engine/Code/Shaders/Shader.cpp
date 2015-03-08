@@ -15,10 +15,18 @@ namespace sge
 		// Give variables default values
 		mpFX = nullptr;
 		mpFXTech = nullptr;
+
 		mpFXVarDiffuseMap = nullptr;
 		mpFXVarProjMat = nullptr;
 		mpFXVarViewMat = nullptr;
 		mpFXVarWorldMat = nullptr;
+
+		mpFXVarLightPositions = nullptr;
+		mpFXVarLightColours = nullptr;
+		mpFXVarAmbientColour = nullptr;
+		mpFXVarCameraPosition = nullptr;
+
+		mpFXVarSpecularPower = nullptr;
 
 
 		// Load in the shader
@@ -59,9 +67,17 @@ namespace sge
 		mpFXTech = mpFX->GetTechniqueByName("PlainColour");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
+
 		mpFXVarProjMat = mpFX->GetVariableByName("ProjMatrix")->AsMatrix();
 		mpFXVarViewMat = mpFX->GetVariableByName("ViewMatrix")->AsMatrix();
 		mpFXVarWorldMat = mpFX->GetVariableByName("WorldMatrix")->AsMatrix();
+
+		mpFXVarLightPositions = mpFX->GetVariableByName("LightPos")->AsVector();
+		mpFXVarLightColours = mpFX->GetVariableByName("lightCol")->AsVector();
+		mpFXVarAmbientColour = mpFX->GetVariableByName("AmbientColour")->AsVector();
+		mpFXVarCameraPosition = mpFX->GetVariableByName("CameraPos")->AsVector();
+
+		mpFXVarSpecularPower = mpFX->GetVariableByName("specularPower")->AsScalar();
 	}
 
 	CShader::~CShader()

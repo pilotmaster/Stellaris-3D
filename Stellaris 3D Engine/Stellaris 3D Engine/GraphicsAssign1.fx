@@ -34,12 +34,16 @@ float4x4 WorldMatrix;
 float4x4 ViewMatrix;
 float4x4 ProjMatrix;
 
-// Light data
+// Information required for lighting
 static const int NUM_LIGHTS = 2;
 float3 lightPos[NUM_LIGHTS];
 float3 lightCol[NUM_LIGHTS];
-float specularPower;
 float3 AmbientColour;
+
+float3 CameraPos;
+
+float specularPower;
+
 
 // Diffuse texture map (the main texture colour) - may contain specular map in alpha channel
 Texture2D DiffuseMap;
