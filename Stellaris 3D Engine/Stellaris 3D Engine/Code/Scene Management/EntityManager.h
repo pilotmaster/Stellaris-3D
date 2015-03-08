@@ -42,6 +42,7 @@ namespace sge
 		// METHODS
 		//---------------------------------
 		void Update();
+		// The base shader is passed in so that camera and light data can be passed to the effect file
 		void Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader);
 		bool DestroyEntity(size_t key);
 		void DestroyAllEntities();
@@ -59,10 +60,13 @@ namespace sge
 
 		// Array of light objects
 		CLight* mpLights[MAX_LIGHTS];
+		float mpLightColours[MAX_LIGHTS];
+		float mpLightPositions[MAX_LIGHTS];
 
 		// The next ID which will be used as a key for the next entity that is placed into
 		// the hash map
 		size_t mNextEID;
+		size_t mNextLightNum;
 	};
 }
 

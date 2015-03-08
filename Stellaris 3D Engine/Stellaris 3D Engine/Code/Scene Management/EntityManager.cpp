@@ -13,6 +13,7 @@ namespace sge
 	CEntityManager::CEntityManager()
 	{
 		mNextEID = 0U;
+		mNextLightNum = 0U;
 	}
 
 	CEntityManager::~CEntityManager()
@@ -49,6 +50,27 @@ namespace sge
 		// Increment next entity ID and return the new model
 		mNextEID++;
 		return pModel;
+	}
+
+	CLight* CEntityManager::CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
+		DirectX::XMFLOAT3 lightColour)
+	{
+		// Check if there are already the max number of lights
+		if (mNextLightNum < MAX_LIGHTS)
+		{
+			// Enough lights - create new one. Store it in hash map & lights array
+			CLight* pNewLight = new CLight(mNextEID, pMesh, pos, orientation, scale, lightColour);
+			mEntityMap.insert(EntityMap::value_type(mNextEID, pNewLight));
+			mpLights[mNextLightNum] = pNewLight;
+
+			// Increment next ID, num lights & return new light model
+			mNextEID++;
+			mNextLightNum++;
+			return pNewLight;
+		}
+
+		// Too many lights - return nullptr
+		return nullptr;
 	}
 
 

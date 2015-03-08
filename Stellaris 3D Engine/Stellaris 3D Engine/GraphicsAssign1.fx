@@ -35,7 +35,7 @@ float4x4 ViewMatrix;
 float4x4 ProjMatrix;
 
 // Light data
-const int NUM_LIGHTS = 2;
+static const int NUM_LIGHTS = 2;
 float3 lightPos[NUM_LIGHTS];
 float3 lightCol[NUM_LIGHTS];
 float specularPower;

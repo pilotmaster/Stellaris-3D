@@ -39,8 +39,8 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor);
 
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x");
-	sge::CLight* mdlLight1 = pEngine->CreateModel(mshLight);
-	sge::CLight* mdlLight2 = pEngine->CreateModel(mshLight, DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
+	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight);
+	sge::CLight* mdlLight2 = pEngine->CreateLight(mshLight, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
 
 	// frame time variable
 	float delta = 0.0f;
@@ -108,6 +108,48 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		if (sge::KeyHeld(sge::KEY_RIGHT))
 		{
 			camMain->RotateY(ROTATE_SPEED * delta);
+		}
+
+		// Cube local movement
+		if (sge::KeyHeld(sge::KEY_PERIOD))
+		{
+			mdlCube->MoveLocalZ(MOVE_SPEED * delta);
+		}
+
+		if (sge::KeyHeld(sge::KEY_COMMA))
+		{
+			mdlCube->MoveLocalZ(-MOVE_SPEED * delta);
+		}
+
+		// Cube rotation
+		if (sge::KeyHeld(sge::KEY_I))
+		{
+			mdlCube->RotateX(-ROTATE_SPEED * delta);
+		}
+
+		if (sge::KeyHeld(sge::KEY_K))
+		{
+			mdlCube->RotateX(ROTATE_SPEED * delta);
+		}
+
+		if (sge::KeyHeld(sge::KEY_J))
+		{
+			mdlCube->RotateY(-ROTATE_SPEED * delta);
+		}
+
+		if (sge::KeyHeld(sge::KEY_L))
+		{
+			mdlCube->RotateY(ROTATE_SPEED * delta);
+		}
+
+		if (sge::KeyHeld(sge::KEY_U))
+		{
+			mdlCube->RotateZ(ROTATE_SPEED * delta);
+		}
+
+		if (sge::KeyHeld(sge::KEY_O))
+		{
+			mdlCube->RotateZ(-ROTATE_SPEED * delta);
 		}
 	}
 

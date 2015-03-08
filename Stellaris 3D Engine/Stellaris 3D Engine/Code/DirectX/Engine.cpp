@@ -91,4 +91,10 @@ namespace sge
 		// Request a new model from the entity manager and return its reuslt
 		return mpEntityManager->CreateModelEntity(pMesh, pos, rot, scale);
 	}
+
+	CLight* CStellaris3D::CreateLight(CMesh* pMesh, DirectX::XMFLOAT3 colour, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot,
+		DirectX::XMFLOAT3 scale)
+	{
+		return mpEntityManager->CreateLightEntity(pMesh, pos, rot, scale, colour);
+	}
 }
