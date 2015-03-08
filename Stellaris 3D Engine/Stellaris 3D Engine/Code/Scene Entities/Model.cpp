@@ -53,7 +53,7 @@ namespace sge
 			}
 
 			// Render the mesh
-			mpMesh->Render(pDevice, pShader->GetTechnique());
+			mpMesh->Render(pDevice);
 		}
 	}
 }

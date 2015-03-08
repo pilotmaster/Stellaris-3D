@@ -32,15 +32,20 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));
 
 	DirectX::XMFLOAT3 cubePos{ 0.0f, 10.0f, 0.0f };
-	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x");
+	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::R_LIT_TEXTURED);
 	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
 
-	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x");
+	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Floor.x", sge::R_LIT_TEXTURED);
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor);
 
-	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x");
+	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::R_LIGHT);
 	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight);
+	mdlLight1->SetLightBrightness(2.0f);
+	mdlLight1->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.0f, 0.7f));
+
 	sge::CLight* mdlLight2 = pEngine->CreateLight(mshLight, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
+	mdlLight2->SetLightBrightness(4.0f);
+	mdlLight2->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.8f, 0.2f));
 
 	// frame time variable
 	float delta = 0.0f;

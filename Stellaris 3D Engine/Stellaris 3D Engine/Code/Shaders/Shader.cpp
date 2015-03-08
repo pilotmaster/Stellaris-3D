@@ -8,13 +8,14 @@
 namespace sge
 {
 	//====================================================================================
-	// MODEL CLASS CONSTRUCTOR & DESTRUCTOR
+	// SHADER CLASS CONSTRUCTOR & DESTRUCTOR
 	//------------------------------------------------------------------------------------
 	CShader::CShader(ID3D10Device* pDevice)
 	{
 		// Give variables default values
 		mpFX = nullptr;
-		mpFXTech = nullptr;
+		mpFXLitTexTech = nullptr;
+		mpFXLightDrawTech = nullptr;
 
 		mpFXVarDiffuseMap = nullptr;
 		mpFXVarProjMat = nullptr;
@@ -23,6 +24,7 @@ namespace sge
 
 		mpFXVarLightPositions = nullptr;
 		mpFXVarLightColours = nullptr;
+		mpFXVarModelColour = nullptr;
 		mpFXVarAmbientColour = nullptr;
 		mpFXVarCameraPosition = nullptr;
 
@@ -64,7 +66,8 @@ namespace sge
 
 		// GET SHADER TECHNIQUES & VARIABLES
 		//---------------------------------
-		mpFXTech = mpFX->GetTechniqueByName("LitTexture");
+		mpFXLitTexTech = mpFX->GetTechniqueByName("LitTextureTech");
+		mpFXLightDrawTech = mpFX->GetTechniqueByName("LightDrawTech");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 
@@ -74,6 +77,7 @@ namespace sge
 
 		mpFXVarLightPositions = mpFX->GetVariableByName("LightPos")->AsVector();
 		mpFXVarLightColours = mpFX->GetVariableByName("LightCol")->AsVector();
+		mpFXVarModelColour = mpFX->GetVariableByName("ModelColour")->AsVector();
 		mpFXVarAmbientColour = mpFX->GetVariableByName("AmbientColour")->AsVector();
 		mpFXVarCameraPosition = mpFX->GetVariableByName("CameraPos")->AsVector();
 
@@ -83,5 +87,74 @@ namespace sge
 	CShader::~CShader()
 	{
 		if (mpFX) mpFX->Release();
+	}
+
+
+	//====================================================================================
+	// SHADER CLASS CONSTRUCTOR & DESTRUCTOR
+	//------------------------------------------------------------------------------------
+	ID3D10Effect* CShader::GetEffect()
+	{
+		return mpFX;
+	}
+
+	ID3D10EffectTechnique* CShader::GetLitTexTechnique()
+	{
+		return mpFXLitTexTech;
+	}
+
+	ID3D10EffectTechnique* CShader::GetLightDrawTechnique()
+	{
+		return mpFXLightDrawTech;
+	}
+
+	ID3D10EffectMatrixVariable* CShader::GetFXWorldVar()
+	{
+		return mpFXVarWorldMat;
+	}
+
+	ID3D10EffectMatrixVariable* CShader::GetFXViewVar()
+	{
+		return mpFXVarViewMat;
+	}
+
+	ID3D10EffectMatrixVariable* CShader::GetFXProjVar()
+	{
+		return mpFXVarProjMat;
+	}
+
+	ID3D10EffectShaderResourceVariable* CShader::GetFXDiffuseMapVar()
+	{
+		return mpFXVarDiffuseMap;
+	}
+
+	ID3D10EffectVectorVariable* CShader::GetFXLightPositions()
+	{
+		return mpFXVarLightPositions;
+	}
+
+	ID3D10EffectVectorVariable* CShader::GetFXLightColours()
+	{
+		return mpFXVarLightColours;
+	}
+
+	ID3D10EffectVectorVariable* CShader::GetFXModelColour()
+	{
+		return mpFXVarModelColour;
+	}
+
+	ID3D10EffectVectorVariable* CShader::GetFXAmbientColour()
+	{
+		return mpFXVarAmbientColour;
+	}
+
+	ID3D10EffectVectorVariable* CShader::GetFXCameraPosition()
+	{
+		return mpFXVarCameraPosition;
+	}
+
+	ID3D10EffectScalarVariable* CShader::GetFXSpecularPower()
+	{
+		return mpFXVarSpecularPower;
 	}
 }

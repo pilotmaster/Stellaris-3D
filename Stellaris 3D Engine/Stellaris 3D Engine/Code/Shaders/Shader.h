@@ -27,62 +27,39 @@ namespace sge
 
 		// ACCESSORS
 		//---------------------------------
-		ID3D10EffectTechnique* GetTechnique()
-		{
-			return mpFXTech;
-		}
+		// Effects
+		ID3D10Effect* GetEffect();
 
-		ID3D10EffectMatrixVariable* GetFXWorldVar()
-		{
-			return mpFXVarWorldMat;
-		}
+		// Effect techniques
+		ID3D10EffectTechnique* GetLitTexTechnique();
+		ID3D10EffectTechnique* GetLightDrawTechnique();
 
-		ID3D10EffectMatrixVariable* GetFXViewVar()
-		{
-			return mpFXVarViewMat;
-		}
+		// Matrices
+		ID3D10EffectMatrixVariable* GetFXWorldVar();
+		ID3D10EffectMatrixVariable* GetFXViewVar();
+		ID3D10EffectMatrixVariable* GetFXProjVar();
 
-		ID3D10EffectMatrixVariable* GetFXProjVar()
-		{
-			return mpFXVarProjMat;
-		}
+		// Textures
+		ID3D10EffectShaderResourceVariable* GetFXDiffuseMapVar();
 
-		ID3D10EffectShaderResourceVariable* GetFXDiffuseMapVar()
-		{
-			return mpFXVarDiffuseMap;
-		}
+		// Vectors
+		ID3D10EffectVectorVariable* GetFXLightPositions();
+		ID3D10EffectVectorVariable* GetFXLightColours();
+		ID3D10EffectVectorVariable* GetFXModelColour();
+		ID3D10EffectVectorVariable* GetFXAmbientColour();
+		ID3D10EffectVectorVariable* GetFXCameraPosition();
 
-		ID3D10EffectVectorVariable* GetFXLightPositions()
-		{
-			return mpFXVarLightPositions;
-		}
-
-		ID3D10EffectVectorVariable* GetFXLightColours()
-		{
-			return mpFXVarLightColours;
-		}
-
-		ID3D10EffectVectorVariable* GetFXAmbientColour()
-		{
-			return mpFXVarAmbientColour;
-		}
-
-		ID3D10EffectVectorVariable* GetFXCameraPosition()
-		{
-			return mpFXVarCameraPosition;
-		}
-
-		ID3D10EffectScalarVariable* GetFXSpecularPower()
-		{
-			return mpFXVarSpecularPower;
-		}
+		// Scalars
+		ID3D10EffectScalarVariable* GetFXSpecularPower();
 
 
 	protected:
 		// EFFECT VARIABLES
 		//---------------------------------
 		ID3D10Effect* mpFX;
-		ID3D10EffectTechnique* mpFXTech;
+
+		ID3D10EffectTechnique* mpFXLitTexTech;					// Technique for lighting a given texture
+		ID3D10EffectTechnique* mpFXLightDrawTech;				// Technique for rendering light models
 
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
@@ -90,6 +67,7 @@ namespace sge
 
 		ID3D10EffectVectorVariable* mpFXVarLightPositions;
 		ID3D10EffectVectorVariable* mpFXVarLightColours;
+		ID3D10EffectVectorVariable* mpFXVarModelColour;
 		ID3D10EffectVectorVariable* mpFXVarAmbientColour;
 		ID3D10EffectVectorVariable* mpFXVarCameraPosition;
 

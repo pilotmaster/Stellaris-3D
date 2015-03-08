@@ -13,6 +13,16 @@
 namespace sge
 {
 	//====================================================================================
+	// ENUMERATION OF ENTITY RENDERING TYPES
+	//------------------------------------------------------------------------------------
+	enum ERenderTypes
+	{
+		R_COLOURED, R_TEXTURED, R_LIT_TEXTURED, R_LIGHT, R_SPECULAR_MAPPED, R_NORMAL_MAPPED,
+		R_PARALLAX, R_CELL_SHADED
+	};
+
+	
+	//====================================================================================
 	// MESH CLASS
 	//------------------------------------------------------------------------------------
 	class CStellaris3D;
@@ -31,10 +41,10 @@ namespace sge
 		// Release all of the resources used by the mesh
 		void ReleaseResources();
 		// Load in a mesh for use as a model
-		bool LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, bool tangents = false);
+		bool LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, ERenderTypes renderType, bool tangents = false);
 
 		// Render the model using its mesh data & matrix data
-		void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
+		void Render(ID3D10Device* pDevice);
 
 
 		// ACCESSORS
@@ -101,9 +111,11 @@ namespace sge
 		UINT mNumIndices;
 
 
-		// MATERIAL DATA
+		// MATERIAL & RENDERING DATA
 		//---------------------------------
 		CMaterial* mpMaterial;
+		ERenderTypes mRenderType;
+		ID3D10EffectTechnique* mpRenderTech;
 	};
 }
 

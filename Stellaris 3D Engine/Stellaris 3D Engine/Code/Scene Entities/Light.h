@@ -33,22 +33,22 @@ namespace sge
 		//---------------------------------
 		inline DirectX::XMFLOAT3 GetLightColour()
 		{
-			return mColour;
+			return mBrightnessColour;
 		}
 
 
 		// MUTATORS
 		//---------------------------------
-		inline void SetLightColour(DirectX::XMFLOAT3& colour)
-		{
-			mColour = colour;
-		}
+		void SetLightColour(DirectX::XMFLOAT3 colour);
+		void SetLightBrightness(float brightness);
 
 
 	private:
 		// LIGHT INFORMATION
 		//---------------------------------
 		DirectX::XMFLOAT3 mColour;
+		DirectX::XMFLOAT3 mBrightnessColour;
+		float mBrightness;
 	};
 }
 

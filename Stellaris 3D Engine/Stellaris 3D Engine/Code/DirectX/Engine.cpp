@@ -77,11 +77,28 @@ namespace sge
 		return mpEntityManager->CreateCameraEntity(pos, rot, fov, nearClip, farClip);
 	}
 
-	CMesh* CStellaris3D::LoadMesh(std::string fileName)
+	CMesh* CStellaris3D::LoadMesh(std::string fileName, ERenderTypes renderType)
 	{
+		// Determine type of rendering in order to decide which technique it will require & whether or not it
+		// needs tangents in order to fulfil the effect
+		bool needsTangents = false;
+		ID3D10EffectTechnique* pTechnique = nullptr;
+		
+		switch (renderType)
+		{
+		case R_LIT_TEXTURED:
+			pTechnique = mpBasicShader->GetLitTexTechnique();
+			break;
+
+		case R_LIGHT:
+			pTechnique = mpBasicShader->GetLightDrawTechnique();
+			break;
+		}
+
+		
 		// Create new mesh & load it
 		CMesh* pMesh = new CMesh();
-		if (pMesh->LoadMesh(mpDevice, fileName, mpBasicShader->GetTechnique()))
+		if (pMesh->LoadMesh(mpDevice, fileName, pTechnique, renderType, needsTangents))
 		{
 			// Succeeded in creating the mesh - return the new mesh
 			return pMesh;

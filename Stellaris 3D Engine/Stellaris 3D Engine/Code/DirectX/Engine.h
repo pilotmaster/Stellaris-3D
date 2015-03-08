@@ -38,7 +38,7 @@ namespace sge
 		CCamera* CreateCamera(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			float fov = DirectX::XM_PI / 4.0f, float nearClip = 0.1f, float farClip = 1000.0f);
 		// Loads the mesh for a given .x file
-		CMesh* LoadMesh(std::string fileName);
+		CMesh* LoadMesh(std::string fileName, ERenderTypes renderType);
 		// Creates a model from the passed in mesh instance
 		CModel* CreateModel(CMesh* pMesh, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));

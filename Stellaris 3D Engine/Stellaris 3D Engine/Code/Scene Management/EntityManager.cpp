@@ -105,7 +105,7 @@ namespace sge
 		pShader->GetFXLightColours()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
 		pShader->GetFXLightPositions()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
 
-		pShader->GetFXSpecularPower()->SetFloat(1000.0f);
+		pShader->GetFXSpecularPower()->SetFloat(256.0f);
 		
 
 		// Call the update function for each stored entity

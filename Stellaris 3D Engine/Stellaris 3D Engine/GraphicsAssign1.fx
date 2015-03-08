@@ -42,6 +42,9 @@ float4x4 WorldMatrix;
 float4x4 ViewMatrix;
 float4x4 ProjMatrix;
 
+// For coloured/tinted models
+float3 ModelColour;
+
 // Information required for lighting
 static const int NUM_LIGHTS = 2;
 float3 LightPos[NUM_LIGHTS];
@@ -124,7 +127,17 @@ float4 PSBasicTexture(VS_BASIC_OUTPUT vOut) : SV_Target
 	return diffuseColour;
 }
 
-// A pixel shader that just outputs a single fixed colour
+// Tints a texture toward a given model colour
+float4 PSTintedTexture(VS_BASIC_OUTPUT vOut) : SV_Target
+{
+	// Calculate colour of texel based on the sampling of the texture
+	float4 diffuseColour = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
+
+	return diffuseColour;
+}
+
+// A pixel shader that just calculates lighting from multiple lights and adds that lighting to
+// a provided texture
 float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 {
 	// Can't guarantee the normals are length 1 now (because the world matrix may contain scaling), so renormalise
@@ -132,9 +145,8 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	float3 WorldNormal = normalize(vOut.WorldNormal);
 
 
-	///////////////////////
-	// Calculate lighting
-
+	// CALCULATE LIGHTING
+	//---------------------------------
 	// Calculate direction of camera
 	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz); // Position of camera - position of current vertex (or pixel) (in world space)
 
@@ -157,19 +169,17 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	float3 SpecularLight = SpecularLight1 + SpecularLight2;
 
 
-	////////////////////
-	// Sample texture
-
+	// SAMPLE THE PROVIDED TEXTURE
+	//---------------------------------
 	// Extract diffuse material colour for this pixel from a texture (using float3, so we get RGB - i.e. ignore any alpha in the texture)
 	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 
-	// Assume specular material colour is white (i.e. highlights are a full, untinted reflection of light)
-	float3 SpecularMaterial = DiffuseMaterial.a;
+	// There is no material for a lit texture, so set a custom amount quite low
+	float3 SpecularMaterial = 0.05f;
 
 
-	////////////////////
-	// Combine colours 
-
+	// COMBINE THE COLOURS
+	//---------------------------------
 	// Combine maps and lighting for final pixel colour
 	float4 combinedColour;
 	combinedColour.rgb = DiffuseMaterial * DiffuseLight + SpecularMaterial * SpecularLight;
@@ -180,28 +190,122 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 
 
 //====================================================================================
+// RASTERIZER STATES 
+//------------------------------------------------------------------------------------
+RasterizerState CullNone
+{
+	FillMode = Solid;
+	CullMode = None;
+	MultisampleEnable = false;
+	AntialiasedLineEnable = true;
+};
+
+RasterizerState CullBack
+{
+	FillMode = Solid;
+	CullMode = Back;
+	MultisampleEnable = false;
+	AntialiasedLineEnable = true;
+};
+
+RasterizerState CullFront
+{
+	FillMode = Solid;
+	CullMode = Front;
+	MultisampleEnable = false;
+	AntialiasedLineEnable = true;
+};
+
+
+//====================================================================================
+// DEPTH STENCIL STATES 
+//------------------------------------------------------------------------------------
+DepthStencilState DepthWritesOff // Don't write to the depth buffer - polygons rendered will not obscure other polygons
+{
+	DepthEnable = true;
+	StencilEnable = true;
+	DepthWriteMask = ZERO;
+};
+
+DepthStencilState DepthWritesOn  // Write to the depth buffer - normal behaviour 
+{
+	DepthEnable = true;
+	StencilEnable = true;
+	DepthWriteMask = ALL;
+};
+
+
+//====================================================================================
+// BLENDING STATES 
+//------------------------------------------------------------------------------------
+BlendState NoBlending // Switch off blending - pixels will be opaque
+{
+	BlendEnable[0] = FALSE;
+};
+
+BlendState AdditiveBlending // Additive blending is used for lighting effects
+{
+	BlendEnable[0] = TRUE;
+	SrcBlend = ONE;
+	DestBlend = ONE;
+	BlendOp = ADD;
+};
+
+BlendState AlphaBlending // Additive blending is used for lighting effects
+{
+	BlendEnable[0] = TRUE;
+	SrcBlend = SRC_ALPHA;
+	DestBlend = SRC_ALPHA;
+	BlendOp = ADD;
+};
+
+
+//====================================================================================
 // TECHNIQUES
 //------------------------------------------------------------------------------------
 // Techniques are used to render models in our scene. They select a combination of vertex, geometry and pixel shader from those provided above. Can also set states.
 
 // Render models unlit with a provided simple texture
-technique10 PlainTexture
+technique10 PlainTextureTech
 {
     pass P0
     {
 		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
         SetGeometryShader(NULL);                                   
 		SetPixelShader(CompileShader(ps_4_0, PSBasicTexture()));
+
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+		SetDepthStencilState(DepthWritesOn, 0);
 	}
 }
 
 // Render models with lighting and simple texture
-technique10 LitTexture
+technique10 LitTextureTech
 {
 	pass P0
 	{
 		SetVertexShader(CompileShader(vs_4_0, VSLightingTransform()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_4_0, PSLitTexture()));
+
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+		SetDepthStencilState(DepthWritesOn, 0);
+	}
+}
+
+// Draws the lights and does addative blending with the background with tints of the lights colour
+technique10 LightDrawTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSTintedTexture()));
+		
+		SetBlendState(AdditiveBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullNone);
+		SetDepthStencilState(DepthWritesOff, 0);
 	}
 }

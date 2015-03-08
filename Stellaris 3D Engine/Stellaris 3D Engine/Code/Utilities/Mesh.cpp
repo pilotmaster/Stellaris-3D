@@ -43,10 +43,14 @@ namespace sge
 		if (mpInputLayout) mpInputLayout->Release();
 	}
 
-	bool CMesh::LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, bool tangents)
+	bool CMesh::LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, ERenderTypes renderType, bool tangents)
 	{
 		// Release any existing geometry in this object
 		ReleaseResources();
+
+		// Store render type & asscoated technique
+		mRenderType = renderType;
+		mpRenderTech = pTech;
 
 		// Use CImportXFile class (from another application) to load the given file. The import code is wrapped in the namespace 'gen'
 		gen::CImportXFile mesh;
@@ -190,7 +194,7 @@ namespace sge
 		return true;
 	}
 
-	void CMesh::Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech)
+	void CMesh::Render(ID3D10Device* pDevice)
 	{
 		// Select vertex and index buffer - assuming all data will be as triangle lists
 		UINT offset = 0;
@@ -202,10 +206,10 @@ namespace sge
 		// Render the model. All the data and shader variables are prepared, now select the technique to use and draw.
 		// The loop is for advanced techniques that need multiple passes - we will only use techniques with one pass
 		D3D10_TECHNIQUE_DESC techDesc;
-		pTech->GetDesc(&techDesc);
+		mpRenderTech->GetDesc(&techDesc);
 		for (UINT p = 0; p < techDesc.Passes; ++p)
 		{
-			pTech->GetPassByIndex(p)->Apply(0);
+			mpRenderTech->GetPassByIndex(p)->Apply(0);
 			pDevice->DrawIndexed(mNumIndices, 0, 0);
 		}
 		pDevice->DrawIndexed(mNumIndices, 0, 0);
