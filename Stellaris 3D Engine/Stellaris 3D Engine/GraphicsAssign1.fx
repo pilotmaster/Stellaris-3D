@@ -531,7 +531,7 @@ float4 PSLitCartoonify(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	float4 DiffuseMaterial = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
 
 	// Assume specular material colour is white (i.e. highlights are a full, untinted reflection of light)
-	float3 SpecularMaterial = DiffuseMaterial.a;
+	float3 SpecularMaterial = DiffuseMaterial.a / 10.0f;
 
 
 	// COMBINE THE COLOURS
