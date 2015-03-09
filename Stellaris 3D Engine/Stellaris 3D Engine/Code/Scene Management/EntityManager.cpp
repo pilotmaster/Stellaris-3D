@@ -101,11 +101,11 @@ namespace sge
 
 		DirectX::XMFLOAT3 cameraPos;
 		pCamera->GetPosition(cameraPos);
-		pShader->GetFXCameraPosition()->SetRawValue(&cameraPos, 0U, 12U);
-		pShader->GetFXLightColours()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
-		pShader->GetFXLightPositions()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
+		pShader->GetFXCameraPositionVar()->SetRawValue(&cameraPos, 0U, 12U);
+		pShader->GetFXLightColoursVar()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
+		pShader->GetFXLightPositionsVar()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
 
-		pShader->GetFXSpecularPower()->SetFloat(256.0f);
+		pShader->GetFXSpecularPowerVar()->SetFloat(256.0f);
 		
 
 		// Call the update function for each stored entity

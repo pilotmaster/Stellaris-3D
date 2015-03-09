@@ -80,7 +80,7 @@ namespace sge
 		mpFXWiggleTech = mpFX->GetTechniqueByName("WiggleTech");
 		mpFXNormalMappingTech = mpFX->GetTechniqueByName("NormalMappingTech"); 
 		mpFXParallaxMappingTech = mpFX->GetTechniqueByName("ParallaxMappingTech");
-		mpFXParallaxMappingTech = mpFX->GetTechniqueByName("CellShadingTech");
+		mpFXCellShadingTech = mpFX->GetTechniqueByName("CellShadingTech");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 		mpFXVarNormalMap = mpFX->GetVariableByName("NormalMap")->AsShaderResource();

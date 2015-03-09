@@ -62,7 +62,7 @@ namespace sge
 			pShader->GetFXWorldVar()->SetMatrix((float*)&mModelMatrix);
 
 			// Send over colour data
-			pShader->GetFXModelColour()->SetRawValue(&mBrightnessColour, 0U, 12U);
+			pShader->GetFXModelColourVar()->SetRawValue(&mBrightnessColour, 0U, 12U);
 
 			// If it has a texture, send it over
 			if (mpMesh->GetMaterial())

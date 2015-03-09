@@ -62,7 +62,7 @@ namespace sge
 		// RENDER ENTITIES IN THE SCENE
 		//---------------------------------
 		// Use the basic shader to set the required variables
-		mpBasicShader->GetFXAmbientColour()->SetRawValue(&mAmbientColour, 0U, 12U);
+		mpBasicShader->GetFXAmbientColourVar()->SetRawValue(&mAmbientColour, 0U, 12U);
 
 		mpEntityManager->Render(mpDevice, pCamera, mpBasicShader);
 
