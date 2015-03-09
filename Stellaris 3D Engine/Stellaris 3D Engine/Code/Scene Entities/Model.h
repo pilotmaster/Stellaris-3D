@@ -45,6 +45,11 @@ namespace sge
 			return mParallaxDepth;
 		}
 
+		inline float GetOutlineThickness()
+		{
+			return mOutlineThickness;
+		}
+
 		inline DirectX::XMFLOAT3 GetModelColour()
 		{
 			return mModelColour;
@@ -63,6 +68,11 @@ namespace sge
 			mParallaxDepth = amount;
 		}
 
+		inline void SetOutlineThickness(float amount)
+		{
+			mOutlineThickness = amount;
+		}
+
 		inline void SetModelColour(DirectX::XMFLOAT3 colour)
 		{
 			mModelColour = colour;
@@ -76,6 +86,7 @@ namespace sge
 		DirectX::XMFLOAT3 mModelColour;
 		float mWiggle;
 		float mParallaxDepth;
+		float mOutlineThickness;
 	};
 }
 

@@ -108,6 +108,10 @@ namespace sge
 			pTechnique = mpBasicShader->GetParallaxMappingTechnique();
 			needsTangents = true;
 			break;
+
+		case FX_CELL_SHADED:
+			pTechnique = mpBasicShader->GetCellShadingTechnique();
+			break;
 		}
 
 		

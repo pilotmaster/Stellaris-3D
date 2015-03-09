@@ -184,6 +184,17 @@ namespace sge
 				// Use the new name to load a normal map texture
 				mpMaterial->CreateNormalMap(pDevice, wTexName);
 			}
+			else if (renderType == FX_CELL_SHADED)
+			{
+				// Use the currently laoded texture to work out the normal mapping texture
+				wStrStream.str(L"");
+
+				// Use gradient image file
+				wStrStream << "CellGradient.png";
+
+				// Use the new name to load a normal map texture
+				mpMaterial->CreateNormalMap(pDevice, wStrStream.str());
+			}
 		}
 
 

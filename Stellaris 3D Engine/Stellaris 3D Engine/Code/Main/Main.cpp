@@ -48,6 +48,11 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CMesh* mshTeapot = pEngine->LoadMesh("Media\\Teapot.x", sge::FX_NORMAL_MAPPED);
 	sge::CModel* mdlTeapot = pEngine->CreateModel(mshTeapot, DirectX::XMFLOAT3(-20.0f, 5.0f, 25.0f));
 
+	sge::CMesh* mshTroll = pEngine->LoadMesh("Media\\Troll.x", sge::FX_CELL_SHADED);
+	sge::CModel* mdlTroll = pEngine->CreateModel(mshTroll, DirectX::XMFLOAT3(20.0f, 5.0f, 25.0f));
+	mdlTroll->Scale(DirectX::XMFLOAT3(5.0f, 5.0f, 5.0f));
+	mdlTroll->SetModelColour(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::FX_LIGHT);
 	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight);
 	mdlLight1->SetLightBrightness(6.0f);

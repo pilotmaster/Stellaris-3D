@@ -26,7 +26,7 @@ Material Material {
 	0.000000;0.000000;0.000000;;
 	0.000000;0.000000;0.000000;;
 	TextureFilename {
-		"Troll1DiffuseSpecular.dds";
+		"Cyan.png";
 	}
 }
 
