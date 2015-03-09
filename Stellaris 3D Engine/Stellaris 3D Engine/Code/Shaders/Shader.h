@@ -36,6 +36,7 @@ namespace sge
 		ID3D10EffectTechnique* GetWiggleTechnique();
 		ID3D10EffectTechnique* GetNormalMappingTechnique();
 		ID3D10EffectTechnique* GetParallaxMappingTechnique();
+		ID3D10EffectTechnique* GetCellShadingTechnique();
 
 		// Matrices
 		ID3D10EffectMatrixVariable* GetFXWorldVar();
@@ -47,16 +48,17 @@ namespace sge
 		ID3D10EffectShaderResourceVariable* GetFXNormalMapVar();
 
 		// Vectors
-		ID3D10EffectVectorVariable* GetFXLightPositions();
-		ID3D10EffectVectorVariable* GetFXLightColours();
-		ID3D10EffectVectorVariable* GetFXModelColour();
-		ID3D10EffectVectorVariable* GetFXAmbientColour();
-		ID3D10EffectVectorVariable* GetFXCameraPosition();
+		ID3D10EffectVectorVariable* GetFXLightPositionsVar();
+		ID3D10EffectVectorVariable* GetFXLightColoursVar();
+		ID3D10EffectVectorVariable* GetFXModelColourVar();
+		ID3D10EffectVectorVariable* GetFXAmbientColourVar();
+		ID3D10EffectVectorVariable* GetFXCameraPositionVar();
 
 		// Scalars
-		ID3D10EffectScalarVariable* GetFXSpecularPower();
-		ID3D10EffectScalarVariable* GetFXWiggle();
-		ID3D10EffectScalarVariable* GetFXParallaxDepth();
+		ID3D10EffectScalarVariable* GetFXSpecularPowerVar();
+		ID3D10EffectScalarVariable* GetFXWiggleVar();
+		ID3D10EffectScalarVariable* GetFXParallaxDepthVar();
+		ID3D10EffectScalarVariable* GetFXOutlineThicknessVar();
 
 
 	protected:
@@ -69,6 +71,7 @@ namespace sge
 		ID3D10EffectTechnique* mpFXWiggleTech;					// Technique for the wiggle effect required by the assignment
 		ID3D10EffectTechnique* mpFXNormalMappingTech;			// Technique for rendering normal maps with lighting
 		ID3D10EffectTechnique* mpFXParallaxMappingTech;			// Technique for rendering normal maps with lighting & parallax effect
+		ID3D10EffectTechnique* mpFXCellShadingTech;				// Technique for rendering a cartoonish effect on models
 
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
@@ -83,6 +86,7 @@ namespace sge
 		ID3D10EffectScalarVariable* mpFXVarSpecularPower;
 		ID3D10EffectScalarVariable* mpFXVarWiggle;
 		ID3D10EffectScalarVariable* mpFXVarParallaxDepth;
+		ID3D10EffectScalarVariable* mpFXVarOutlineThickness;
 
 		ID3D10EffectShaderResourceVariable* mpFXVarDiffuseMap;
 		ID3D10EffectShaderResourceVariable* mpFXVarNormalMap;

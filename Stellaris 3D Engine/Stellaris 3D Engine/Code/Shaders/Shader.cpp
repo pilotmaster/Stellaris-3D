@@ -19,6 +19,7 @@ namespace sge
 		mpFXWiggleTech = nullptr;
 		mpFXNormalMappingTech = nullptr;
 		mpFXParallaxMappingTech = nullptr;
+		mpFXCellShadingTech = nullptr;
 
 		mpFXVarDiffuseMap = nullptr;
 		mpFXVarNormalMap = nullptr;
@@ -36,6 +37,7 @@ namespace sge
 		mpFXVarSpecularPower = nullptr;
 		mpFXVarWiggle = nullptr;
 		mpFXVarParallaxDepth = nullptr;
+		mpFXVarOutlineThickness = nullptr;
 
 
 		// Load in the shader
@@ -78,6 +80,7 @@ namespace sge
 		mpFXWiggleTech = mpFX->GetTechniqueByName("WiggleTech");
 		mpFXNormalMappingTech = mpFX->GetTechniqueByName("NormalMappingTech"); 
 		mpFXParallaxMappingTech = mpFX->GetTechniqueByName("ParallaxMappingTech");
+		mpFXParallaxMappingTech = mpFX->GetTechniqueByName("CellShadingTech");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 		mpFXVarNormalMap = mpFX->GetVariableByName("NormalMap")->AsShaderResource();
@@ -95,6 +98,7 @@ namespace sge
 		mpFXVarSpecularPower = mpFX->GetVariableByName("SpecularPower")->AsScalar();
 		mpFXVarWiggle = mpFX->GetVariableByName("Wiggle")->AsScalar();
 		mpFXVarParallaxDepth = mpFX->GetVariableByName("ParallaxDepth")->AsScalar();
+		mpFXVarOutlineThickness = mpFX->GetVariableByName("OutlineThickness")->AsScalar();
 	}
 
 	CShader::~CShader()
@@ -136,6 +140,11 @@ namespace sge
 		return mpFXParallaxMappingTech;
 	}
 
+	ID3D10EffectTechnique* CShader::GetCellShadingTechnique()
+	{
+		return mpFXCellShadingTech;
+	}
+
 	ID3D10EffectMatrixVariable* CShader::GetFXWorldVar()
 	{
 		return mpFXVarWorldMat;
@@ -161,43 +170,48 @@ namespace sge
 		return mpFXVarNormalMap;
 	}
 
-	ID3D10EffectVectorVariable* CShader::GetFXLightPositions()
+	ID3D10EffectVectorVariable* CShader::GetFXLightPositionsVar()
 	{
 		return mpFXVarLightPositions;
 	}
 
-	ID3D10EffectVectorVariable* CShader::GetFXLightColours()
+	ID3D10EffectVectorVariable* CShader::GetFXLightColoursVar()
 	{
 		return mpFXVarLightColours;
 	}
 
-	ID3D10EffectVectorVariable* CShader::GetFXModelColour()
+	ID3D10EffectVectorVariable* CShader::GetFXModelColourVar()
 	{
 		return mpFXVarModelColour;
 	}
 
-	ID3D10EffectVectorVariable* CShader::GetFXAmbientColour()
+	ID3D10EffectVectorVariable* CShader::GetFXAmbientColourVar()
 	{
 		return mpFXVarAmbientColour;
 	}
 
-	ID3D10EffectVectorVariable* CShader::GetFXCameraPosition()
+	ID3D10EffectVectorVariable* CShader::GetFXCameraPositionVar()
 	{
 		return mpFXVarCameraPosition;
 	}
 
-	ID3D10EffectScalarVariable* CShader::GetFXSpecularPower()
+	ID3D10EffectScalarVariable* CShader::GetFXSpecularPowerVar()
 	{
 		return mpFXVarSpecularPower;
 	}
 
-	ID3D10EffectScalarVariable* CShader::GetFXWiggle()
+	ID3D10EffectScalarVariable* CShader::GetFXWiggleVar()
 	{
 		return mpFXVarWiggle;
 	}
 
-	ID3D10EffectScalarVariable* CShader::GetFXParallaxDepth()
+	ID3D10EffectScalarVariable* CShader::GetFXParallaxDepthVar()
 	{
 		return mpFXVarParallaxDepth;
+	}
+
+	ID3D10EffectScalarVariable* CShader::GetFXOutlineThicknessVar()
+	{
+		return mpFXVarOutlineThickness;
 	}
 }
