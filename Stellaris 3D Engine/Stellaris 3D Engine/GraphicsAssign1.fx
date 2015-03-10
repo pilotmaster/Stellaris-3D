@@ -551,7 +551,7 @@ RasterizerState CullNone
 {
 	FillMode = Solid;
 	CullMode = None;
-	MultisampleEnable = false;
+	MultisampleEnable = true;
 	AntialiasedLineEnable = true;
 };
 
@@ -559,7 +559,7 @@ RasterizerState CullBack
 {
 	FillMode = Solid;
 	CullMode = Back;
-	MultisampleEnable = false;
+	MultisampleEnable = true;
 	AntialiasedLineEnable = true;
 };
 
@@ -567,7 +567,7 @@ RasterizerState CullFront
 {
 	FillMode = Solid;
 	CullMode = Front;
-	MultisampleEnable = false;
+	MultisampleEnable = true;
 	AntialiasedLineEnable = true;
 };
 

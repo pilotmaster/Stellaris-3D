@@ -190,7 +190,7 @@ namespace sge
 				wStrStream.str(L"");
 
 				// Use gradient image file
-				wStrStream << "CellGradient.png";
+				wStrStream << "Media\\CellGradient.png";
 
 				// Use the new name to load a normal map texture
 				mpMaterial->CreateNormalMap(pDevice, wStrStream.str());
