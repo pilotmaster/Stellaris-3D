@@ -54,17 +54,20 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	mdlTroll->SetModelColour(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::FX_LIGHT);
-	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight);
-	mdlLight1->SetLightBrightness(6.0f);
+	//sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight, sge::POINT_LIGHT);
+	//mdlLight1->SetLightBrightness(6.0f);
 
-	sge::CLight* mdlLight2 = pEngine->CreateLight(mshLight, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
-	mdlLight2->SetLightBrightness(4.0f);
-	mdlLight2->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.8f, 0.2f));
+	//sge::CLight* mdlLight2 = pEngine->CreateLight(mshLight, sge::POINT_LIGHT, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
+	//mdlLight2->SetLightBrightness(4.0f);
+	//mdlLight2->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.8f, 0.2f));
+
+	sge::CLight* mdlLight3 = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(20.0f, 40.0f, -50.0f));
+	mdlLight3->SetLightBrightness(5.0f);
 
 
 	// Variables & set up for altering the lights behaviour
 	DirectX::XMFLOAT3 light1RGB = { 1.0f, 1.0f, 1.0f };
-	mdlLight1->SetLightColour(light1RGB);
+	//mdlLight1->SetLightColour(light1RGB);
 	DirectX::XMFLOAT3 light1HSL;
 
 	const float brightnessMulti = 4.0f;		// Multiplier for determining brightness
@@ -92,7 +95,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		// UPDATE MODEL POSITIONS
 		//---------------------------------
 		mdlCube->GetPosition(cubePos);
-		mdlLight1->SetPosition(DirectX::XMFLOAT3((cosf(rotation) * ORBIT_RADIUS) + cubePos.x, cubePos.y, (sinf(rotation) * ORBIT_RADIUS) + cubePos.z));
+		//mdlLight1->SetPosition(DirectX::XMFLOAT3((cosf(rotation) * ORBIT_RADIUS) + cubePos.x, cubePos.y, (sinf(rotation) * ORBIT_RADIUS) + cubePos.z));
 
 
 		// LIGHT 1 MOVING THROUGH COLOURS
@@ -109,7 +112,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		// Convert back to RGB & set the light to the new colour
 		vecLight1Colour = DirectX::XMColorHSLToRGB(DirectX::XMLoadFloat3(&light1HSL));
 		DirectX::XMStoreFloat3(&light1RGB, vecLight1Colour);
-		mdlLight1->SetLightColour(light1RGB);
+		//mdlLight1->SetLightColour(light1RGB);
 
 
 		// LIGHT 2 PULSATING ON & OFF
@@ -118,7 +121,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		sinBrightness = (sinf(counter) * brightnessMulti) + brightnessMulti;
 
 		// Use new brightness on light 2
-		mdlLight2->SetLightBrightness(sinBrightness);
+		//mdlLight2->SetLightBrightness(sinBrightness);
 
 
 		// WIGGLING MODELS UPDATES

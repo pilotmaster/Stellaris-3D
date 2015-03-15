@@ -134,9 +134,9 @@ namespace sge
 		return mpEntityManager->CreateModelEntity(pMesh, pos, rot, scale);
 	}
 
-	CLight* CStellaris3D::CreateLight(CMesh* pMesh, DirectX::XMFLOAT3 colour, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot,
+	CLight* CStellaris3D::CreateLight(CMesh* pMesh, ELightTypes lightType, DirectX::XMFLOAT3 colour, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot,
 		DirectX::XMFLOAT3 scale)
-	{
-		return mpEntityManager->CreateLightEntity(pMesh, pos, rot, scale, colour);
+	{		
+		return mpEntityManager->CreateLightEntity(pMesh, pos, rot, scale, colour, static_cast<int>(lightType));
 	}
 }

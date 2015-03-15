@@ -11,12 +11,15 @@ namespace sge
 	// LIGHT CLASS CONSTRUCTOR & DESTRUCTOR
 	//------------------------------------------------------------------------------------
 	CLight::CLight(UINT id, CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale,
-		DirectX::XMFLOAT3 lightColour) :
-		CModel(id, pMesh, pos, rot, scale), mColour(lightColour), mBrightness(2.0f)
+		DirectX::XMFLOAT3 lightColour, int lightType) :
+		CModel(id, pMesh, pos, rot, scale), mLightType(lightType), mColour(lightColour), mBrightness(2.0f), mConeAngle(90.0f)
 	{
 		mBrightnessColour.x = mColour.x * mBrightness;
 		mBrightnessColour.y = mColour.y * mBrightness;
 		mBrightnessColour.z = mColour.z * mBrightness;
+
+		// Set default angle & find the half cos angle for spotlight use
+		mCosHalfAngle = cosf(mConeAngle / 2.0f);
 	}
 
 	CLight::~CLight()
@@ -51,6 +54,12 @@ namespace sge
 		mBrightnessColour.x = mColour.x * mBrightness;
 		mBrightnessColour.y = mColour.y * mBrightness;
 		mBrightnessColour.z = mColour.z * mBrightness;
+	}
+
+	void CLight::SetSpotLightAngle(float angle)
+	{
+		mConeAngle = angle;
+		mCosHalfAngle = cosf(mConeAngle / 2.0f);
 	}
 
 	void CLight::Render(ID3D10Device* pDevice, CShader* pShader)

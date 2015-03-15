@@ -73,9 +73,12 @@ float ParallaxDepth;
 float OutlineThickness;
 
 // Information required for lighting
-static const int NUM_LIGHTS = 2;
+static const int NUM_LIGHTS = 5;
+int LightType[NUM_LIGHTS];
 float3 LightPos[NUM_LIGHTS];
 float3 LightCol[NUM_LIGHTS];
+float3 LightFacing[NUM_LIGHTS];
+float LightCosHalfAngle[NUM_LIGHTS];
 float3 AmbientColour;
 
 float3 CameraPos;
@@ -105,6 +108,36 @@ SamplerState TrilinearWrap
 	AddressU = Wrap;
 	AddressV = Wrap;
 };
+
+
+//====================================================================================
+// LIGHT CALCULATION FUNCTIONS
+//------------------------------------------------------------------------------------
+void DoPointLight(int lIndex, float3 camDir, float3 worldPos, float3 worldNorm, out float3 diffuse, out float3 specular)
+{
+	float3 LightDir = normalize(LightPos[lIndex] - worldPos);
+	float3 LightDist = length(LightPos[lIndex] - worldPos);
+	diffuse = LightCol[lIndex] * max(dot(worldNorm, LightDir), 0.0f) / LightDist;
+	float3 halfway = normalize(LightDir + camDir);
+	specular = LightCol[lIndex] * pow(max(dot(worldNorm, halfway), 0.0f), SpecularPower);
+}
+
+void DoSpotLight(int lIndex, float3 camDir, float3 worldPos, float3 worldNorm, out float3 diffuse, out float3 specular)
+{
+	float3 LightDir = normalize(LightPos[lIndex] - worldPos);
+
+	// Calculate the dot product between light-pixel vector and the light-facing vector
+	float FDotL = dot(-LightDir, LightFacing[lIndex]);
+
+	// Check if within cone of light
+	if (FDotL > LightCosHalfAngle[lIndex])
+	{
+		float3 lightDist = length(LightPos[lIndex] - worldPos);
+		diffuse = LightCol[lIndex] * max(dot(worldNorm, LightDir), 0) / lightDist;
+		float3 halfway = normalize(LightDir + camDir);
+		specular = diffuse * pow(max(dot(worldNorm, halfway), 0), SpecularPower);
+	}
+}
 
 
 //====================================================================================
@@ -289,23 +322,44 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	// Calculate direction of camera
 	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz); // Position of camera - position of current vertex (or pixel) (in world space)
 
-	//// LIGHT 1
-	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
-	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
-	float3 DiffuseLight1 = LightCol[0] * max(dot(vOut.WorldNormal.xyz, Light1Dir), 0.0f) / Light1Dist;
-	float3 halfway = normalize(Light1Dir + CameraDir);
-	float3 SpecularLight1 = LightCol[0] * pow(max(dot(vOut.WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+	// LIGHTING VARIABLES
+	float3 TotalDiffuse = float3(0.0f, 0.0f, 0.0f);
+	float3 TotalSpecular = float3(0.0f, 0.0f, 0.0f);
 
-	//// LIGHT 2
-	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
-	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
-	float3 DiffuseLight2 = LightCol[1] * max(dot(vOut.WorldNormal.xyz, Light2Dir), 0.0f) / Light2Dist;
-	halfway = normalize(Light2Dir + CameraDir);
-	float3 SpecularLight2 = LightCol[1] * pow(max(dot(vOut.WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+	float3 LightDif;
+	float3 LightSpec;
+
+	// CALCULATE LIGHTING FOR ALL LIGHTS
+	for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		// Set light variables to 0
+		LightDif = float3(0.0f, 0.0f, 0.0f);
+		LightSpec = float3(0.0f, 0.0f, 0.0f);
+		
+		// Check value of light
+		if (LightType[i] == 0)
+		{
+			// Point light
+			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, vOut.WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 1)
+		{
+			// Spot light
+			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, vOut.WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 2)
+		{
+			// Directional Light
+		}
+
+		// Accumulate new light
+		TotalDiffuse += LightDif;
+		TotalSpecular += LightSpec;
+	}
 
 	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
-	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
-	float3 SpecularLight = SpecularLight1 + SpecularLight2;
+	float3 DiffuseLight = AmbientColour + TotalDiffuse;
+	float3 SpecularLight = TotalSpecular;
 
 
 	// SAMPLE THE PROVIDED TEXTURE
@@ -357,23 +411,44 @@ float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 	// Calculate direction of camera
 	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz); // Position of camera - position of current vertex (or pixel) (in world space)
 
-	// Light1
-	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
-	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
-	float3 DiffuseLight1 = LightCol[0] * max(dot(WorldNormal.xyz, Light1Dir), 0.0f) / Light1Dist;
-	float3 halfway = normalize(Light1Dir + CameraDir);
-	float3 SpecularLight1 = LightCol[0] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
-	
-	// Light2
-	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
-	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
-	float3 DiffuseLight2 = LightCol[1] * max(dot(WorldNormal.xyz, Light2Dir), 0.0f) / Light2Dist;
-	halfway = normalize(Light2Dir + CameraDir);
-	float3 SpecularLight2 = LightCol[1] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+	// LIGHTING VARIABLES
+	float3 TotalDiffuse = float3(0.0f, 0.0f, 0.0f);
+	float3 TotalSpecular = float3(0.0f, 0.0f, 0.0f);
+
+	float3 LightDif;
+	float3 LightSpec;
+
+	// CALCULATE LIGHTING FOR ALL LIGHTS
+	for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		// Set light variables to 0
+		LightDif = float3(0.0f, 0.0f, 0.0f);
+		LightSpec = float3(0.0f, 0.0f, 0.0f);
+
+		// Check value of light
+		if (LightType[i] == 0)
+		{
+			// Point light
+			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 1)
+		{
+			// Spot light
+			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 2)
+		{
+			// Directional Light
+		}
+
+		// Accumulate new light
+		TotalDiffuse += LightDif;
+		TotalSpecular += LightSpec;
+	}
 
 	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
-	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
-	float3 SpecularLight = SpecularLight1 + SpecularLight2;
+	float3 DiffuseLight = AmbientColour + TotalDiffuse;
+	float3 SpecularLight = TotalSpecular;
 
 
 	// SAMPLE THE PROVIDED TEXTURE
@@ -446,23 +521,44 @@ float4 PSLitParallaxMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 
 	// CALCULATE LIGHTING
 	//---------------------------------
-	// Light1
-	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);
-	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
-	float3 DiffuseLight1 = LightCol[0] * max(dot(WorldNormal.xyz, Light1Dir), 0.0f) / Light1Dist;
-	float3 halfway = normalize(Light1Dir + CameraDir);
-	float3 SpecularLight1 = LightCol[0] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+	// LIGHTING VARIABLES
+	float3 TotalDiffuse = float3(0.0f, 0.0f, 0.0f);
+	float3 TotalSpecular = float3(0.0f, 0.0f, 0.0f);
 
-	// Light2
-	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
-	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
-	float3 DiffuseLight2 = LightCol[1] * max(dot(WorldNormal.xyz, Light2Dir), 0.0f) / Light2Dist;
-	halfway = normalize(Light2Dir + CameraDir);
-	float3 SpecularLight2 = LightCol[1] * pow(max(dot(WorldNormal.xyz, halfway), 0.0f), SpecularPower);
+	float3 LightDif;
+	float3 LightSpec;
+
+	// CALCULATE LIGHTING FOR ALL LIGHTS
+	for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		// Set light variables to 0
+		LightDif = float3(0.0f, 0.0f, 0.0f);
+		LightSpec = float3(0.0f, 0.0f, 0.0f);
+
+		// Check value of light
+		if (LightType[i] == 0)
+		{
+			// Point light
+			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 1)
+		{
+			// Spot light
+			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 2)
+		{
+			// Directional Light
+		}
+
+		// Accumulate new light
+		TotalDiffuse += LightDif;
+		TotalSpecular += LightSpec;
+	}
 
 	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
-	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
-	float3 SpecularLight = SpecularLight1 + SpecularLight2;
+	float3 DiffuseLight = AmbientColour + TotalDiffuse;
+	float3 SpecularLight = TotalSpecular;
 
 
 	// SAMPLE THE PROVIDED TEXTURE
@@ -489,40 +585,55 @@ float4 PSLitCartoonify(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	// CALCULATE LIGHTING
 	//---------------------------------
 	// Calculate the world normal
-	float3 worldNormal = normalize(vOut.WorldNormal);
+	float3 WorldNormal = normalize(vOut.WorldNormal);
 	// Calculate direction of camera
 	float3 CameraDir = normalize(CameraPos - vOut.WorldPos.xyz); // Position of camera - position of current vertex (or pixel) (in world space)
 
-	//// LIGHT 1
-	float3 Light1Dir = normalize(LightPos[0] - vOut.WorldPos.xyz);   // Direction for each light is different
-	float3 Light1Dist = length(LightPos[0] - vOut.WorldPos.xyz);
-	float DiffuseLevel1 = max(dot(worldNormal.xyz, Light1Dir), 0);
-	float CellDiffuseLevel1 = NormalMap.Sample(PointSampleClamp, DiffuseLevel1).r;
-	float3 DiffuseLight1 = LightCol[0] * CellDiffuseLevel1 / Light1Dist;
 
-	// Do same for specular light and further lights
-	float3 halfway = normalize(Light1Dir + CameraDir);
-	float SpecularLevel1 = pow(max(dot(worldNormal.xyz, halfway), 0), SpecularPower);
-	float CellSpecularLevel1 = NormalMap.Sample(PointSampleClamp, SpecularLevel1).r;
-	float3 SpecularLight1 = DiffuseLight1 * CellSpecularLevel1;
+	// LIGHTING VARIABLES
+	float3 TotalDiffuse = float3(0.0f, 0.0f, 0.0f);
+	float3 TotalSpecular = float3(0.0f, 0.0f, 0.0f);
 
+	float3 LightDif;
+	float3 LightSpec;
+	float CellDiffuseLevel;
+	float CellSpecularLevel;
 
-	//// LIGHT 2
-	float3 Light2Dir = normalize(LightPos[1] - vOut.WorldPos.xyz);
-	float3 Light2Dist = length(LightPos[1] - vOut.WorldPos.xyz);
-	float DiffuseLevel2 = max(dot(worldNormal.xyz, Light2Dir), 0);
-	float CellDiffuseLevel2 = NormalMap.Sample(PointSampleClamp, DiffuseLevel2).r;
-	float3 DiffuseLight2 = LightCol[1] * CellDiffuseLevel2 / Light2Dist;
+	// CALCULATE LIGHTING FOR ALL LIGHTS
+	for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		// Set light variables to 0
+		LightDif = float3(0.0f, 0.0f, 0.0f);
+		LightSpec = float3(0.0f, 0.0f, 0.0f);
 
-	halfway = normalize(Light2Dir + CameraDir);
-	float SpecularLevel2 = pow(max(dot(worldNormal.xyz, halfway), 0), SpecularPower);
-	float CellSpecularLevel2 = NormalMap.Sample(PointSampleClamp, SpecularLevel2).r;
-	float3 SpecularLight2 = DiffuseLight2 * CellSpecularLevel2;
+		// Check value of light
+		if (LightType[i] == 0)
+		{
+			// Point light
+			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 1)
+		{
+			// Spot light
+			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+		}
+		else if (LightType[i] == 2)
+		{
+			// Directional Light
+		}
 
+		// Accumulate new light & apply cell shading
+		CellDiffuseLevel = NormalMap.Sample(PointSampleClamp, LightDif).r;
+		TotalDiffuse += LightDif * CellDiffuseLevel;
+
+		CellSpecularLevel = NormalMap.Sample(PointSampleClamp, LightSpec).r;
+		LightSpec = LightDif * CellDiffuseLevel;
+		TotalSpecular += LightSpec;
+	}
 
 	// Sum the effect of the two lights - add the ambient at this stage rather than for each light (or we will get twice the ambient level)
-	float3 DiffuseLight = AmbientColour + DiffuseLight1 + DiffuseLight2;
-	float3 SpecularLight = SpecularLight1 + SpecularLight2;
+	float3 DiffuseLight = AmbientColour + TotalDiffuse;
+	float3 SpecularLight = TotalSpecular;
 
 
 	// SAMPLE THE PROVIDED TEXTURE

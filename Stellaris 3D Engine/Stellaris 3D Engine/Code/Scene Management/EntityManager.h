@@ -36,7 +36,7 @@ namespace sge
 		CModel* CreateModelEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
 		// Create a new light
 		CLight* CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
-			DirectX::XMFLOAT3 lightColour);
+			DirectX::XMFLOAT3 lightColour, int lightType);
 
 
 		// METHODS
@@ -50,7 +50,7 @@ namespace sge
 
 		// STATIC VARIABLES
 		//---------------------------------
-		static const int MAX_LIGHTS = 2;
+		static const int MAX_LIGHTS = 5;
 
 
 	private:
@@ -60,8 +60,11 @@ namespace sge
 
 		// Array of light objects
 		CLight* mpLights[MAX_LIGHTS];
+		int mpLightTypes[MAX_LIGHTS];
 		DirectX::XMFLOAT3 mpLightColours[MAX_LIGHTS];
 		DirectX::XMFLOAT3 mpLightPositions[MAX_LIGHTS];
+		DirectX::XMFLOAT3 mpLightFacings[MAX_LIGHTS];
+		float mpCosHalfAngles[MAX_LIGHTS];
 
 		// The next ID which will be used as a key for the next entity that is placed into
 		// the hash map

@@ -50,6 +50,7 @@ namespace sge
 		// Vectors
 		ID3D10EffectVectorVariable* GetFXLightPositionsVar();
 		ID3D10EffectVectorVariable* GetFXLightColoursVar();
+		ID3D10EffectVectorVariable* GetFXLightFacingsVar();
 		ID3D10EffectVectorVariable* GetFXModelColourVar();
 		ID3D10EffectVectorVariable* GetFXAmbientColourVar();
 		ID3D10EffectVectorVariable* GetFXCameraPositionVar();
@@ -59,6 +60,8 @@ namespace sge
 		ID3D10EffectScalarVariable* GetFXWiggleVar();
 		ID3D10EffectScalarVariable* GetFXParallaxDepthVar();
 		ID3D10EffectScalarVariable* GetFXOutlineThicknessVar();
+		ID3D10EffectScalarVariable* GetFXLightTypeVar();
+		ID3D10EffectScalarVariable* GetFXCosHalfAngleVar();
 
 
 	protected:
@@ -79,12 +82,15 @@ namespace sge
 
 		ID3D10EffectVectorVariable* mpFXVarLightPositions;
 		ID3D10EffectVectorVariable* mpFXVarLightColours;
+		ID3D10EffectVectorVariable* mpFXVarLightFacings;
 		ID3D10EffectVectorVariable* mpFXVarModelColour;
 		ID3D10EffectVectorVariable* mpFXVarAmbientColour;
 		ID3D10EffectVectorVariable* mpFXVarCameraPosition;
 
 		ID3D10EffectScalarVariable* mpFXVarSpecularPower;
 		ID3D10EffectScalarVariable* mpFXVarWiggle;
+		ID3D10EffectScalarVariable* mpFXVarLightType;
+		ID3D10EffectScalarVariable* mpFXVarCosHalfAngle;
 		ID3D10EffectScalarVariable* mpFXVarParallaxDepth;
 		ID3D10EffectScalarVariable* mpFXVarOutlineThickness;
 

@@ -53,13 +53,13 @@ namespace sge
 	}
 
 	CLight* CEntityManager::CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
-		DirectX::XMFLOAT3 lightColour)
+		DirectX::XMFLOAT3 lightColour, int lightType)
 	{
 		// Check if there are already the max number of lights
 		if (mNextLightNum < MAX_LIGHTS)
 		{
 			// Enough lights - create new one. Store it in hash map & lights array
-			CLight* pNewLight = new CLight(mNextEID, pMesh, pos, orientation, scale, lightColour);
+			CLight* pNewLight = new CLight(mNextEID, pMesh, pos, orientation, scale, lightColour, lightType);
 			mEntityMap.insert(EntityMap::value_type(mNextEID, pNewLight));
 			mpLights[mNextLightNum] = pNewLight;
 
@@ -78,18 +78,20 @@ namespace sge
 	// ENTITY MANAGER CLASS METHODS
 	//------------------------------------------------------------------------------------
 	void CEntityManager::Update()
-	{
-		for (int i = 0; i < mNextLightNum; i++)
-		{
-			mpLightColours[i] = mpLights[i]->GetLightColour();
-			mpLights[i]->GetPosition(mpLightPositions[i]);
-		}
-		
-		
+	{		
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 		{
 			miterEntityMap->second->Update();
+		}
+
+		for (int i = 0; i < mNextLightNum; i++)
+		{
+			mpLightTypes[i] = mpLights[i]->GetType();
+			mpLightColours[i] = mpLights[i]->GetLightColour();
+			mpLights[i]->GetPosition(mpLightPositions[i]);
+			mpLightFacings[i] = mpLights[i]->GetLightFacing();
+			mpCosHalfAngles[i] = mpLights[i]->GetCosHalfAngle();
 		}
 	}
 
@@ -102,8 +104,11 @@ namespace sge
 		DirectX::XMFLOAT3 cameraPos;
 		pCamera->GetPosition(cameraPos);
 		pShader->GetFXCameraPositionVar()->SetRawValue(&cameraPos, 0U, 12U);
+		pShader->GetFXLightTypeVar()->SetIntArray((int*)mpLightTypes, 0U, mNextLightNum);
 		pShader->GetFXLightColoursVar()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
 		pShader->GetFXLightPositionsVar()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
+		pShader->GetFXLightFacingsVar()->SetFloatVectorArray((float*)mpLightFacings, 0U, mNextLightNum);
+		pShader->GetFXCosHalfAngleVar()->SetFloatArray((float*)mpCosHalfAngles, 0U, mNextLightNum);
 
 		pShader->GetFXSpecularPowerVar()->SetFloat(100.0f);
 		

@@ -11,6 +11,12 @@
 
 namespace sge
 {
+	// Enumeration of light types and their associated values
+	enum ELightTypes
+	{
+		POINT_LIGHT = 0, SPOT_LIGHT = 1
+	};
+
 	//====================================================================================
 	// LIGHT CLASS : CHILD OF MODEL CLASS
 	//------------------------------------------------------------------------------------
@@ -20,7 +26,7 @@ namespace sge
 		// CONSTRUCTOR & DESTRUCTOR
 		//---------------------------------
 		CLight(UINT id, CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
-			DirectX::XMFLOAT3 lightColour);
+			DirectX::XMFLOAT3 lightColour, int lightType);
 		~CLight();
 
 
@@ -37,11 +43,27 @@ namespace sge
 			return mBrightnessColour;
 		}
 
+		inline DirectX::XMFLOAT3 GetLightFacing()
+		{
+			return DirectX::XMFLOAT3(mModelMatrix._31, mModelMatrix._32, mModelMatrix._33);
+		}
+
+		inline int GetType()
+		{
+			return mLightType;
+		}
+
+		inline float GetCosHalfAngle()
+		{
+			return mCosHalfAngle;
+		}
+
 
 		// MUTATORS
 		//---------------------------------
 		void SetLightColour(DirectX::XMFLOAT3 colour);
 		void SetLightBrightness(float brightness);
+		void SetSpotLightAngle(float angle);
 
 
 	private:
@@ -50,6 +72,9 @@ namespace sge
 		DirectX::XMFLOAT3 mColour;
 		DirectX::XMFLOAT3 mBrightnessColour;
 		float mBrightness;
+		float mConeAngle;
+		float mCosHalfAngle;
+		int mLightType;
 	};
 }
 

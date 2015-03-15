@@ -38,6 +38,8 @@ namespace sge
 		mpFXVarWiggle = nullptr;
 		mpFXVarParallaxDepth = nullptr;
 		mpFXVarOutlineThickness = nullptr;
+		mpFXVarLightType = nullptr;
+		mpFXVarCosHalfAngle = nullptr;
 
 
 		// Load in the shader
@@ -89,8 +91,9 @@ namespace sge
 		mpFXVarViewMat = mpFX->GetVariableByName("ViewMatrix")->AsMatrix();
 		mpFXVarWorldMat = mpFX->GetVariableByName("WorldMatrix")->AsMatrix();
 
-		mpFXVarLightPositions = mpFX->GetVariableByName("LightPos")->AsVector();
+		mpFXVarLightPositions = mpFX->GetVariableByName("LightPos")->AsVector(); 
 		mpFXVarLightColours = mpFX->GetVariableByName("LightCol")->AsVector();
+		mpFXVarLightFacings = mpFX->GetVariableByName("LightFacing")->AsVector();
 		mpFXVarModelColour = mpFX->GetVariableByName("ModelColour")->AsVector();
 		mpFXVarAmbientColour = mpFX->GetVariableByName("AmbientColour")->AsVector();
 		mpFXVarCameraPosition = mpFX->GetVariableByName("CameraPos")->AsVector();
@@ -99,6 +102,8 @@ namespace sge
 		mpFXVarWiggle = mpFX->GetVariableByName("Wiggle")->AsScalar();
 		mpFXVarParallaxDepth = mpFX->GetVariableByName("ParallaxDepth")->AsScalar();
 		mpFXVarOutlineThickness = mpFX->GetVariableByName("OutlineThickness")->AsScalar();
+		mpFXVarLightType = mpFX->GetVariableByName("LightType")->AsScalar();
+		mpFXVarCosHalfAngle = mpFX->GetVariableByName("CosHalfAngle")->AsScalar();
 	}
 
 	CShader::~CShader()
@@ -180,6 +185,11 @@ namespace sge
 		return mpFXVarLightColours;
 	}
 
+	ID3D10EffectVectorVariable* CShader::GetFXLightFacingsVar()
+	{
+		return mpFXVarLightFacings;
+	}
+
 	ID3D10EffectVectorVariable* CShader::GetFXModelColourVar()
 	{
 		return mpFXVarModelColour;
@@ -213,5 +223,15 @@ namespace sge
 	ID3D10EffectScalarVariable* CShader::GetFXOutlineThicknessVar()
 	{
 		return mpFXVarOutlineThickness;
+	}
+
+	ID3D10EffectScalarVariable* CShader::GetFXLightTypeVar()
+	{
+		return mpFXVarLightType;
+	}
+
+	ID3D10EffectScalarVariable* CShader::GetFXCosHalfAngleVar()
+	{
+		return mpFXVarCosHalfAngle;
 	}
 }
