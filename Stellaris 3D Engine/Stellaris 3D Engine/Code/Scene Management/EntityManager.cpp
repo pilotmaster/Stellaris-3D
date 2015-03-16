@@ -83,6 +83,12 @@ namespace sge
 			miterEntityMap->second->Update();
 		}
 
+		// Render lights
+		for (int i = 0; i < mNextLightNum; i++)
+		{
+			mpLights[i]->Update();
+		}
+
 		for (int i = 0; i < mNextLightNum; i++)
 		{
 			mpLightTypes[i] = mpLights[i]->GetType();
@@ -90,12 +96,6 @@ namespace sge
 			mpLights[i]->GetPosition(mpLightPositions[i]);
 			mpLightFacings[i] = mpLights[i]->GetLightFacing();
 			mpCosHalfAngles[i] = mpLights[i]->GetCosHalfAngle();
-		}
-
-		// Render lights
-		for (int i = 0; i < mNextLightNum; i++)
-		{
-			mpLights[i]->Update();
 		}
 	}
 

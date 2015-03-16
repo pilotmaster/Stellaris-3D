@@ -29,7 +29,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	const float ORBIT_SPEED = 0.5f;
 
 	// Set ambient colour
-	pEngine->SetAmbientColour(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	pEngine->SetAmbientColour(DirectX::XMFLOAT3(0.1f, 0.2f, 0.25f));
 
 	// Model loading
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));

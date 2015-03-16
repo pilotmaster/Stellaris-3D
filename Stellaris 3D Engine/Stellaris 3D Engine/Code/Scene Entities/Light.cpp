@@ -19,7 +19,7 @@ namespace sge
 		mBrightnessColour.z = mColour.z * mBrightness;
 
 		// Set default angle & find the half cos angle for spotlight use
-		mCosHalfAngle = cosf(mConeAngle / 2.0f);
+		mCosHalfAngle = cosf(DirectX::XMConvertToRadians(mConeAngle / 2.0f));
 	}
 
 	CLight::~CLight()
@@ -59,7 +59,7 @@ namespace sge
 	void CLight::SetSpotLightAngle(float angle)
 	{
 		mConeAngle = angle;
-		mCosHalfAngle = cosf(mConeAngle / 2.0f);
+		mCosHalfAngle = cosf(DirectX::XMConvertToRadians(mConeAngle / 2.0f));
 	}
 
 	void CLight::Render(ID3D10Device* pDevice, CShader* pShader)
