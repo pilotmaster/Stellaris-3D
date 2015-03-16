@@ -106,7 +106,7 @@ namespace sge
 		mpFXVarParallaxDepth = mpFX->GetVariableByName("ParallaxDepth")->AsScalar();
 		mpFXVarOutlineThickness = mpFX->GetVariableByName("OutlineThickness")->AsScalar();
 		mpFXVarLightType = mpFX->GetVariableByName("LightType")->AsScalar();
-		mpFXVarCosHalfAngle = mpFX->GetVariableByName("CosHalfAngle")->AsScalar();
+		mpFXVarCosHalfAngle = mpFX->GetVariableByName("LightCosHalfAngle")->AsScalar();
 	}
 
 	CShader::~CShader()
