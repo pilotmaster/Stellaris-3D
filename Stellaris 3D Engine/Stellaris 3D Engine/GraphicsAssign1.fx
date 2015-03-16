@@ -615,7 +615,7 @@ float4 PSLitCartoonify(VS_LIGHTING_OUTPUT vOut) : SV_Target
 		else if (LightType[i] == 1)
 		{
 			// Spot light
-			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
 		else if (LightType[i] == 2)
 		{

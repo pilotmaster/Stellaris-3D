@@ -61,9 +61,6 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	mdlLight2->SetLightBrightness(4.0f);
 	mdlLight2->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.8f, 0.2f));
 
-	sge::CLight* mdlLight3 = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, DirectX::XMFLOAT3(0.5f, 0.7f, 0.3f), DirectX::XMFLOAT3(20.0f, 25.0f, 20.0f));
-	mdlLight3->SetLightBrightness(5.0f);
-
 	sge::CLight* mdlLight4 = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, DirectX::XMFLOAT3(0.5f, 0.7f, 0.3f), DirectX::XMFLOAT3(20.0f, 25.0f, -50.0f));
 	mdlLight4->SetLightBrightness(5.0f);
 

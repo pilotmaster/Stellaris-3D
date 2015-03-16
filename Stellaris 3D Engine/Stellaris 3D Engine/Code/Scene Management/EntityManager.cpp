@@ -60,11 +60,9 @@ namespace sge
 		{
 			// Enough lights - create new one. Store it in hash map & lights array
 			CLight* pNewLight = new CLight(mNextEID, pMesh, pos, orientation, scale, lightColour, lightType);
-			mEntityMap.insert(EntityMap::value_type(mNextEID, pNewLight));
 			mpLights[mNextLightNum] = pNewLight;
 
 			// Increment next ID, num lights & return new light model
-			mNextEID++;
 			mNextLightNum++;
 			return pNewLight;
 		}
@@ -93,6 +91,12 @@ namespace sge
 			mpLightFacings[i] = mpLights[i]->GetLightFacing();
 			mpCosHalfAngles[i] = mpLights[i]->GetCosHalfAngle();
 		}
+
+		// Render lights
+		for (int i = 0; i < mNextLightNum; i++)
+		{
+			mpLights[i]->Update();
+		}
 	}
 
 	void CEntityManager::Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader)
@@ -117,6 +121,12 @@ namespace sge
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 		{
 			miterEntityMap->second->Render(pDevice, pShader);
+		}
+
+		// Render lights
+		for (int i = 0; i < mNextLightNum; i++)
+		{
+			mpLights[i]->Render(pDevice, pShader);
 		}
 	}
 
