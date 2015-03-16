@@ -26,7 +26,7 @@ namespace sge
 		//---------------------------------
 		void UpdateMatrices();
 		void Update();
-		void Render(ID3D10Device* pDevice, CShader* pShader);
+		void Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow = false);
 
 
 		// ACCESSORS

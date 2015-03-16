@@ -54,7 +54,7 @@ namespace sge
 		UpdateMatrices();
 	}
 
-	void CCamera::Render(ID3D10Device* pDevice, CShader* pShader)
+	void CCamera::Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow)
 	{
 		return;
 	}

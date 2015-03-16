@@ -125,6 +125,10 @@ void DoPointLight(int lIndex, float3 camDir, float3 worldPos, float3 worldNorm, 
 
 void DoSpotLight(int lIndex, float3 camDir, float3 worldPos, float3 worldNorm, out float3 diffuse, out float3 specular)
 {
+	// Calculate the direction of the light along with the light's view position and projection position
+	// which are all required for the shadow effect
+	float4 LightViewPos = mul(float4(worldPos, 1.0f), LightViewMatrix[lIndex]);
+	float4 LightProjPos = mul(LightViewPos, LightProjMatrix[lIndex]);
 	float3 LightDir = normalize(LightPos[lIndex] - worldPos);
 
 	// Calculate the dot product between light-pixel vector and the light-facing vector
@@ -133,10 +137,23 @@ void DoSpotLight(int lIndex, float3 camDir, float3 worldPos, float3 worldNorm, o
 	// Check if within cone of light
 	if (FDotL > LightCosHalfAngle[lIndex])
 	{
-		float3 lightDist = length(LightPos[lIndex] - worldPos);
-		diffuse = LightCol[lIndex] * max(dot(worldNorm, LightDir), 0) / lightDist;
-		float3 halfway = normalize(LightDir + camDir);
-		specular = diffuse * pow(max(dot(worldNorm, halfway), 0), SpecularPower);
+		// Convert 2D pixel position as viewed from light into texture coordinates for shadow map - an advanced topic related to the projection step
+		// Detail: 2D position x & y get perspective divide, then converted from range -1->1 to UV range 0->1. Also flip V axis
+		float2 shadowUV = 0.5f * LightProjPos.xy / LightProjPos.w + float2(0.5f, 0.5f);
+		shadowUV.y = 1.0f - shadowUV.y;
+
+		// Get depth of this pixel if it were visible from the light (another advanced projection step)
+		float depthFromLight = LightProjPos.z / LightProjPos.w - 0.0005f;
+
+		// Compare pixel depth from light with depth held in shadow map of the light. If shadow map depth is less than something is nearer
+		// to the light than this pixel - so the pixel gets no effect from this light
+		if (depthFromLight < ShadowMap.Sample(PointSampleClamp, shadowUV).r)
+		{
+			float3 lightDist = length(LightPos[lIndex] - worldPos);
+			diffuse = LightCol[lIndex] * max(dot(worldNorm, LightDir), 0) / lightDist;
+			float3 halfway = normalize(LightDir + camDir);
+			specular = diffuse * pow(max(dot(worldNorm, halfway), 0), SpecularPower);
+		}
 	}
 }
 
@@ -656,6 +673,13 @@ float4 PSLitCartoonify(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	return combinedColour;
 }
 
+float4 PSPixelDepth(VS_BASIC_OUTPUT vOut) : SV_Target
+{
+	// Output the value that would go in the depth puffer to the pixel colour (greyscale)
+	return vOut.ProjPos.z / vOut.ProjPos.w;
+}
+
+
 //====================================================================================
 // RASTERIZER STATES 
 //------------------------------------------------------------------------------------
@@ -845,5 +869,20 @@ technique10 CellShadingTech
 
 		// Return to standard culling (remove polygons facing away from us)
 		SetRasterizerState(CullBack);
+	}
+}
+
+technique10 DepthOnlyTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSPixelDepth()));
+
+		// Switch off blending states
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+		SetDepthStencilState(DepthWritesOn, 0);
 	}
 }

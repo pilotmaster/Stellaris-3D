@@ -16,11 +16,20 @@ namespace sge
 
 		// Give a base ambient colour
 		mAmbientColour = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
+
+		mpShadowMapTexture = nullptr;
+		mpShadowMapDepthView = nullptr;
+		mpShadowMap = nullptr;
 	}
 
 	CStellaris3D::~CStellaris3D()
 	{
 		if (mpEntityManager) delete mpEntityManager;
+		if (mpBasicShader) delete mpBasicShader;
+
+		if (mpShadowMap) mpShadowMap->Release();
+		if (mpShadowMapDepthView) mpShadowMapDepthView->Release();
+		if (mpShadowMapTexture) mpShadowMapTexture->Release();
 	}
 
 
@@ -41,6 +50,36 @@ namespace sge
 		// Begin timer
 		CTimer::GetTimerInstace()->Reset();
 
+		// Shadow map data
+		D3D10_TEXTURE2D_DESC texDesc;
+		texDesc.Width = 216; // Size of the shadow map determines quality / resolution of shadows
+		texDesc.Height = 216;
+		texDesc.MipLevels = 1; // 1 level, means just the main texture, no additional mip-maps. Usually don't use mip-maps when rendering to textures (or we would have to render every level)
+		texDesc.ArraySize = 1;
+		texDesc.Format = DXGI_FORMAT_R32_TYPELESS; // The shadow map contains a single 32-bit value [tech gotcha: have to say typeless because depth buffer and texture see things slightly differently]
+		texDesc.SampleDesc.Count = 1;
+		texDesc.SampleDesc.Quality = 0;
+		texDesc.Usage = D3D10_USAGE_DEFAULT;
+		texDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL | D3D10_BIND_SHADER_RESOURCE; // Indicate we will use texture as render target, and will also pass it to shaders
+		texDesc.CPUAccessFlags = 0;
+		texDesc.MiscFlags = 0;
+		if (FAILED(mpDevice->CreateTexture2D(&texDesc, NULL, &mpShadowMapTexture))) return false;
+
+		// Create the depth stencil view, i.e. indicate that the texture just created is to be used as a depth buffer
+		D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
+		descDSV.Format = DXGI_FORMAT_D32_FLOAT; // See "tech gotcha" above
+		descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
+		descDSV.Texture2D.MipSlice = 0;
+		if (FAILED(mpDevice->CreateDepthStencilView(mpShadowMapTexture, &descDSV, &mpShadowMapDepthView))) return false;
+
+		// We also need to send this texture (a GPU memory resource) to the shaders. To do that we must create a shader-resource "view"	
+		D3D10_SHADER_RESOURCE_VIEW_DESC srDesc;
+		srDesc.Format = DXGI_FORMAT_R32_FLOAT; // See "tech gotcha" above
+		srDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+		srDesc.Texture2D.MostDetailedMip = 0;
+		srDesc.Texture2D.MipLevels = 1;
+		if (FAILED(mpDevice->CreateShaderResourceView(mpShadowMapTexture, &srDesc, &mpShadowMap))) return false;
+
 		return true;
 	}
 
@@ -52,8 +91,35 @@ namespace sge
 
 	void CStellaris3D::Render(CCamera* pCamera)
 	{
+		// Use the basic shader to set the required variables
+		mpBasicShader->GetFXAmbientColourVar()->SetRawValue(&mAmbientColour, 0U, 12U);
+		mpBasicShader->GetFXShadowMapVar()->SetResource(mpShadowMap);
+
+		// Clear show depth view & render to shadow map
+		mViewport.Width = 216;
+		mViewport.Height = 216;
+		mViewport.MinDepth = 0.0f;
+		mViewport.MaxDepth = 1.0f;
+		mViewport.TopLeftX = 0;
+		mViewport.TopLeftY = 0;
+		mpDevice->RSSetViewports(1, &mViewport);
+
+		mpDevice->OMSetRenderTargets(0, 0, mpShadowMapDepthView);
+		mpDevice->ClearDepthStencilView(mpShadowMapDepthView, D3D10_CLEAR_DEPTH, 1.0f, 0.0f);
+		mpEntityManager->RenderShadows(mpDevice, mpBasicShader);
+
+		
 		// CLEAR CURRENT SCENE
 		//---------------------------------
+		mViewport.Width = mpWindow->GetWindowWidth();
+		mViewport.Height = mpWindow->GetWindowHeight();
+		mViewport.MinDepth = 0.0f;
+		mViewport.MaxDepth = 1.0f;
+		mViewport.TopLeftX = 0;
+		mViewport.TopLeftY = 0;
+		mpDevice->RSSetViewports(1, &mViewport);
+
+		mpDevice->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
 		float ambientColour[4] = { mAmbientColour.x, mAmbientColour.y, mAmbientColour.z, 1.0f };
 		mpDevice->ClearRenderTargetView(mpRenderTarget, ambientColour);
 		mpDevice->ClearDepthStencilView(mpDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0U);
@@ -61,9 +127,6 @@ namespace sge
 
 		// RENDER ENTITIES IN THE SCENE
 		//---------------------------------
-		// Use the basic shader to set the required variables
-		mpBasicShader->GetFXAmbientColourVar()->SetRawValue(&mAmbientColour, 0U, 12U);
-
 		mpEntityManager->Render(mpDevice, pCamera, mpBasicShader);
 
 

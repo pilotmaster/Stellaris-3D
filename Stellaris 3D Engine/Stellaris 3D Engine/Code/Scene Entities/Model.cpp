@@ -39,7 +39,7 @@ namespace sge
 		UpdateMatrices();
 	}
 
-	void CModel::Render(ID3D10Device* pDevice, CShader* pShader)
+	void CModel::Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow)
 	{
 		// Before rendering, ensure model has geometry
 		if (mpMesh)
@@ -66,7 +66,14 @@ namespace sge
 			pShader->GetFXOutlineThicknessVar()->SetFloat(mOutlineThickness);
 
 			// Render the mesh
-			mpMesh->Render(pDevice);
+			if (forShadow)
+			{
+				mpMesh->Render(pDevice, pShader->GetDepthOnlyTechnique());
+			}
+			else
+			{
+				mpMesh->Render(pDevice);
+			}
 		}
 	}
 }

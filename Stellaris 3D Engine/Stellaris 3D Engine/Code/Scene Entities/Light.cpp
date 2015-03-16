@@ -80,8 +80,11 @@ namespace sge
 		}
 	}
 
-	void CLight::Render(ID3D10Device* pDevice, CShader* pShader)
+	void CLight::Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow)
 	{
+		// If rendering for a shadow - do not take into consideration the lights
+		if (forShadow) return;
+
 		// Before rendering, ensure model has geometry
 		if (mpMesh)
 		{

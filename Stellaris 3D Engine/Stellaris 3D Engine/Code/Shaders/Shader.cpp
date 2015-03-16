@@ -23,6 +23,7 @@ namespace sge
 
 		mpFXVarDiffuseMap = nullptr;
 		mpFXVarNormalMap = nullptr;
+		mpFXVarShadowMap = nullptr;
 
 		mpFXVarProjMat = nullptr;
 		mpFXVarViewMat = nullptr;
@@ -88,9 +89,11 @@ namespace sge
 		mpFXNormalMappingTech = mpFX->GetTechniqueByName("NormalMappingTech"); 
 		mpFXParallaxMappingTech = mpFX->GetTechniqueByName("ParallaxMappingTech");
 		mpFXCellShadingTech = mpFX->GetTechniqueByName("CellShadingTech");
+		mpFXDepthOnlyTech = mpFX->GetTechniqueByName("DepthOnlyTech");
 
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 		mpFXVarNormalMap = mpFX->GetVariableByName("NormalMap")->AsShaderResource();
+		mpFXVarShadowMap = mpFX->GetVariableByName("ShadowMap")->AsShaderResource();
 
 		mpFXVarProjMat = mpFX->GetVariableByName("ProjMatrix")->AsMatrix();
 		mpFXVarViewMat = mpFX->GetVariableByName("ViewMatrix")->AsMatrix();
@@ -157,6 +160,11 @@ namespace sge
 		return mpFXCellShadingTech;
 	}
 
+	ID3D10EffectTechnique* CShader::GetDepthOnlyTechnique()
+	{
+		return mpFXDepthOnlyTech;
+	}
+
 	ID3D10EffectMatrixVariable* CShader::GetFXWorldVar()
 	{
 		return mpFXVarWorldMat;
@@ -190,6 +198,11 @@ namespace sge
 	ID3D10EffectShaderResourceVariable* CShader::GetFXNormalMapVar()
 	{
 		return mpFXVarNormalMap;
+	}
+
+	ID3D10EffectShaderResourceVariable* CShader::GetFXShadowMapVar()
+	{
+		return mpFXVarShadowMap;
 	}
 
 	ID3D10EffectVectorVariable* CShader::GetFXLightPositionsVar()

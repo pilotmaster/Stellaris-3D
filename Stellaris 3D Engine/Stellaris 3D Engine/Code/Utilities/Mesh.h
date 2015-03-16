@@ -45,6 +45,7 @@ namespace sge
 
 		// Render the model using its mesh data & matrix data
 		void Render(ID3D10Device* pDevice);
+		void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
 
 
 		// ACCESSORS

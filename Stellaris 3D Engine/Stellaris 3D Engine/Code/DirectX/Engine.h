@@ -63,6 +63,13 @@ namespace sge
 		CShader* mpBasicShader;
 
 
+		// SHADOW VARIABLES
+		//---------------------------------
+		ID3D10Texture2D* mpShadowMapTexture;
+		ID3D10DepthStencilView* mpShadowMapDepthView;
+		ID3D10ShaderResourceView* mpShadowMap;
+
+
 		// MISC VARIABLES
 		//---------------------------------
 		DirectX::XMFLOAT3 mAmbientColour;

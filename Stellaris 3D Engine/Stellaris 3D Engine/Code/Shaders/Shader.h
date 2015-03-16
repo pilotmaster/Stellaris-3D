@@ -37,6 +37,7 @@ namespace sge
 		ID3D10EffectTechnique* GetNormalMappingTechnique();
 		ID3D10EffectTechnique* GetParallaxMappingTechnique();
 		ID3D10EffectTechnique* GetCellShadingTechnique();
+		ID3D10EffectTechnique* GetDepthOnlyTechnique();
 
 		// Matrices
 		ID3D10EffectMatrixVariable* GetFXWorldVar();
@@ -48,6 +49,7 @@ namespace sge
 		// Textures
 		ID3D10EffectShaderResourceVariable* GetFXDiffuseMapVar();
 		ID3D10EffectShaderResourceVariable* GetFXNormalMapVar();
+		ID3D10EffectShaderResourceVariable* GetFXShadowMapVar();
 
 		// Vectors
 		ID3D10EffectVectorVariable* GetFXLightPositionsVar();
@@ -77,6 +79,7 @@ namespace sge
 		ID3D10EffectTechnique* mpFXNormalMappingTech;			// Technique for rendering normal maps with lighting
 		ID3D10EffectTechnique* mpFXParallaxMappingTech;			// Technique for rendering normal maps with lighting & parallax effect
 		ID3D10EffectTechnique* mpFXCellShadingTech;				// Technique for rendering a cartoonish effect on models
+		ID3D10EffectTechnique* mpFXDepthOnlyTech;				// Technique for rendering just the depth (value of 0 - 1) to the render target
 
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
@@ -100,6 +103,7 @@ namespace sge
 
 		ID3D10EffectShaderResourceVariable* mpFXVarDiffuseMap;
 		ID3D10EffectShaderResourceVariable* mpFXVarNormalMap;
+		ID3D10EffectShaderResourceVariable* mpFXVarShadowMap;
 	};
 }
 

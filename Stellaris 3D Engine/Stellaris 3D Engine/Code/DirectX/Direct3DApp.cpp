@@ -128,6 +128,10 @@ namespace sge
 		// Create swap chain
 		D3D_FEATURE_LEVEL fl = D3D_FEATURE_LEVEL_10_1;
 
+		DXGI_SWAP_CHAIN_DESC* pDesc = &swapDesc;
+		IDXGISwapChain** ppChain = &mpSwapChain;
+		ID3D10Device** ppDevice = &mpDevice;
+
 		HRESULT result = D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, deviceFlags,
 			D3D10_SDK_VERSION, &swapDesc, &mpSwapChain, &mpDevice);
 

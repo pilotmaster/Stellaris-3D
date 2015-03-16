@@ -36,7 +36,7 @@ namespace sge
 		virtual void UpdateMatrices();
 
 		virtual void Update() = 0;
-		virtual void Render(ID3D10Device* pDevice, CShader* pShader) = 0;
+		virtual void Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow = false) = 0;
 
 
 		// ACCESSORS

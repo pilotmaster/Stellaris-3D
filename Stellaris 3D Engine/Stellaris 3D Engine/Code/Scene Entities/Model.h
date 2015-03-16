@@ -30,7 +30,7 @@ namespace sge
 		// Update the matrices, position, scale, etc. of the model
 		virtual void Update();
 		// Render the model using its mesh data & matrix data
-		virtual void Render(ID3D10Device* pDevice, CShader* pShader);
+		virtual void Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow = false);
 
 
 		// ACCESSORS

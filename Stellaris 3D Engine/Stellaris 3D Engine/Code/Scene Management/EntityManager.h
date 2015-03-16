@@ -42,6 +42,7 @@ namespace sge
 		// METHODS
 		//---------------------------------
 		void Update();
+		void RenderShadows(ID3D10Device* pDevice, CShader* pShader);
 		// The base shader is passed in so that camera and light data can be passed to the effect file
 		void Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader);
 		bool DestroyEntity(size_t key);
