@@ -27,6 +27,8 @@ namespace sge
 		mpFXVarProjMat = nullptr;
 		mpFXVarViewMat = nullptr;
 		mpFXVarWorldMat = nullptr;
+		mpFXVarLightViewMat = nullptr;
+		mpFXVarLightProjMat = nullptr;
 
 		mpFXVarLightPositions = nullptr;
 		mpFXVarLightColours = nullptr;
@@ -93,6 +95,8 @@ namespace sge
 		mpFXVarProjMat = mpFX->GetVariableByName("ProjMatrix")->AsMatrix();
 		mpFXVarViewMat = mpFX->GetVariableByName("ViewMatrix")->AsMatrix();
 		mpFXVarWorldMat = mpFX->GetVariableByName("WorldMatrix")->AsMatrix();
+		mpFXVarLightViewMat = mpFX->GetVariableByName("LightViewMatrix")->AsMatrix();
+		mpFXVarLightProjMat = mpFX->GetVariableByName("LightProjMatrix")->AsMatrix();
 
 		mpFXVarLightPositions = mpFX->GetVariableByName("LightPos")->AsVector(); 
 		mpFXVarLightColours = mpFX->GetVariableByName("LightCol")->AsVector();
@@ -166,6 +170,16 @@ namespace sge
 	ID3D10EffectMatrixVariable* CShader::GetFXProjVar()
 	{
 		return mpFXVarProjMat;
+	}
+
+	ID3D10EffectMatrixVariable* CShader::GetFXLightViewVar()
+	{
+		return mpFXVarLightViewMat;
+	}
+
+	ID3D10EffectMatrixVariable* CShader::GetFXLightProjVar()
+	{
+		return mpFXVarLightProjMat;
 	}
 
 	ID3D10EffectShaderResourceVariable* CShader::GetFXDiffuseMapVar()

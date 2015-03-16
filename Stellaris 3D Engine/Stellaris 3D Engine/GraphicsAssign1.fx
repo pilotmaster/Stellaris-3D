@@ -79,16 +79,17 @@ float3 LightPos[NUM_LIGHTS];
 float3 LightCol[NUM_LIGHTS];
 float3 LightFacing[NUM_LIGHTS];
 float LightCosHalfAngle[NUM_LIGHTS];
+float4x4 LightViewMatrix[NUM_LIGHTS];
+float4x4 LightProjMatrix[NUM_LIGHTS];
 float3 AmbientColour;
-
-float3 CameraPos;
-
 float SpecularPower;
 
+float3 CameraPos;
 
 // Diffuse texture map (the main texture colour) - may contain specular map in alpha channel
 Texture2D DiffuseMap;
 Texture2D NormalMap;
+Texture2D ShadowMap;
 
 
 //====================================================================================
@@ -337,17 +338,17 @@ float4 PSLitTexture(VS_LIGHTING_OUTPUT vOut) : SV_Target
 		LightSpec = float3(0.0f, 0.0f, 0.0f);
 		
 		// Check value of light
-		if (LightType[i] == 0)
+		if (LightType[i] == 1)
 		{
 			// Point light
 			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, vOut.WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 1)
+		else if (LightType[i] == 2)
 		{
 			// Spot light
 			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, vOut.WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 2)
+		else if (LightType[i] == 3)
 		{
 			// Directional Light
 		}

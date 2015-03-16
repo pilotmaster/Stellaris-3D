@@ -14,7 +14,7 @@ namespace sge
 	// Enumeration of light types and their associated values
 	enum ELightTypes
 	{
-		POINT_LIGHT = 0, SPOT_LIGHT = 1
+		POINT_LIGHT = 1, SPOT_LIGHT = 2
 	};
 
 	//====================================================================================
@@ -32,6 +32,7 @@ namespace sge
 
 		// METHODS
 		//---------------------------------
+		void Update() override;
 		// Render the model using its mesh data & matrix data
 		void Render(ID3D10Device* pDevice, CShader* pShader);
 
@@ -58,6 +59,16 @@ namespace sge
 			return mCosHalfAngle;
 		}
 
+		inline DirectX::XMFLOAT4X4 GetViewMatrix()
+		{
+			return mViewMatrix;
+		}
+
+		inline DirectX::XMFLOAT4X4 GetProjectionMatrix()
+		{
+			return mProjMatrix;
+		}
+
 
 		// MUTATORS
 		//---------------------------------
@@ -75,6 +86,10 @@ namespace sge
 		float mConeAngle;
 		float mCosHalfAngle;
 		int mLightType;
+
+		// Spot light data
+		DirectX::XMFLOAT4X4 mViewMatrix;
+		DirectX::XMFLOAT4X4 mProjMatrix;
 	};
 }
 

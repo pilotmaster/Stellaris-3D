@@ -64,6 +64,8 @@ namespace sge
 		DirectX::XMFLOAT3 mpLightColours[MAX_LIGHTS];
 		DirectX::XMFLOAT3 mpLightPositions[MAX_LIGHTS];
 		DirectX::XMFLOAT3 mpLightFacings[MAX_LIGHTS];
+		DirectX::XMFLOAT4X4 mpLightViewMatrices[MAX_LIGHTS];
+		DirectX::XMFLOAT4X4 mpLightProjMatrices[MAX_LIGHTS];
 		float mpCosHalfAngles[MAX_LIGHTS];
 
 		// The next ID which will be used as a key for the next entity that is placed into

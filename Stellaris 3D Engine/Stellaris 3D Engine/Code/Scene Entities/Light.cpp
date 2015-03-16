@@ -62,10 +62,26 @@ namespace sge
 		mCosHalfAngle = cosf(DirectX::XMConvertToRadians(mConeAngle / 2.0f));
 	}
 
+	void CLight::Update()
+	{
+		// Call paren'ts update function
+		CModel::Update();
+
+		// If it is a spot light, update the view and projection matrices
+		if (mLightType == 2)
+		{
+			// View matrix
+			DirectX::XMMATRIX matView = DirectX::XMMatrixInverse(nullptr, DirectX::XMLoadFloat4x4(&mModelMatrix));
+			DirectX::XMStoreFloat4x4(&mViewMatrix, matView);
+
+			// Projection matrix
+			DirectX::XMMATRIX matProj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(mConeAngle), 1.0f, 0.01f, 1000.0f);
+			DirectX::XMStoreFloat4x4(&mProjMatrix, matProj);
+		}
+	}
+
 	void CLight::Render(ID3D10Device* pDevice, CShader* pShader)
 	{
-		int i = mEID;
-		
 		// Before rendering, ensure model has geometry
 		if (mpMesh)
 		{

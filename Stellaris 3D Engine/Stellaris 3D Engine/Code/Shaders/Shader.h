@@ -42,6 +42,8 @@ namespace sge
 		ID3D10EffectMatrixVariable* GetFXWorldVar();
 		ID3D10EffectMatrixVariable* GetFXViewVar();
 		ID3D10EffectMatrixVariable* GetFXProjVar();
+		ID3D10EffectMatrixVariable* GetFXLightViewVar();
+		ID3D10EffectMatrixVariable* GetFXLightProjVar();
 
 		// Textures
 		ID3D10EffectShaderResourceVariable* GetFXDiffuseMapVar();
@@ -79,6 +81,8 @@ namespace sge
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
 		ID3D10EffectMatrixVariable* mpFXVarProjMat;
+		ID3D10EffectMatrixVariable* mpFXVarLightViewMat;
+		ID3D10EffectMatrixVariable* mpFXVarLightProjMat;
 
 		ID3D10EffectVectorVariable* mpFXVarLightPositions;
 		ID3D10EffectVectorVariable* mpFXVarLightColours;
