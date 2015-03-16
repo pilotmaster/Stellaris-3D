@@ -31,6 +31,9 @@ namespace sge
 		mpFXVarLightPositions = nullptr;
 		mpFXVarLightColours = nullptr;
 		mpFXVarModelColour = nullptr;
+		mpFXVarCosHalfAngle = nullptr;
+		mpFXVarLightType = nullptr;
+		mpFXVarLightFacings = nullptr;
 		mpFXVarAmbientColour = nullptr;
 		mpFXVarCameraPosition = nullptr;
 

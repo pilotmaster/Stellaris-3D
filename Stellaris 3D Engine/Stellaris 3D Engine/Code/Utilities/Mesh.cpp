@@ -255,6 +255,6 @@ namespace sge
 			mpRenderTech->GetPassByIndex(p)->Apply(0);
 			pDevice->DrawIndexed(mNumIndices, 0, 0);
 		}
-		pDevice->DrawIndexed(mNumIndices, 0, 0);
+		//pDevice->DrawIndexed(mNumIndices, 0, 0);
 	}
 }

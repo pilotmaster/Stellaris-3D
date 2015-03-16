@@ -64,6 +64,8 @@ namespace sge
 
 	void CLight::Render(ID3D10Device* pDevice, CShader* pShader)
 	{
+		int i = mEID;
+		
 		// Before rendering, ensure model has geometry
 		if (mpMesh)
 		{

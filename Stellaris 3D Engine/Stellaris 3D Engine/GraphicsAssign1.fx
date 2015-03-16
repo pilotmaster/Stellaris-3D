@@ -127,7 +127,7 @@ void DoSpotLight(int lIndex, float3 camDir, float3 worldPos, float3 worldNorm, o
 	float3 LightDir = normalize(LightPos[lIndex] - worldPos);
 
 	// Calculate the dot product between light-pixel vector and the light-facing vector
-	float FDotL = dot(-LightDir, LightFacing[lIndex]);
+	float FDotL = dot(-LightDir, normalize(LightFacing[lIndex]));
 
 	// Check if within cone of light
 	if (FDotL > LightCosHalfAngle[lIndex])
@@ -544,7 +544,7 @@ float4 PSLitParallaxMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 		else if (LightType[i] == 1)
 		{
 			// Spot light
-			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
+			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
 		else if (LightType[i] == 2)
 		{

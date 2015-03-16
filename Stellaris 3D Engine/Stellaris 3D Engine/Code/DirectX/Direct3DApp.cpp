@@ -54,9 +54,6 @@ namespace sge
 			{
 				CTimer::GetTimerInstace()->Tick();
 				CalcFrameStats();
-
-				// Update application
-				Update();
 			}
 			else
 			{
@@ -131,7 +128,7 @@ namespace sge
 		// Create swap chain
 		D3D_FEATURE_LEVEL fl = D3D_FEATURE_LEVEL_10_1;
 
-		HRESULT result = D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0,
+		HRESULT result = D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, deviceFlags,
 			D3D10_SDK_VERSION, &swapDesc, &mpSwapChain, &mpDevice);
 
 
