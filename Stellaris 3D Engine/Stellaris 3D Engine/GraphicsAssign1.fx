@@ -427,17 +427,17 @@ float4 PSLitNormalMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 		LightSpec = float3(0.0f, 0.0f, 0.0f);
 
 		// Check value of light
-		if (LightType[i] == 0)
+		if (LightType[i] == 1)
 		{
 			// Point light
 			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 1)
+		else if (LightType[i] == 2)
 		{
 			// Spot light
 			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 2)
+		else if (LightType[i] == 3)
 		{
 			// Directional Light
 		}
@@ -537,17 +537,17 @@ float4 PSLitParallaxMap(VS_NORMAL_MAP_OUTPUT vOut) : SV_Target
 		LightSpec = float3(0.0f, 0.0f, 0.0f);
 
 		// Check value of light
-		if (LightType[i] == 0)
+		if (LightType[i] == 1)
 		{
 			// Point light
 			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 1)
+		else if (LightType[i] == 2)
 		{
 			// Spot light
 			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 2)
+		else if (LightType[i] == 3)
 		{
 			// Directional Light
 		}
@@ -608,17 +608,17 @@ float4 PSLitCartoonify(VS_LIGHTING_OUTPUT vOut) : SV_Target
 		LightSpec = float3(0.0f, 0.0f, 0.0f);
 
 		// Check value of light
-		if (LightType[i] == 0)
+		if (LightType[i] == 1)
 		{
 			// Point light
 			DoPointLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 1)
+		else if (LightType[i] == 2)
 		{
 			// Spot light
 			DoSpotLight(i, CameraDir, vOut.WorldPos.xyz, WorldNormal.xyz, LightDif, LightSpec);
 		}
-		else if (LightType[i] == 2)
+		else if (LightType[i] == 3)
 		{
 			// Directional Light
 		}

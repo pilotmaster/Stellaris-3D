@@ -48,7 +48,7 @@ namespace sge
 		mBrightness = brightness;
 
 		// Use brightness as a scale modifier
-		SetScale(DirectX::XMFLOAT3(mBrightness / 2.0f, mBrightness / 2.0f, mBrightness / 2.0f));
+		SetScale(DirectX::XMFLOAT3(mBrightness / 5.0f, mBrightness / 5.0f, mBrightness / 5.0f));
 
 		// Adjust light colour based on brightness
 		mBrightnessColour.x = mColour.x * mBrightness;

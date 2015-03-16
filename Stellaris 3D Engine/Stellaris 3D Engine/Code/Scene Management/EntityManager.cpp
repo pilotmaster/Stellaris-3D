@@ -96,6 +96,8 @@ namespace sge
 			mpLights[i]->GetPosition(mpLightPositions[i]);
 			mpLightFacings[i] = mpLights[i]->GetLightFacing();
 			mpCosHalfAngles[i] = mpLights[i]->GetCosHalfAngle();
+			mpLightViewMatrices[i] = mpLights[i]->GetViewMatrix();
+			mpLightProjMatrices[i] = mpLights[i]->GetProjectionMatrix();
 		}
 	}
 
@@ -113,6 +115,9 @@ namespace sge
 		pShader->GetFXLightPositionsVar()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
 		pShader->GetFXLightFacingsVar()->SetFloatVectorArray((float*)mpLightFacings, 0U, mNextLightNum);
 		pShader->GetFXCosHalfAngleVar()->SetFloatArray((float*)mpCosHalfAngles, 0U, mNextLightNum);
+
+		pShader->GetFXLightViewVar()->SetMatrixArray((float*)mpLightViewMatrices, 0U, mNextLightNum);
+		pShader->GetFXLightProjVar()->SetMatrixArray((float*)mpLightProjMatrices, 0U, mNextLightNum);
 
 		pShader->GetFXSpecularPowerVar()->SetFloat(100.0f);
 		
