@@ -7,6 +7,7 @@
 
 
 #include <unordered_map>
+#include <DirectXCollision.h>
 
 #include "..\Scene Entities\Light.h"
 #include "..\Scene Entities\Camera.h"
@@ -34,6 +35,8 @@ namespace sge
 		CCamera* CreateCameraEntity(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, float fov, float nearClip, float farClip);
 		// Creates an entity of type model and returns the created model
 		CModel* CreateModelEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
+		// Create a mirror entity
+		CModel* CreateMirrorEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
 		// Create a new light
 		CLight* CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
 			DirectX::XMFLOAT3 lightColour, int lightType);
@@ -42,9 +45,11 @@ namespace sge
 		// METHODS
 		//---------------------------------
 		void Update();
+		void RenderMirror(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader);
 		void RenderShadows(ID3D10Device* pDevice, CShader* pShader);
 		// The base shader is passed in so that camera and light data can be passed to the effect file
 		void Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader);
+		void SetShaderVariables(CCamera* pCamera, CShader* pShader);
 		bool DestroyEntity(size_t key);
 		void DestroyAllEntities();
 
@@ -69,10 +74,14 @@ namespace sge
 		DirectX::XMFLOAT4X4 mpLightProjMatrices[MAX_LIGHTS];
 		float mpCosHalfAngles[MAX_LIGHTS];
 
+		// Mirror model
+		CModel* mpMirror;
+
 		// The next ID which will be used as a key for the next entity that is placed into
 		// the hash map
 		size_t mNextEID;
 		size_t mNextLightNum;
+		bool hasMirror = false;
 	};
 }
 

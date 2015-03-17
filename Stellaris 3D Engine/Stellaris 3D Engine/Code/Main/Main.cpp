@@ -31,13 +31,13 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	pEngine->SetAmbientColour(DirectX::XMFLOAT3(0.1f, 0.2f, 0.25f));
 
 	// Model loading
-	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));
+	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f), {0.0f, DirectX::XMConvertToRadians(25.0f), 0.0f});
 
 	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Hills.x", sge::FX_PARALLAX);
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor, DirectX::XMFLOAT3(-30.0f, 0.0f, 0.0f));
 
 	sge::CMesh* mshMirror = pEngine->LoadMesh("Media\\Mirror.x", sge::FX_MIRROR);
-	sge::CModel* mdlMirror = pEngine->CreateModel(mshMirror, { 40.0f, 18.0f, 50.0f }, { 0.0f, DirectX::XMConvertToRadians(210.0f), 0.0f });
+	sge::CModel* mdlMirror = pEngine->CreateMirror(mshMirror, { 0.0f, 20.0f, 30.0f }, { 0.0f, DirectX::XMConvertToRadians(-180.0f), 0.0f });
 
 	sge::CMesh* mshWiggleSphere = pEngine->LoadMesh("Media\\Sphere.x", sge::FX_WIGGLE);
 	sge::CModel* mdlWiggleSphere = pEngine->CreateModel(mshWiggleSphere, DirectX::XMFLOAT3(20.0f, 5.0f, -25.0f));

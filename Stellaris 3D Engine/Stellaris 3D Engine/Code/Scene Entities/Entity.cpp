@@ -29,15 +29,16 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	void CEntity::UpdateMatrices()
 	{
-		DirectX::XMMATRIX world, rotation, scale, translation;
-
+		DirectX::XMMATRIX world, rotation, rotationX, rotationY, rotationZ, scale, translation;
 		world = DirectX::XMMatrixIdentity();
 		translation = world;
+
 		rotation = DirectX::XMMatrixRotationRollPitchYaw(mRotation.x, mRotation.y, mRotation.z);
+
 		scale = DirectX::XMMatrixScaling(mScale.x, mScale.y, mScale.z);
 		translation = DirectX::XMMatrixTranslation(mPosition.x, mPosition.y, mPosition.z);
 
-		world = rotation * scale * translation;
+		world = scale * rotation * translation;
 		DirectX::XMStoreFloat4x4(&mModelMatrix, world);
 	}
 }

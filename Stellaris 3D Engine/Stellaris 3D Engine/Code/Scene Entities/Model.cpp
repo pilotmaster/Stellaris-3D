@@ -39,7 +39,34 @@ namespace sge
 		UpdateMatrices();
 	}
 
-	void CModel::Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow)
+	void CModel::Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech, CShader* pShader)
+	{
+		// Before rendering, ensure model has geometry
+		if (mpMesh)
+		{
+			// Send model data over required by model's shader
+			pShader->GetFXWorldVar()->SetMatrix((float*)&mModelMatrix);
+
+			// If it has a texture, send it over
+			if (mpMesh->GetMaterial())
+			{
+				pShader->GetFXDiffuseMapVar()->SetResource(mpMesh->GetMaterial()->GetDiffuseMap());
+			}
+
+			// If it has a normal map, send it over
+			if (mpMesh->GetMaterial()->GetNormalMap())
+			{
+				pShader->GetFXNormalMapVar()->SetResource(mpMesh->GetMaterial()->GetNormalMap());
+			}
+
+			// Set model colour & wiggle values
+			pShader->GetFXModelColourVar()->SetRawValue(&mModelColour, 0U, 12U);
+
+			mpMesh->Render(pDevice, pTech);
+		}
+	}
+
+	void CModel::Render(ID3D10Device* pDevice, CShader* pShader, bool mirrored, bool forShadow)
 	{
 		// Before rendering, ensure model has geometry
 		if (mpMesh)
@@ -72,7 +99,14 @@ namespace sge
 				pShader->GetFXOutlineThicknessVar()->SetFloat(mOutlineThickness);
 
 				// Render the mesh
-				mpMesh->Render(pDevice);
+				if (mirrored)
+				{
+					mpMesh->Render(pDevice, pShader->GetVertexLitTexMirrorTechnique());
+				}
+				else
+				{
+					mpMesh->Render(pDevice);
+				}
 			}
 		}
 	}

@@ -36,7 +36,7 @@ namespace sge
 		virtual void UpdateMatrices();
 
 		virtual void Update() = 0;
-		virtual void Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow = false) = 0;
+		virtual void Render(ID3D10Device* pDevice, CShader* pShader, bool mirrored = false, bool forShadow = false) = 0;
 
 
 		// ACCESSORS
@@ -99,6 +99,11 @@ namespace sge
 		inline float GetZScale()
 		{
 			return mScale.z;
+		}
+
+		inline void GetModelMatrix(DirectX::XMFLOAT4X4& matrix)
+		{
+			matrix = mModelMatrix;
 		}
 
 

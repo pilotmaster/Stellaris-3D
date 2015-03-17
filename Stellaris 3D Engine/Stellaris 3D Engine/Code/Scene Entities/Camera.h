@@ -26,14 +26,14 @@ namespace sge
 		//---------------------------------
 		void UpdateMatrices();
 		void Update();
-		void Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow = false);
+		void Render(ID3D10Device* pDevice, CShader* pShader, bool mirrored = false, bool forShadow = false);
 
 
 		// ACCESSORS
 		//---------------------------------
-		DirectX::XMFLOAT4X4 GetViewMatrix()
+		inline void GetViewMatrix(DirectX::XMFLOAT4X4& matrix)
 		{
-			return mViewMatrix;
+			matrix = mViewMatrix;
 		}
 
 		DirectX::XMFLOAT4X4 GetProjectionMatrix()

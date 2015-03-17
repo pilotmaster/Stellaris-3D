@@ -714,6 +714,11 @@ PS_DEPTH_OUTPUT PSClearDepth(VS_BASIC_OUTPUT vOut)
 	return pOut;
 }
 
+float4 PSPlainColour(VS_BASIC_OUTPUT vOut) : SV_Target
+{
+	return float4(ModelColour, 1.0f);
+}
+
 float4 PSPixelDepth(VS_BASIC_OUTPUT vOut) : SV_Target
 {
 	// Output the value that would go in the depth puffer to the pixel colour (greyscale)
@@ -1044,7 +1049,7 @@ technique10 MirrorClearTech
 	{
 		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_4_0, PSOneColour()));
+		SetPixelShader(CompileShader(ps_4_0, PSPlainColour()));
 
 		// Switch off colour output (only updating stencil in this pass), normal culling
 		SetBlendState(NoColourOutput, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
@@ -1076,7 +1081,7 @@ technique10 MirrorSurfaceTech
 	{
 		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_4_0, PSOneColour()));
+		SetPixelShader(CompileShader(ps_4_0, PSPlainColour()));
 
 		// Use a special blending state to disable any changes to the viewport pixels as we're only updating the stencil/depth
 		// buffer in this pass (for now).

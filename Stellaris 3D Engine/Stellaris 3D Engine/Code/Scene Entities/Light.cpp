@@ -68,7 +68,7 @@ namespace sge
 		CModel::Update();
 
 		// If it is a spot light, update the view and projection matrices
-		if (mLightType == 2)
+		if (mLightType == SPOT_LIGHT)
 		{
 			// View matrix
 			DirectX::XMMATRIX matView = DirectX::XMMatrixInverse(nullptr, DirectX::XMLoadFloat4x4(&mModelMatrix));
@@ -80,7 +80,7 @@ namespace sge
 		}
 	}
 
-	void CLight::Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow)
+	void CLight::Render(ID3D10Device* pDevice, CShader* pShader, bool mirrored, bool forShadow)
 	{
 		// If rendering for a shadow - do not take into consideration the lights
 		if (forShadow) return;
@@ -101,7 +101,14 @@ namespace sge
 			}
 
 			// Render the mesh
-			mpMesh->Render(pDevice);
+			if (mirrored)
+			{
+				mpMesh->Render(pDevice, pShader->GetAdditiveTintTexMirrorTechnique());
+			}
+			else
+			{
+				mpMesh->Render(pDevice);
+			}
 		}
 	}
 }

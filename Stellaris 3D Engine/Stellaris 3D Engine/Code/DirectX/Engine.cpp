@@ -129,6 +129,7 @@ namespace sge
 
 		// RENDER ENTITIES IN THE SCENE
 		//---------------------------------
+		mpEntityManager->RenderMirror(mpDevice, pCamera, mpBasicShader);
 		mpEntityManager->Render(mpDevice, pCamera, mpBasicShader);
 
 
@@ -179,7 +180,7 @@ namespace sge
 			break;
 
 		case FX_MIRROR:
-			pTechnique = mpBasicShader->GetMirrorClearTechnique();
+			pTechnique = mpBasicShader->GetMirrorSurfaceTechnique();
 			break;
 		}
 
@@ -201,6 +202,14 @@ namespace sge
 	{
 		// Request a new model from the entity manager and return its reuslt
 		return mpEntityManager->CreateModelEntity(pMesh, pos, rot, scale);
+	}
+
+	CModel* CStellaris3D::CreateMirror(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale)
+	{
+		// Request a new model from the entity manager and return its reuslt
+		CModel* pModel = mpEntityManager->CreateMirrorEntity(pMesh, pos, rot, scale);
+		if (pModel) pModel->SetModelColour(mAmbientColour);
+		return pModel;
 	}
 
 	CLight* CStellaris3D::CreateLight(CMesh* pMesh, ELightTypes lightType, DirectX::XMFLOAT3 colour, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot,

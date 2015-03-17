@@ -52,6 +52,25 @@ namespace sge
 		return pModel;
 	}
 
+	CModel* CEntityManager::CreateMirrorEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation,
+		DirectX::XMFLOAT3 scale)
+	{
+		// Check if a mirror has already been created
+		if (!hasMirror)
+		{
+			mpMirror = new CModel(mNextEID, pMesh, pos, orientation, scale);
+
+			// Store the model in the hash map
+			mEntityMap.insert(EntityMap::value_type(mNextEID, mpMirror));
+
+			mNextEID++;
+			hasMirror = true;
+			return mpMirror;
+		}
+
+		return nullptr;
+	}
+
 	CLight* CEntityManager::CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
 		DirectX::XMFLOAT3 lightColour, int lightType)
 	{
@@ -77,6 +96,9 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	void CEntityManager::Update()
 	{		
+		// Update mirror modle
+		mpMirror->Update();
+		
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 		{
@@ -101,6 +123,64 @@ namespace sge
 		}
 	}
 
+	void CEntityManager::RenderMirror(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader)
+	{
+		SetShaderVariables(pCamera, pShader);
+		
+		// Render just the mirror with the clear surface technique
+		mpMirror->Render(pDevice, pShader->GetMirrorClearTechnique(), pShader);
+		
+		// Create the mirror's plane
+		DirectX::XMFLOAT4X4 mirrorMat;
+		mpMirror->GetModelMatrix(mirrorMat);
+		DirectX::XMFLOAT3 mirrorPoint{ mirrorMat(3, 0), mirrorMat(3, 1), mirrorMat(3, 2) };
+		DirectX::XMFLOAT3 mirrorNormal{ mirrorMat(2, 0), mirrorMat(2, 1), mirrorMat(2, 2) };
+		DirectX::XMVECTOR vecMirrorPlane = DirectX::XMPlaneFromPointNormal(DirectX::XMLoadFloat3(&mirrorPoint), DirectX::XMLoadFloat3(&mirrorNormal));
+
+		// Reflect camera's view matrix in the mirror plane
+		DirectX::XMMATRIX reflectViewMat = DirectX::XMMatrixReflect(vecMirrorPlane);
+		DirectX::XMFLOAT4X4 camViewMat;
+		pCamera->GetViewMatrix(camViewMat);
+		reflectViewMat *= DirectX::XMLoadFloat4x4(&camViewMat);
+
+		// Reflect camera's position in the mirror plane
+		DirectX::XMFLOAT3 camPos;
+		pCamera->GetPosition(camPos);
+		DirectX::XMVECTOR reflectCamPosVec = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&camPos),reflectViewMat);
+		DirectX::XMFLOAT3 reflectCamPos;
+		DirectX::XMStoreFloat3(&reflectCamPos, reflectCamPosVec);
+		DirectX::XMFLOAT4X4 finalReflectViewMat;
+		DirectX::XMStoreFloat4x4(&finalReflectViewMat, reflectViewMat);
+		DirectX::XMFLOAT4 finalMirrorPlane;
+		DirectX::XMStoreFloat4(&finalMirrorPlane, vecMirrorPlane);
+
+
+		// Render models within the mirror
+		pShader->GetFXViewVar()->SetMatrix((float*)&finalReflectViewMat);
+		pShader->GetFXCameraPositionVar()->SetRawValue(&reflectCamPos, 0U, 12U);
+		pShader->GetFXClipPlaneVar()->SetRawValue(&finalMirrorPlane, 0U, 16U);
+		
+
+		// Render all models and lights with the mirror technique
+		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
+		{
+			if (mpMirror != miterEntityMap->second)
+			{
+				miterEntityMap->second->Render(pDevice, pShader, true);
+			}
+		}
+
+		for (int i = 0; i < mNextLightNum; i++)
+		{
+			mpLights[i]->Render(pDevice, pShader, true);
+		}
+
+
+		// Reset values in shader
+		DirectX::XMFLOAT4 nullVec{0.0f, 0.0f, 0.0f, 0.0f};
+		pShader->GetFXClipPlaneVar()->SetRawValue(&nullVec, 0U, 16U);
+	}
+
 	void CEntityManager::RenderShadows(ID3D10Device* pDevice, CShader* pShader)
 	{
 		// Loop through each light & see if it is a spot light to render shadows for
@@ -114,7 +194,7 @@ namespace sge
 				// Render shadows for this light
 				for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 				{
-					miterEntityMap->second->Render(pDevice, pShader, true);
+					miterEntityMap->second->Render(pDevice, pShader, false, true);
 				}
 			}
 		}
@@ -122,8 +202,34 @@ namespace sge
 
 	void CEntityManager::Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader)
 	{
+		SetShaderVariables(pCamera, pShader);
+		
+		// Render mirror
+		mpMirror->Render(pDevice, pShader);
+
+		// Call the update function for each stored entity
+		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
+		{
+			if (mpMirror != miterEntityMap->second)
+			{
+				miterEntityMap->second->Render(pDevice, pShader);
+			}
+		}
+
+		// Render lights
+		for (int i = 0; i < mNextLightNum; i++)
+		{
+			mpLights[i]->Render(pDevice, pShader);
+		}
+	}
+
+	void CEntityManager::SetShaderVariables(CCamera* pCamera, CShader* pShader)
+	{
 		// Pass camera's data over to the shader
-		pShader->GetFXViewVar()->SetMatrix((float*)&pCamera->GetViewMatrix());
+		DirectX::XMFLOAT4X4 viewMat;
+		pCamera->GetViewMatrix(viewMat);
+
+		pShader->GetFXViewVar()->SetMatrix((float*)&viewMat);
 		pShader->GetFXProjVar()->SetMatrix((float*)&pCamera->GetProjectionMatrix());
 
 		DirectX::XMFLOAT3 cameraPos;
@@ -139,19 +245,6 @@ namespace sge
 		pShader->GetFXLightProjVar()->SetMatrixArray((float*)mpLightProjMatrices, 0U, mNextLightNum);
 
 		pShader->GetFXSpecularPowerVar()->SetFloat(100.0f);
-		
-
-		// Call the update function for each stored entity
-		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
-		{
-			miterEntityMap->second->Render(pDevice, pShader);
-		}
-
-		// Render lights
-		for (int i = 0; i < mNextLightNum; i++)
-		{
-			mpLights[i]->Render(pDevice, pShader);
-		}
 	}
 
 	bool CEntityManager::DestroyEntity(size_t key)

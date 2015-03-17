@@ -34,7 +34,7 @@ namespace sge
 		//---------------------------------
 		void Update() override;
 		// Render the model using its mesh data & matrix data
-		void Render(ID3D10Device* pDevice, CShader* pShader, bool forShadow = false);
+		void Render(ID3D10Device* pDevice, CShader* pShader, bool mirrored = false, bool forShadow = false);
 
 
 		// ACCESSORS
