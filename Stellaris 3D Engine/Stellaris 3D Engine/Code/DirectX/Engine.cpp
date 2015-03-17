@@ -177,6 +177,10 @@ namespace sge
 		case FX_CELL_SHADED:
 			pTechnique = mpBasicShader->GetCellShadingTechnique();
 			break;
+
+		case FX_MIRROR:
+			pTechnique = mpBasicShader->GetMirrorClearTechnique();
+			break;
 		}
 
 		

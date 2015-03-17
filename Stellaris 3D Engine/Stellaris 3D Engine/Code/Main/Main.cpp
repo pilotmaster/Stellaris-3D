@@ -33,16 +33,19 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	// Model loading
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));
 
-	DirectX::XMFLOAT3 cubePos{ 0.0f, 5.0f, 0.0f };
-	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::FX_LIT_TEXTURED);
-	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
-
 	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Hills.x", sge::FX_PARALLAX);
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor, DirectX::XMFLOAT3(-30.0f, 0.0f, 0.0f));
+
+	sge::CMesh* mshMirror = pEngine->LoadMesh("Media\\Mirror.x", sge::FX_MIRROR);
+	sge::CModel* mdlMirror = pEngine->CreateModel(mshMirror, { 40.0f, 18.0f, 50.0f }, { 0.0f, DirectX::XMConvertToRadians(210.0f), 0.0f });
 
 	sge::CMesh* mshWiggleSphere = pEngine->LoadMesh("Media\\Sphere.x", sge::FX_WIGGLE);
 	sge::CModel* mdlWiggleSphere = pEngine->CreateModel(mshWiggleSphere, DirectX::XMFLOAT3(20.0f, 5.0f, -25.0f));
 	mdlWiggleSphere->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+
+	DirectX::XMFLOAT3 cubePos{ 0.0f, 5.0f, 0.0f };
+	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::FX_LIT_TEXTURED);
+	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
 
 	sge::CMesh* mshTeapot = pEngine->LoadMesh("Media\\Teapot.x", sge::FX_NORMAL_MAPPED);
 	sge::CModel* mdlTeapot = pEngine->CreateModel(mshTeapot, DirectX::XMFLOAT3(-20.0f, 0.0f, 25.0f));
@@ -51,9 +54,6 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CModel* mdlTroll = pEngine->CreateModel(mshTroll, DirectX::XMFLOAT3(20.0f, 0.0f, 25.0f));
 	mdlTroll->Scale(DirectX::XMFLOAT3(5.0f, 5.0f, 5.0f));
 	mdlTroll->SetModelColour(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-
-	sge::CMesh* mshMirror = pEngine->LoadMesh("Media\\Mirror.x", sge::FX_LIT_TEXTURED);
-	sge::CModel* mdlMirror = pEngine->CreateModel(mshMirror, { 40.0f, 18.0f, 50.0f }, { 0.0f, DirectX::XMConvertToRadians(210.0f), 0.0f });
 
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::FX_LIGHT);
 	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight, sge::POINT_LIGHT);
