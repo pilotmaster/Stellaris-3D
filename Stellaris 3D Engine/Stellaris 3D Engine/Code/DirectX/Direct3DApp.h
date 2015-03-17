@@ -5,6 +5,8 @@
 #ifndef _DIRECT_3D_APP_H_
 #define _DIRECT_3D_APP_H_
 
+#include <memory>
+
 #include "..\Windows\Window.h"
 #include "..\Scene Management\EntityManager.h"
 

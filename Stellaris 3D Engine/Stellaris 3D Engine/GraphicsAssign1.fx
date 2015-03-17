@@ -34,8 +34,9 @@ struct VS_POS_ONLY_OUTPUT
 // Data output from vertex shader to pixel shader for simple techniques. Again different techniques have different requirements
 struct VS_BASIC_OUTPUT
 {
-    float4 ProjPos     : SV_POSITION;
-    float2 UV          : TEXCOORD0;
+    float4 ProjPos  : SV_POSITION;
+    float2 UV       : TEXCOORD0;
+	float  ClipDist : SV_ClipDistance;
 };
 
 // Output for if there is going to be lighting on the item (without tangent)
@@ -45,6 +46,7 @@ struct VS_LIGHTING_OUTPUT
 	float3 WorldPos    : POSITION;
 	float3 WorldNormal : NORMAL;
 	float2 UV          : TEXCOORD0;
+	float  ClipDist    : SV_ClipDistance;
 };
 
 // Output required for normal mapping & possibly parallax mapping
@@ -55,6 +57,12 @@ struct VS_NORMAL_MAP_OUTPUT
 	float3 ModelNormal  : NORMAL;
 	float3 ModelTangent : TANGENT;
 	float2 UV           : TEXCOORD0;
+};
+
+struct PS_DEPTH_OUTPUT
+{
+	float4 Colour : SV_Target;
+	float  Depth : SV_Depth;
 };
 
 
@@ -85,6 +93,12 @@ float3 AmbientColour;
 float SpecularPower;
 
 float3 CameraPos;
+
+// We view a reflection using a camera that is reflected in the mirror. However, the near clip plane for a reflected camera
+// is different - it needs to be the plane of the mirror itself. Otherwise, we would see objects *behind* the mirror in the
+// reflection. So we use a custom clip plane, a special output (new in DX10) and a single line of code at the end of each
+// vertex shader that allows us to use any arbitrary plane in space as the near clip plane. This is an advanced subtle detail.
+float4 ClipPlane;
 
 // Diffuse texture map (the main texture colour) - may contain specular map in alpha channel
 Texture2D DiffuseMap;
@@ -174,6 +188,9 @@ VS_BASIC_OUTPUT VSBasicTransform(VS_BASIC_INPUT vIn)
 	
 	// Pass texture coordinates (UVs) on to the pixel shader
 	vOut.UV = vIn.UV;
+
+	// Custom clip plane for mirrors
+	vOut.ClipDist = dot(worldPos, ClipPlane);
 
 	return vOut;
 }
@@ -278,6 +295,9 @@ VS_LIGHTING_OUTPUT VSLightingTransform(VS_BASIC_INPUT vIn)
 	// Pass texture coordinates (UVs) on to the pixel shader
 	vOut.UV = vIn.UV;
 
+	// Custom clip plane for mirrors - see comment near top
+	vOut.ClipDist = dot(worldPos, ClipPlane);
+
 	return vOut;
 }
 
@@ -309,6 +329,17 @@ float4 PSTintedTexture(VS_BASIC_OUTPUT vOut) : SV_Target
 	diffuseColour.rgb *= ModelColour;
 
 	return diffuseColour;
+}
+
+float4 PSTintDiffuseMap(VS_BASIC_OUTPUT vOut) : SV_Target
+{
+	// Extract diffuse material colour for this pixel from a texture
+	float4 diffuseMapColour = DiffuseMap.Sample(TrilinearWrap, vOut.UV);
+
+	// Tint by global colour (set from C++)
+	diffuseMapColour.rgb *= ModelColour / 10;
+
+	return diffuseMapColour;
 }
 
 // Tints a texture toward a given model colour
@@ -673,6 +704,16 @@ float4 PSLitCartoonify(VS_LIGHTING_OUTPUT vOut) : SV_Target
 	return combinedColour;
 }
 
+PS_DEPTH_OUTPUT PSClearDepth(VS_BASIC_OUTPUT vOut)
+{
+	PS_DEPTH_OUTPUT pOut;
+
+	pOut.Colour = float4(ModelColour, 1.0f);
+	pOut.Depth = 1.0f;
+
+	return pOut;
+}
+
 float4 PSPixelDepth(VS_BASIC_OUTPUT vOut) : SV_Target
 {
 	// Output the value that would go in the depth puffer to the pixel colour (greyscale)
@@ -718,11 +759,69 @@ DepthStencilState DepthWritesOff // Don't write to the depth buffer - polygons r
 	DepthWriteMask = ZERO;
 };
 
-DepthStencilState DepthWritesOn  // Write to the depth buffer - normal behaviour 
+DepthStencilState DepthWritesOn
 {
 	DepthEnable = true;
 	StencilEnable = true;
 	DepthWriteMask = ALL;
+};
+
+DepthStencilState MirrorStencil
+{
+	// Use depth buffer normally
+	DepthFunc = Less;
+	DepthWriteMask = ALL;
+
+	// Enable stencil buffer and replace all pixel stencil values with the reference value (value specified in the technique)
+	StencilEnable = true;
+	FrontFaceStencilFunc = Always;
+	FrontFaceStencilPass = Replace;
+	BackFaceStencilFunc = Always;
+	BackFaceStencilPass = Replace;
+};
+
+DepthStencilState AffectStencilArea
+{
+	// Use depth buffer normally
+	DepthFunc = Less;
+	DepthWriteMask = ALL;
+
+	// Only render those pixels whose stencil value is equal to the reference value (value specified in the technique)
+	StencilEnable = true;
+	FrontFaceStencilFunc = Equal; // Only render on matching stencil
+	FrontFaceStencilPass = Keep;  // But don't change the stencil values
+	BackFaceStencilFunc = Equal;
+	BackFaceStencilPass = Keep;
+};
+
+// Only render to the area with a given stencil value but don't write to depth-buffer, used for rendering transparent polygons within the mirror (similar to state above)
+DepthStencilState AffectStencilAreaDepthWritesOff
+{
+	// Test the depth buffer, but don't write anything new to it
+	DepthFunc = Less;
+	DepthWriteMask = ZERO;
+
+	// Only render those pixels whose stencil value is equal to the reference value (value specified in the technique)
+	StencilEnable = true;
+	FrontFaceStencilFunc = Equal; // Only render on matching stencil
+	FrontFaceStencilPass = Keep;  // But don't change the stencil values
+	BackFaceStencilFunc = Equal;
+	BackFaceStencilPass = Keep;
+};
+
+// Only render to the area with a given stencil value and completely ignore the depth buffer - used to clear the mirror before rendering the scene inside it
+DepthStencilState AffectStencilAreaIgnoreDepth
+{
+	// Disable depth buffer - we're going to fill the mirror/portal with distant z-values as we will want to render a new scene in there. So we must
+	// ignore the z-values of the mirror surface - or the depth buffer would think the mirror polygon was obscuring our distant z-values
+	DepthFunc = Always;
+
+	// Only render those pixels whose stencil value is equal to the reference value (value specified in the technique)
+	StencilEnable = True;
+	FrontFaceStencilFunc = Equal; // Only render on matching stencil
+	FrontFaceStencilPass = Keep;  // But don't change the stencil values
+	BackFaceStencilFunc = Equal;
+	BackFaceStencilPass = Keep;
 };
 
 
@@ -747,6 +846,14 @@ BlendState AlphaBlending // Additive blending is used for lighting effects
 	BlendEnable[0] = TRUE;
 	SrcBlend = SRC_ALPHA;
 	DestBlend = SRC_ALPHA;
+	BlendOp = ADD;
+};
+
+BlendState NoColourOutput // Use blending to prevent drawing pixel colours, but still allow depth/stencil updates
+{
+	BlendEnable[0] = TRUE;
+	SrcBlend = ZERO;
+	DestBlend = ONE;
 	BlendOp = ADD;
 };
 
@@ -884,5 +991,101 @@ technique10 DepthOnlyTech
 		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 		SetRasterizerState(CullBack);
 		SetDepthStencilState(DepthWritesOn, 0);
+	}
+}
+
+
+// MIRROR RENDER TECHNIQUES
+
+technique10 VertexLitTexMirrorTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSLightingTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSLitTexture()));
+
+		// No blending
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+
+		// Reverse culling - the mirror will reverse the clockwise/anti-clockwise ordering of the polygons
+		SetRasterizerState(CullFront);
+
+		// Only render in stencil area (the mirror surface)
+		SetDepthStencilState(AffectStencilArea, 1);
+	}
+}
+
+// Additive blended texture. No lighting, but uses a global colour tint. Used for light models
+technique10 AdditiveTexTintMirrorTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSTintDiffuseMap()));
+
+		// Additive blending states plus only rendering to stencil area
+		SetBlendState(AdditiveBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullNone);
+		SetDepthStencilState(AffectStencilAreaDepthWritesOff, 1);
+	}
+}
+
+
+//**** Mirror Surface Techniques ****//
+
+// Managing the mirror surface requires precise stencil and depth buffer work as we are rendering two scenes into the same viewport
+
+// First stage for stenciled mirror/portal polygons - clear the pixel colours and the depth buffer within. Prior to rendering the scene inside the mirror
+technique10 MirrorClearTech
+{
+	pass P0 // Set the stencil values to 1, do nothing to the pixels
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSOneColour()));
+
+		// Switch off colour output (only updating stencil in this pass), normal culling
+		SetBlendState(NoColourOutput, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+
+		// Set the stencil to 1 in the visible area of this polygon
+		SetDepthStencilState(MirrorStencil, 1);
+	}
+	pass P1 // Set the pixel colour to background colour, set z-value to furthest distance - but do this only where stencil was set to 1 above
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSClearDepth()));
+
+		// Switch off blending, normal culling
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullBack);
+
+		// Only affect the area where the stencil was set to 1 in the pass above
+		SetDepthStencilState(AffectStencilAreaIgnoreDepth, 1);
+	}
+}
+
+// Final stage for stenciled mirror/portal polygons - put a transparent layer over the mirror surface. Clear the stencil values to normal
+// and set the correct depth-buffer values for the mirror surface, so further rendering won't go "inside" the mirrored scene
+technique10 MirrorSurfaceTech
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSBasicTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSOneColour()));
+
+		// Use a special blending state to disable any changes to the viewport pixels as we're only updating the stencil/depth
+		// buffer in this pass (for now).
+		SetBlendState(NoColourOutput, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+
+		// Standard culling
+		SetRasterizerState(CullBack);
+
+		// Set the stencil back to 0 in the surface of the polygon
+		SetDepthStencilState(MirrorStencil, 0);
 	}
 }

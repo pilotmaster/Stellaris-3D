@@ -111,6 +111,7 @@ namespace sge
 
 		// CLEAR CURRENT SCENE
 		//---------------------------------
+		mpBasicShader->GetFXShadowMapVar()->SetResource(mpShadowMap);
 		mViewport.Width = mpWindow->GetWindowWidth();
 		mViewport.Height = mpWindow->GetWindowHeight();
 		mViewport.MinDepth = 0.0f;

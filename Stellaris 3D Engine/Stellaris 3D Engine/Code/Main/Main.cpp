@@ -11,11 +11,10 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 {
 	// ENGINE CREATION & INITIALISATION
 	//---------------------------------
-	sge::CStellaris3D* pEngine = new sge::CStellaris3D();
+	auto pEngine = std::make_unique<sge::CStellaris3D>();
 
 	if (!pEngine->InitialiseEngine(hInstance))
 	{
-		delete pEngine;
 		return 0;
 	}
 
@@ -53,6 +52,9 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	mdlTroll->Scale(DirectX::XMFLOAT3(5.0f, 5.0f, 5.0f));
 	mdlTroll->SetModelColour(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
+	sge::CMesh* mshMirror = pEngine->LoadMesh("Media\\Mirror.x", sge::FX_LIT_TEXTURED);
+	sge::CModel* mdlMirror = pEngine->CreateModel(mshMirror, { 40.0f, 18.0f, 50.0f }, { 0.0f, DirectX::XMConvertToRadians(210.0f), 0.0f });
+
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::FX_LIGHT);
 	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight, sge::POINT_LIGHT);
 	mdlLight1->SetLightBrightness(6.0f);
@@ -61,13 +63,15 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	mdlLight2->SetLightBrightness(4.0f);
 	mdlLight2->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.8f, 0.2f));
 
-	sge::CLight* mdlLight4 = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, DirectX::XMFLOAT3(0.5f, 0.7f, 0.3f), DirectX::XMFLOAT3(20.0f, 25.0f, -50.0f));
-	mdlLight4->SetLightBrightness(50.0f);
+	sge::CLight* mdlSpotlight = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, { 5.0f, 5.0f, 5.0f }, { 20.0f, 25.0f, -50.0f });
+	mdlSpotlight->SetLightBrightness(7.0f);
+
+
 
 
 	// Variables & set up for altering the lights behaviour
 	DirectX::XMFLOAT3 light1RGB = { 1.0f, 1.0f, 1.0f };
-	//mdlLight1->SetLightColour(light1RGB);
+	mdlLight1->SetLightColour(light1RGB);
 	DirectX::XMFLOAT3 light1HSL;
 
 	const float brightnessMulti = 4.0f;		// Multiplier for determining brightness
@@ -177,47 +181,45 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		// Cube local movement
 		if (sge::KeyHeld(sge::KEY_PERIOD))
 		{
-			mdlLight4->MoveLocalZ(MOVE_SPEED * delta);
+			mdlSpotlight->MoveLocalZ(MOVE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_COMMA))
 		{
-			mdlLight4->MoveLocalZ(-MOVE_SPEED * delta);
+			mdlSpotlight->MoveLocalZ(-MOVE_SPEED * delta);
 		}
 
 		// Cube rotation
 		if (sge::KeyHeld(sge::KEY_I))
 		{
-			mdlLight4->RotateX(-ROTATE_SPEED * delta);
+			mdlSpotlight->RotateX(-ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_K))
 		{
-			mdlLight4->RotateX(ROTATE_SPEED * delta);
+			mdlSpotlight->RotateX(ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_J))
 		{
-			mdlLight4->RotateY(-ROTATE_SPEED * delta);
+			mdlSpotlight->RotateY(-ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_L))
 		{
-			mdlLight4->RotateY(ROTATE_SPEED * delta);
+			mdlSpotlight->RotateY(ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_U))
 		{
-			mdlLight4->RotateZ(ROTATE_SPEED * delta);
+			mdlSpotlight->RotateZ(ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_O))
 		{
-			mdlLight4->RotateZ(-ROTATE_SPEED * delta);
+			mdlSpotlight->RotateZ(-ROTATE_SPEED * delta);
 		}
 	}
-
-	delete pEngine;
 
 	return 0;
 }

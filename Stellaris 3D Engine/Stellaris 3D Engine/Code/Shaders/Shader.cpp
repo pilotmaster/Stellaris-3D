@@ -21,6 +21,11 @@ namespace sge
 		mpFXParallaxMappingTech = nullptr;
 		mpFXCellShadingTech = nullptr;
 
+		mpFXVertexLitTexMirrorTech = nullptr;
+		mpFXAdditiveTintTexMirrorTech = nullptr;
+		mpFXMirrorClearTech = nullptr;
+		mpFXMirrorSurfaceTech = nullptr;
+
 		mpFXVarDiffuseMap = nullptr;
 		mpFXVarNormalMap = nullptr;
 		mpFXVarShadowMap = nullptr;
@@ -39,6 +44,7 @@ namespace sge
 		mpFXVarLightFacings = nullptr;
 		mpFXVarAmbientColour = nullptr;
 		mpFXVarCameraPosition = nullptr;
+		mpFXVarClipPlane = nullptr;
 
 		mpFXVarSpecularPower = nullptr;
 		mpFXVarWiggle = nullptr;
@@ -91,6 +97,11 @@ namespace sge
 		mpFXCellShadingTech = mpFX->GetTechniqueByName("CellShadingTech");
 		mpFXDepthOnlyTech = mpFX->GetTechniqueByName("DepthOnlyTech");
 
+		mpFXVertexLitTexMirrorTech = mpFX->GetTechniqueByName("VertexLitTexMirrorTech");
+		mpFXAdditiveTintTexMirrorTech = mpFX->GetTechniqueByName("AdditiveTexTintMirrorTech");
+		mpFXMirrorClearTech = mpFX->GetTechniqueByName("MirrorClearTech");
+		mpFXMirrorSurfaceTech = mpFX->GetTechniqueByName("MirrorSurfaceTech");
+
 		mpFXVarDiffuseMap = mpFX->GetVariableByName("DiffuseMap")->AsShaderResource();
 		mpFXVarNormalMap = mpFX->GetVariableByName("NormalMap")->AsShaderResource();
 		mpFXVarShadowMap = mpFX->GetVariableByName("ShadowMap")->AsShaderResource();
@@ -107,6 +118,7 @@ namespace sge
 		mpFXVarModelColour = mpFX->GetVariableByName("ModelColour")->AsVector();
 		mpFXVarAmbientColour = mpFX->GetVariableByName("AmbientColour")->AsVector();
 		mpFXVarCameraPosition = mpFX->GetVariableByName("CameraPos")->AsVector();
+		mpFXVarClipPlane = mpFX->GetVariableByName("ClipPlane")->AsVector();
 
 		mpFXVarSpecularPower = mpFX->GetVariableByName("SpecularPower")->AsScalar();
 		mpFXVarWiggle = mpFX->GetVariableByName("Wiggle")->AsScalar();
@@ -235,6 +247,11 @@ namespace sge
 		return mpFXVarCameraPosition;
 	}
 
+	ID3D10EffectVectorVariable* CShader::GetFXClipPlaneVar()
+	{
+		return mpFXVarClipPlane;
+	}
+
 	ID3D10EffectScalarVariable* CShader::GetFXSpecularPowerVar()
 	{
 		return mpFXVarSpecularPower;
@@ -263,5 +280,26 @@ namespace sge
 	ID3D10EffectScalarVariable* CShader::GetFXCosHalfAngleVar()
 	{
 		return mpFXVarCosHalfAngle;
+	}
+
+	// Effect techniques for mirror rendering
+	ID3D10EffectTechnique* CShader::GetVertexLitTexMirrorTechnique()
+	{
+		return mpFXVertexLitTexMirrorTech;
+	}
+
+	ID3D10EffectTechnique* CShader::GetAdditiveTintTexMirrorTechnique()
+	{
+		return mpFXAdditiveTintTexMirrorTech;
+	}
+
+	ID3D10EffectTechnique* CShader::GetMirrorClearTechnique()
+	{
+		return mpFXMirrorClearTech;
+	}
+
+	ID3D10EffectTechnique* CShader::GetMirrorSurfaceTechnique()
+	{
+		return mpFXMirrorSurfaceTech;
 	}
 }

@@ -18,7 +18,7 @@ namespace sge
 	enum ERenderTypes
 	{
 		FX_COLOURED, FX_TEXTURED, FX_WIGGLE, FX_LIT_TEXTURED, FX_LIGHT,	FX_NORMAL_MAPPED,
-		FX_PARALLAX, FX_CELL_SHADED
+		FX_PARALLAX, FX_CELL_SHADED, FX_MIRROR
 	};
 
 	
@@ -95,7 +95,6 @@ namespace sge
 		//---------------------------------
 
 
-
 	private:
 		// VERTEX DATA
 		//---------------------------------
@@ -119,7 +118,7 @@ namespace sge
 
 		// MATERIAL & RENDERING DATA
 		//---------------------------------
-		CMaterial* mpMaterial;
+		CMaterial* mpMaterial = nullptr;
 		ERenderTypes mRenderType;
 		ID3D10EffectTechnique* mpRenderTech;
 	};

@@ -39,6 +39,12 @@ namespace sge
 		ID3D10EffectTechnique* GetCellShadingTechnique();
 		ID3D10EffectTechnique* GetDepthOnlyTechnique();
 
+		// Effect techniques for mirror rendering
+		ID3D10EffectTechnique* GetVertexLitTexMirrorTechnique();
+		ID3D10EffectTechnique* GetAdditiveTintTexMirrorTechnique();
+		ID3D10EffectTechnique* GetMirrorClearTechnique();
+		ID3D10EffectTechnique* GetMirrorSurfaceTechnique();
+
 		// Matrices
 		ID3D10EffectMatrixVariable* GetFXWorldVar();
 		ID3D10EffectMatrixVariable* GetFXViewVar();
@@ -58,6 +64,7 @@ namespace sge
 		ID3D10EffectVectorVariable* GetFXModelColourVar();
 		ID3D10EffectVectorVariable* GetFXAmbientColourVar();
 		ID3D10EffectVectorVariable* GetFXCameraPositionVar();
+		ID3D10EffectVectorVariable* GetFXClipPlaneVar();
 
 		// Scalars
 		ID3D10EffectScalarVariable* GetFXSpecularPowerVar();
@@ -81,6 +88,12 @@ namespace sge
 		ID3D10EffectTechnique* mpFXCellShadingTech;				// Technique for rendering a cartoonish effect on models
 		ID3D10EffectTechnique* mpFXDepthOnlyTech;				// Technique for rendering just the depth (value of 0 - 1) to the render target
 
+		// Mirror techniques
+		ID3D10EffectTechnique* mpFXVertexLitTexMirrorTech;
+		ID3D10EffectTechnique* mpFXAdditiveTintTexMirrorTech;
+		ID3D10EffectTechnique* mpFXMirrorClearTech;
+		ID3D10EffectTechnique* mpFXMirrorSurfaceTech;
+
 		ID3D10EffectMatrixVariable* mpFXVarWorldMat;
 		ID3D10EffectMatrixVariable* mpFXVarViewMat;
 		ID3D10EffectMatrixVariable* mpFXVarProjMat;
@@ -93,6 +106,7 @@ namespace sge
 		ID3D10EffectVectorVariable* mpFXVarModelColour;
 		ID3D10EffectVectorVariable* mpFXVarAmbientColour;
 		ID3D10EffectVectorVariable* mpFXVarCameraPosition;
+		ID3D10EffectVectorVariable* mpFXVarClipPlane;
 
 		ID3D10EffectScalarVariable* mpFXVarSpecularPower;
 		ID3D10EffectScalarVariable* mpFXVarWiggle;
