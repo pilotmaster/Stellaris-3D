@@ -34,7 +34,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	// Model loading
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f));
 
-	DirectX::XMFLOAT3 cubePos{ 0.0f, 10.0f, 0.0f };
+	DirectX::XMFLOAT3 cubePos{ 0.0f, 5.0f, 0.0f };
 	sge::CMesh* mshCube = pEngine->LoadMesh("Media\\Cube.x", sge::FX_LIT_TEXTURED);
 	sge::CModel* mdlCube = pEngine->CreateModel(mshCube, cubePos);
 
@@ -46,10 +46,10 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	mdlWiggleSphere->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 	sge::CMesh* mshTeapot = pEngine->LoadMesh("Media\\Teapot.x", sge::FX_NORMAL_MAPPED);
-	sge::CModel* mdlTeapot = pEngine->CreateModel(mshTeapot, DirectX::XMFLOAT3(-20.0f, 5.0f, 25.0f));
+	sge::CModel* mdlTeapot = pEngine->CreateModel(mshTeapot, DirectX::XMFLOAT3(-20.0f, 0.0f, 25.0f));
 
 	sge::CMesh* mshTroll = pEngine->LoadMesh("Media\\Troll.x", sge::FX_CELL_SHADED);
-	sge::CModel* mdlTroll = pEngine->CreateModel(mshTroll, DirectX::XMFLOAT3(20.0f, 5.0f, 25.0f));
+	sge::CModel* mdlTroll = pEngine->CreateModel(mshTroll, DirectX::XMFLOAT3(20.0f, 0.0f, 25.0f));
 	mdlTroll->Scale(DirectX::XMFLOAT3(5.0f, 5.0f, 5.0f));
 	mdlTroll->SetModelColour(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
@@ -62,12 +62,12 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	mdlLight2->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.8f, 0.2f));
 
 	sge::CLight* mdlLight4 = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, DirectX::XMFLOAT3(0.5f, 0.7f, 0.3f), DirectX::XMFLOAT3(20.0f, 25.0f, -50.0f));
-	mdlLight4->SetLightBrightness(20.0f);
+	mdlLight4->SetLightBrightness(50.0f);
 
 
 	// Variables & set up for altering the lights behaviour
 	DirectX::XMFLOAT3 light1RGB = { 1.0f, 1.0f, 1.0f };
-	mdlLight1->SetLightColour(light1RGB);
+	//mdlLight1->SetLightColour(light1RGB);
 	DirectX::XMFLOAT3 light1HSL;
 
 	const float brightnessMulti = 4.0f;		// Multiplier for determining brightness

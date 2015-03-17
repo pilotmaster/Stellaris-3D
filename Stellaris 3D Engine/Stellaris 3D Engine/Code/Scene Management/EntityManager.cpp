@@ -103,13 +103,20 @@ namespace sge
 
 	void CEntityManager::RenderShadows(ID3D10Device* pDevice, CShader* pShader)
 	{
-		pShader->GetFXViewVar()->SetMatrix((float*)&mpLightViewMatrices[2]);
-		pShader->GetFXProjVar()->SetMatrix((float*)&mpLightProjMatrices[2]);
-		
-		// Call the update function for each stored entity
-		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
+		// Loop through each light & see if it is a spot light to render shadows for
+		for (int i = 0; i < mNextLightNum; i++)
 		{
-			miterEntityMap->second->Render(pDevice, pShader, true);
+			if (mpLightTypes[i] == ELightTypes::SPOT_LIGHT)
+			{
+				pShader->GetFXViewVar()->SetMatrix((float*)&mpLightViewMatrices[i]);
+				pShader->GetFXProjVar()->SetMatrix((float*)&mpLightProjMatrices[i]);
+
+				// Render shadows for this light
+				for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
+				{
+					miterEntityMap->second->Render(pDevice, pShader, true);
+				}
+			}
 		}
 	}
 

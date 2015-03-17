@@ -47,31 +47,31 @@ namespace sge
 			// Send model data over required by model's shader
 			pShader->GetFXWorldVar()->SetMatrix((float*)&mModelMatrix);
 
-			// If it has a texture, send it over
-			if (mpMesh->GetMaterial())
-			{
-				pShader->GetFXDiffuseMapVar()->SetResource(mpMesh->GetMaterial()->GetDiffuseMap());
-			}
-
-			// If it has a normal map, send it over
-			if (mpMesh->GetMaterial()->GetNormalMap())
-			{
-				pShader->GetFXNormalMapVar()->SetResource(mpMesh->GetMaterial()->GetNormalMap());
-			}
-
-			// Set model colour & wiggle values
-			pShader->GetFXWiggleVar()->SetFloat(mWiggle);
-			pShader->GetFXModelColourVar()->SetRawValue(&mModelColour, 0U, 12U);
-			pShader->GetFXParallaxDepthVar()->SetFloat(mParallaxDepth);
-			pShader->GetFXOutlineThicknessVar()->SetFloat(mOutlineThickness);
-
-			// Render the mesh
 			if (forShadow)
 			{
 				mpMesh->Render(pDevice, pShader->GetDepthOnlyTechnique());
 			}
 			else
 			{
+				// If it has a texture, send it over
+				if (mpMesh->GetMaterial())
+				{
+					pShader->GetFXDiffuseMapVar()->SetResource(mpMesh->GetMaterial()->GetDiffuseMap());
+				}
+
+				// If it has a normal map, send it over
+				if (mpMesh->GetMaterial()->GetNormalMap())
+				{
+					pShader->GetFXNormalMapVar()->SetResource(mpMesh->GetMaterial()->GetNormalMap());
+				}
+
+				// Set model colour & wiggle values
+				pShader->GetFXWiggleVar()->SetFloat(mWiggle);
+				pShader->GetFXModelColourVar()->SetRawValue(&mModelColour, 0U, 12U);
+				pShader->GetFXParallaxDepthVar()->SetFloat(mParallaxDepth);
+				pShader->GetFXOutlineThicknessVar()->SetFloat(mOutlineThickness);
+
+				// Render the mesh
 				mpMesh->Render(pDevice);
 			}
 		}

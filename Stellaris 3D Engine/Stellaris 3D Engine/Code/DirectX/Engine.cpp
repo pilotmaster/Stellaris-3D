@@ -52,8 +52,8 @@ namespace sge
 
 		// Shadow map data
 		D3D10_TEXTURE2D_DESC texDesc;
-		texDesc.Width = 216; // Size of the shadow map determines quality / resolution of shadows
-		texDesc.Height = 216;
+		texDesc.Width = 2056; // Size of the shadow map determines quality / resolution of shadows
+		texDesc.Height = 2056;
 		texDesc.MipLevels = 1; // 1 level, means just the main texture, no additional mip-maps. Usually don't use mip-maps when rendering to textures (or we would have to render every level)
 		texDesc.ArraySize = 1;
 		texDesc.Format = DXGI_FORMAT_R32_TYPELESS; // The shadow map contains a single 32-bit value [tech gotcha: have to say typeless because depth buffer and texture see things slightly differently]
@@ -96,8 +96,8 @@ namespace sge
 		mpBasicShader->GetFXShadowMapVar()->SetResource(mpShadowMap);
 
 		// Clear show depth view & render to shadow map
-		mViewport.Width = 216;
-		mViewport.Height = 216;
+		mViewport.Width = 2056;
+		mViewport.Height = 2056;
 		mViewport.MinDepth = 0.0f;
 		mViewport.MaxDepth = 1.0f;
 		mViewport.TopLeftX = 0;
@@ -105,10 +105,10 @@ namespace sge
 		mpDevice->RSSetViewports(1, &mViewport);
 
 		mpDevice->OMSetRenderTargets(0, 0, mpShadowMapDepthView);
-		mpDevice->ClearDepthStencilView(mpShadowMapDepthView, D3D10_CLEAR_DEPTH, 1.0f, 0.0f);
+		mpDevice->ClearDepthStencilView(mpShadowMapDepthView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0.0f);
 		mpEntityManager->RenderShadows(mpDevice, mpBasicShader);
 
-		
+
 		// CLEAR CURRENT SCENE
 		//---------------------------------
 		mViewport.Width = mpWindow->GetWindowWidth();
@@ -120,6 +120,7 @@ namespace sge
 		mpDevice->RSSetViewports(1, &mViewport);
 
 		mpDevice->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
+
 		float ambientColour[4] = { mAmbientColour.x, mAmbientColour.y, mAmbientColour.z, 1.0f };
 		mpDevice->ClearRenderTargetView(mpRenderTarget, ambientColour);
 		mpDevice->ClearDepthStencilView(mpDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0U);

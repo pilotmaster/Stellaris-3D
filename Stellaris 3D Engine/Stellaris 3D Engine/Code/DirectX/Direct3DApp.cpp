@@ -132,7 +132,7 @@ namespace sge
 		IDXGISwapChain** ppChain = &mpSwapChain;
 		ID3D10Device** ppDevice = &mpDevice;
 
-		HRESULT result = D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, deviceFlags,
+		HRESULT result = D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0,
 			D3D10_SDK_VERSION, &swapDesc, &mpSwapChain, &mpDevice);
 
 

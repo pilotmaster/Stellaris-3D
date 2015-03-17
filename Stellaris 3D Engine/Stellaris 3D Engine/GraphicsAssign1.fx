@@ -143,7 +143,7 @@ void DoSpotLight(int lIndex, float3 camDir, float3 worldPos, float3 worldNorm, o
 		shadowUV.y = 1.0f - shadowUV.y;
 
 		// Get depth of this pixel if it were visible from the light (another advanced projection step)
-		float depthFromLight = LightProjPos.z / LightProjPos.w - 0.0005f;
+		float depthFromLight = LightProjPos.z / LightProjPos.w - 0.00001f;
 
 		// Compare pixel depth from light with depth held in shadow map of the light. If shadow map depth is less than something is nearer
 		// to the light than this pixel - so the pixel gets no effect from this light
