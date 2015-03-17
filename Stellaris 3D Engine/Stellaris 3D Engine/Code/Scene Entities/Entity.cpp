@@ -33,7 +33,12 @@ namespace sge
 		world = DirectX::XMMatrixIdentity();
 		translation = world;
 
-		rotation = DirectX::XMMatrixRotationRollPitchYaw(mRotation.x, mRotation.y, mRotation.z);
+		//rotation = DirectX::XMMatrixRotationRollPitchYaw(mRotation.x, mRotation.y, mRotation.z);
+
+		D3DXMATRIX rotationDX;
+		D3DXMatrixRotationYawPitchRoll(&rotationDX, mRotation.y, mRotation.x, mRotation.z);
+		DirectX::XMFLOAT4X4 newRotation = static_cast<DirectX::XMFLOAT4X4>(rotationDX);
+		rotation = DirectX::XMLoadFloat4x4(&newRotation);
 
 		scale = DirectX::XMMatrixScaling(mScale.x, mScale.y, mScale.z);
 		translation = DirectX::XMMatrixTranslation(mPosition.x, mPosition.y, mPosition.z);
