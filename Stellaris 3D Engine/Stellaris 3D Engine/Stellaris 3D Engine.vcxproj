@@ -25,6 +25,7 @@
     <ClCompile Include="Code\Utilities\Timer.cpp" />
     <ClCompile Include="Code\Utilities\UserInput.cpp" />
     <ClCompile Include="Code\Windows\Window.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Import\CImportXFile.cpp" />
     <ClCompile Include="Import\Common\CFatalException.cpp" />
     <ClCompile Include="Import\Common\MSDefines.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Code\Utilities\Timer.h" />
     <ClInclude Include="Code\Utilities\UserInput.h" />
     <ClInclude Include="Code\Windows\Window.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Import\CImportXFile.h" />
     <ClInclude Include="Import\Colour.h" />
     <ClInclude Include="Import\Common\CFatalException.h" />

@@ -126,6 +126,9 @@
     <ClCompile Include="Code\Scene Entities\Light.cpp">
       <Filter>Code\Scene Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Code\Scene Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Utilities\Timer.h">
@@ -222,6 +225,9 @@
       <Filter>Code\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Code\Scene Entities\Light.h">
+      <Filter>Code\Scene Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
       <Filter>Code\Scene Entities</Filter>
     </ClInclude>
   </ItemGroup>

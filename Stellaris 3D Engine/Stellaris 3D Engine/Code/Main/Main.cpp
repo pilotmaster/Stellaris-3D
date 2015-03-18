@@ -57,16 +57,14 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 	sge::CMesh* mshLight = pEngine->LoadMesh("Media\\Light.x", sge::FX_LIGHT);
 	sge::CLight* mdlLight1 = pEngine->CreateLight(mshLight, sge::POINT_LIGHT);
-	mdlLight1->SetLightBrightness(6.0f);
+	mdlLight1->SetLightBrightness(10.0f);
 
 	sge::CLight* mdlLight2 = pEngine->CreateLight(mshLight, sge::POINT_LIGHT, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-20.0f, 30.0f, 50.0f));
-	mdlLight2->SetLightBrightness(4.0f);
+	mdlLight2->SetLightBrightness(16.0f);
 	mdlLight2->SetLightColour(DirectX::XMFLOAT3(1.0f, 0.8f, 0.2f));
 
 	sge::CLight* mdlSpotlight = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, { 5.0f, 5.0f, 5.0f }, { 20.0f, 25.0f, -50.0f });
 	mdlSpotlight->SetLightBrightness(7.0f);
-
-
 
 
 	// Variables & set up for altering the lights behaviour
@@ -81,6 +79,9 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	// frame time variable
 	float delta = 0.0f;
 	float rotation = 0.0f;
+
+	// Currently selected model for movemement
+	sge::CModel* pCurrentlySelected = mdlCube;
 
 
 	// MAIN GAME LOOP
@@ -136,6 +137,20 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 		// CHECK FOR KEY PRESSES
 		//---------------------------------
+		// Change currently selected model
+		if (sge::KeyHit(sge::KEY_T))
+		{
+			// Check which model is selected and change it
+			if (pCurrentlySelected == mdlCube)
+			{
+				pCurrentlySelected = mdlSpotlight;
+			}
+			else
+			{
+				pCurrentlySelected = mdlCube;
+			}
+		}
+
 		// Local camera movement
 		if (sge::KeyHeld(sge::KEY_W))
 		{
@@ -178,46 +193,46 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 			camMain->RotateY(ROTATE_SPEED * delta);
 		}
 
-		// Cube local movement
+		// Currently selected model local movement
 		if (sge::KeyHeld(sge::KEY_PERIOD))
 		{
-			mdlSpotlight->MoveLocalZ(MOVE_SPEED * delta);
+			pCurrentlySelected->MoveLocalZ(MOVE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_COMMA))
 		{
-			mdlSpotlight->MoveLocalZ(-MOVE_SPEED * delta);
+			pCurrentlySelected->MoveLocalZ(-MOVE_SPEED * delta);
 		}
 
-		// Cube rotation
+		// Currently selected model rotation
 		if (sge::KeyHeld(sge::KEY_I))
 		{
-			mdlSpotlight->RotateX(-ROTATE_SPEED * delta);
+			pCurrentlySelected->RotateX(-ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_K))
 		{
-			mdlSpotlight->RotateX(ROTATE_SPEED * delta);
+			pCurrentlySelected->RotateX(ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_J))
 		{
-			mdlSpotlight->RotateY(-ROTATE_SPEED * delta);
+			pCurrentlySelected->RotateY(-ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_L))
 		{
-			mdlSpotlight->RotateY(ROTATE_SPEED * delta);
+			pCurrentlySelected->RotateY(ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_U))
 		{
-			mdlSpotlight->RotateZ(ROTATE_SPEED * delta);
+			pCurrentlySelected->RotateZ(ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_O))
 		{
-			mdlSpotlight->RotateZ(-ROTATE_SPEED * delta);
+			pCurrentlySelected->RotateZ(-ROTATE_SPEED * delta);
 		}
 	}
 
