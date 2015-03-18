@@ -79,6 +79,11 @@ namespace sge
 			mModelColour = colour;
 		}
 
+		inline void SetTexture(ID3D10ShaderResourceView* pShaderResource)
+		{
+			mpMesh->GetMaterial()->SetDiffuseMap(pShaderResource);
+		}
+
 
 	protected:
 		// MODEL DATA

@@ -80,6 +80,52 @@ namespace sge
 		srDesc.Texture2D.MipLevels = 1;
 		if (FAILED(mpDevice->CreateShaderResourceView(mpShadowMapTexture, &srDesc, &mpShadowMap))) return false;
 
+
+		// Portal map data
+		D3D10_TEXTURE2D_DESC portalDesc;
+		portalDesc.Width = 2056;  // Size of the portal texture determines its quality
+		portalDesc.Height = 2056;
+		portalDesc.MipLevels = 1; // No mip-maps when rendering to textures (or we would have to render every level)
+		portalDesc.ArraySize = 1;
+		portalDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA texture (8-bits each)
+		portalDesc.SampleDesc.Count = 1;
+		portalDesc.SampleDesc.Quality = 0;
+		portalDesc.Usage = D3D10_USAGE_DEFAULT;
+		portalDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE; // Indicate we will use texture as render target, and pass it to shaders
+		portalDesc.CPUAccessFlags = 0;
+		portalDesc.MiscFlags = 0;
+		if (FAILED(mpDevice->CreateTexture2D(&portalDesc, NULL, &mpPortalTexture))) return false;
+
+		if (FAILED(mpDevice->CreateRenderTargetView(mpPortalTexture, NULL, &mpPortalRenderTarget))) return false;
+
+		// We also need to send this texture (resource) to the shaders. To do that we must create a shader-resource "view"
+		srDesc.Format = portalDesc.Format;
+		srDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+		srDesc.Texture2D.MostDetailedMip = 0;
+		srDesc.Texture2D.MipLevels = 1;
+		if (FAILED(mpDevice->CreateShaderResourceView(mpPortalTexture, &srDesc, &mpPortalMap))) return false;
+
+		//**** This depth buffer can be shared with any other portals of the same size
+		portalDesc.Width = 2056;
+		portalDesc.Height = 2056;
+		portalDesc.MipLevels = 1;
+		portalDesc.ArraySize = 1;
+		portalDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		portalDesc.SampleDesc.Count = 1;
+		portalDesc.SampleDesc.Quality = 0;
+		portalDesc.Usage = D3D10_USAGE_DEFAULT;
+		portalDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+		portalDesc.CPUAccessFlags = 0;
+		portalDesc.MiscFlags = 0;
+		if (FAILED(mpDevice->CreateTexture2D(&portalDesc, NULL, &mpPortalDepthStencil))) return false;
+
+		// Create the depth stencil view, i.e. indicate that the texture just created is to be used as a depth buffer
+		D3D10_DEPTH_STENCIL_VIEW_DESC portalDescDSV;
+		portalDescDSV.Format = portalDesc.Format;
+		portalDescDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
+		portalDescDSV.Texture2D.MipSlice = 0;
+		if (FAILED(mpDevice->CreateDepthStencilView(mpPortalDepthStencil, &portalDescDSV, &mpPortalDepthStencilView))) return false;
+
 		return true;
 	}
 
@@ -89,7 +135,7 @@ namespace sge
 		mpEntityManager->Update();
 	}
 
-	void CStellaris3D::Render(CCamera* pCamera)
+	void CStellaris3D::Render(CCamera* pCamera, CCamera* pPortalCamera)
 	{
 		// Use the basic shader to set the required variables
 		mpBasicShader->GetFXAmbientColourVar()->SetRawValue(&mAmbientColour, 0U, 12U);
@@ -109,6 +155,23 @@ namespace sge
 		mpEntityManager->RenderShadows(mpDevice, mpBasicShader);
 
 
+		// CLEAR CURRENT SCENE TO PORTAL
+		//---------------------------------
+		mViewport.Width = 2056;
+		mViewport.Height = 2056;
+		mViewport.MinDepth = 0.0f;
+		mViewport.MaxDepth = 1.0f;
+		mViewport.TopLeftX = 0;
+		mViewport.TopLeftY = 0;
+		mpDevice->RSSetViewports(1, &mViewport);
+
+		float ambientColour[4] = { mAmbientColour.x, mAmbientColour.y, mAmbientColour.z, 1.0f };
+		mpDevice->OMSetRenderTargets(1, &mpPortalRenderTarget, mpPortalDepthStencilView);
+		mpDevice->ClearRenderTargetView(mpPortalRenderTarget, ambientColour);
+		mpDevice->ClearDepthStencilView(mpPortalDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
+		mpEntityManager->Render(mpDevice, pPortalCamera, mpBasicShader);
+
+
 		// CLEAR CURRENT SCENE
 		//---------------------------------
 		mViewport.Width = static_cast<float>(mpWindow->GetWindowWidth());
@@ -121,7 +184,6 @@ namespace sge
 
 		mpDevice->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
 
-		float ambientColour[4] = { mAmbientColour.x, mAmbientColour.y, mAmbientColour.z, 1.0f };
 		mpDevice->ClearRenderTargetView(mpRenderTarget, ambientColour);
 		mpDevice->ClearDepthStencilView(mpDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0U);
 
@@ -208,6 +270,14 @@ namespace sge
 		// Request a new model from the entity manager and return its reuslt
 		CModel* pModel = mpEntityManager->CreateMirrorEntity(pMesh, pos, rot, scale);
 		if (pModel) pModel->SetModelColour(mAmbientColour);
+		return pModel;
+	}
+
+	CModel* CStellaris3D::CreatePortal(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot, DirectX::XMFLOAT3 scale)
+	{
+		// Request a new model from the entity manager and return its reuslt
+		CModel* pModel = mpEntityManager->CreatePortalEntity(pMesh, pos, rot, scale);
+		mpEntityManager->SetPortalTexture(mpPortalMap);
 		return pModel;
 	}
 

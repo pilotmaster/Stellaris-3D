@@ -47,6 +47,15 @@ namespace sge
 		}
 
 
+		// MUTATORS
+		//---------------------------------
+		inline void SetDiffuseMap(ID3D10ShaderResourceView* pShaderResource)
+		{
+			// If there is already a diffuse map, release it
+			mpDiffuseMap = pShaderResource;
+		}
+
+
 	private:
 		// TEXTURE DATA
 		//---------------------------------

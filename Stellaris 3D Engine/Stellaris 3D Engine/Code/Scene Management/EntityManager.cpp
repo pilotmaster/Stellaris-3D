@@ -71,6 +71,25 @@ namespace sge
 		return nullptr;
 	}
 
+	CModel* CEntityManager::CreatePortalEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation,
+		DirectX::XMFLOAT3 scale)
+	{
+		// Check if a mirror has already been created
+		if (!hasPortal)
+		{
+			mpPortal = new CModel(mNextEID, pMesh, pos, orientation, scale);
+
+			// Store the model in the hash map
+			mEntityMap.insert(EntityMap::value_type(mNextEID, mpPortal));
+
+			mNextEID++;
+			hasPortal = true;
+			return mpMirror;
+		}
+
+		return nullptr;
+	}
+
 	CLight* CEntityManager::CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
 		DirectX::XMFLOAT3 lightColour, int lightType)
 	{
@@ -94,6 +113,14 @@ namespace sge
 	//====================================================================================
 	// ENTITY MANAGER CLASS METHODS
 	//------------------------------------------------------------------------------------
+	void CEntityManager::SetPortalTexture(ID3D10ShaderResourceView* pTexture)
+	{
+		if (mpPortal)
+		{
+			mpPortal->SetTexture(pTexture);
+		}
+	}
+
 	void CEntityManager::Update()
 	{		
 		// Update mirror modle

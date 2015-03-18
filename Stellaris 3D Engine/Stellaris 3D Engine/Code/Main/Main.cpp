@@ -32,6 +32,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 	// Model loading
 	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 35.0f, -70.0f), { DirectX::XMConvertToRadians(10.0f), DirectX::XMConvertToRadians(18.0f), 0.0f });
+	sge::CCamera* camPortal = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 35.0f, -70.0f), { DirectX::XMConvertToRadians(20.0f), DirectX::XMConvertToRadians(18.0f), 0.0f });
 
 	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Hills.x", sge::FX_PARALLAX);
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor, DirectX::XMFLOAT3(-30.0f, 0.0f, 0.0f));
@@ -66,6 +67,9 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CLight* mdlSpotlight = pEngine->CreateLight(mshLight, sge::SPOT_LIGHT, { 5.0f, 5.0f, 5.0f }, { 20.0f, 25.0f, -50.0f });
 	mdlSpotlight->SetLightBrightness(7.0f);
 
+	sge::CMesh* mshPortal = pEngine->LoadMesh("Media\\Mirror.x", sge::FX_LIT_TEXTURED);
+	sge::CModel* mdlPortal = pEngine->CreatePortal(mshPortal, { 0.0f, 60.0f, 30.0f }, { DirectX::XMConvertToRadians(10.0f), DirectX::XMConvertToRadians(-180.0f), DirectX::XMConvertToRadians(-180.0f) });
+
 
 	// Variables & set up for altering the lights behaviour
 	DirectX::XMFLOAT3 light1RGB = { 1.0f, 1.0f, 1.0f };
@@ -91,7 +95,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		// UPDATE & RENDER CURRENT SCENE
 		//---------------------------------
 		pEngine->Update();
-		pEngine->Render(camMain);
+		pEngine->Render(camMain, camPortal);
 
 		// Update delta time & light orbit rotation
 		delta = sge::CTimer::GetTimerInstace()->GetDeltaTime();

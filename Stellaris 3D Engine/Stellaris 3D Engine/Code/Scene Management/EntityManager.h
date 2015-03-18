@@ -37,6 +37,8 @@ namespace sge
 		CModel* CreateModelEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
 		// Create a mirror entity
 		CModel* CreateMirrorEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
+		// Create a portal entity
+		CModel* CreatePortalEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale);
 		// Create a new light
 		CLight* CreateLightEntity(CMesh* pMesh, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 orientation, DirectX::XMFLOAT3 scale,
 			DirectX::XMFLOAT3 lightColour, int lightType);
@@ -52,6 +54,7 @@ namespace sge
 		void SetShaderVariables(CCamera* pCamera, CShader* pShader);
 		bool DestroyEntity(size_t key);
 		void DestroyAllEntities();
+		void SetPortalTexture(ID3D10ShaderResourceView* pTexture);
 
 
 		// STATIC VARIABLES
@@ -74,14 +77,16 @@ namespace sge
 		DirectX::XMFLOAT4X4 mpLightProjMatrices[MAX_LIGHTS];
 		float mpCosHalfAngles[MAX_LIGHTS];
 
-		// Mirror model
-		CModel* mpMirror;
+		// Mirror & portal model
+		CModel* mpMirror = nullptr;
+		CModel* mpPortal = nullptr;
 
 		// The next ID which will be used as a key for the next entity that is placed into
 		// the hash map
 		size_t mNextEID;
 		size_t mNextLightNum;
 		bool hasMirror = false;
+		bool hasPortal = false;
 	};
 }
 

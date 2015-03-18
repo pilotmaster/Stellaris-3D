@@ -29,7 +29,7 @@ namespace sge
 		//---------------------------------
 		bool InitialiseEngine(HINSTANCE hInstance);
 		void Update();
-		void Render(CCamera* pCamera);
+		void Render(CCamera* pCamera, CCamera* pPortalCamera);
 
 
 		// METHODS
@@ -43,6 +43,8 @@ namespace sge
 		CModel* CreateModel(CMesh* pMesh, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 		CModel* CreateMirror(CMesh* pMesh, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		CModel* CreatePortal(CMesh* pMesh, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 		// Create an instance of a light with a given colour
 		CLight* CreateLight(CMesh* pMesh, ELightTypes lightType, DirectX::XMFLOAT3 colour = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
@@ -67,9 +69,15 @@ namespace sge
 
 		// SHADOW VARIABLES
 		//---------------------------------
-		ID3D10Texture2D* mpShadowMapTexture;
-		ID3D10DepthStencilView* mpShadowMapDepthView;
-		ID3D10ShaderResourceView* mpShadowMap;
+		ID3D10Texture2D* mpShadowMapTexture = nullptr;;
+		ID3D10DepthStencilView* mpShadowMapDepthView = nullptr;;
+		ID3D10ShaderResourceView* mpShadowMap = nullptr;;
+
+		ID3D10Texture2D* mpPortalTexture = nullptr;
+		ID3D10Texture2D* mpPortalDepthStencil = nullptr;;
+		ID3D10RenderTargetView* mpPortalRenderTarget = nullptr;
+		ID3D10DepthStencilView* mpPortalDepthStencilView = nullptr;;
+		ID3D10ShaderResourceView* mpPortalMap = nullptr;;
 
 
 		// MISC VARIABLES
