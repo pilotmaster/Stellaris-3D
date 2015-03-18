@@ -57,12 +57,13 @@ struct VS_NORMAL_MAP_OUTPUT
 	float3 ModelNormal  : NORMAL;
 	float3 ModelTangent : TANGENT;
 	float2 UV           : TEXCOORD0;
+	float  ClipDist     : SV_ClipDistance;
 };
 
 struct PS_DEPTH_OUTPUT
 {
 	float4 Colour : SV_Target;
-	float  Depth : SV_Depth;
+	float  Depth  : SV_Depth;
 };
 
 
@@ -250,6 +251,9 @@ VS_BASIC_OUTPUT VSWiggleTransform(VS_BASIC_INPUT vIn)
 	// Pass texture coordinates (UVs) on to the pixel shader
 	vOut.UV = vIn.UV;
 
+	// Custom clip plane for mirrors
+	vOut.ClipDist = dot(worldPos, ClipPlane);
+
 	return vOut;
 }
 
@@ -272,6 +276,9 @@ VS_NORMAL_MAP_OUTPUT VSNormalMapTransform(VS_NORMAL_MAP_INPUT vIn)
 
 	// Pass texture coordinates (UVs) on to the pixel shader, the vertex shader doesn't need them
 	vOut.UV = vIn.UV;
+
+	// Custom clip plane for mirrors
+	vOut.ClipDist = dot(worldPos, ClipPlane);
 
 	return vOut;
 }
@@ -760,14 +767,16 @@ RasterizerState CullFront
 DepthStencilState DepthWritesOff // Don't write to the depth buffer - polygons rendered will not obscure other polygons
 {
 	DepthEnable = true;
-	StencilEnable = true;
+	StencilEnable = false;
+	DepthFunc = Less;
 	DepthWriteMask = ZERO;
 };
 
 DepthStencilState DepthWritesOn
 {
 	DepthEnable = true;
-	StencilEnable = true;
+	StencilEnable = false;
+	DepthFunc = Less;
 	DepthWriteMask = ALL;
 };
 
@@ -822,7 +831,7 @@ DepthStencilState AffectStencilAreaIgnoreDepth
 	DepthFunc = Always;
 
 	// Only render those pixels whose stencil value is equal to the reference value (value specified in the technique)
-	StencilEnable = True;
+	StencilEnable = true;
 	FrontFaceStencilFunc = Equal; // Only render on matching stencil
 	FrontFaceStencilPass = Keep;  // But don't change the stencil values
 	BackFaceStencilFunc = Equal;
@@ -1014,7 +1023,7 @@ technique10 VertexLitTexMirrorTech
 		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 
 		// Reverse culling - the mirror will reverse the clockwise/anti-clockwise ordering of the polygons
-		SetRasterizerState(CullFront);
+		SetRasterizerState(CullNone);
 
 		// Only render in stencil area (the mirror surface)
 		SetDepthStencilState(AffectStencilArea, 1);
@@ -1053,7 +1062,7 @@ technique10 MirrorClearTech
 
 		// Switch off colour output (only updating stencil in this pass), normal culling
 		SetBlendState(NoColourOutput, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
-		SetRasterizerState(CullBack);
+		SetRasterizerState(CullNone);
 
 		// Set the stencil to 1 in the visible area of this polygon
 		SetDepthStencilState(MirrorStencil, 1);
@@ -1066,7 +1075,7 @@ technique10 MirrorClearTech
 
 		// Switch off blending, normal culling
 		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
-		SetRasterizerState(CullBack);
+		SetRasterizerState(CullNone);
 
 		// Only affect the area where the stencil was set to 1 in the pass above
 		SetDepthStencilState(AffectStencilAreaIgnoreDepth, 1);
@@ -1088,7 +1097,7 @@ technique10 MirrorSurfaceTech
 		SetBlendState(NoColourOutput, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 
 		// Standard culling
-		SetRasterizerState(CullBack);
+		SetRasterizerState(CullNone);
 
 		// Set the stencil back to 0 in the surface of the polygon
 		SetDepthStencilState(MirrorStencil, 0);

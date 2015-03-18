@@ -59,6 +59,7 @@ namespace sge
 		//---------------------------------
 		DWORD shaderFlags = 0;
 #if defined( DEBUG ) || defined( _DEBUG )
+		shaderFlags |= D3D10_SHADER_ENABLE_STRICTNESS;
 		shaderFlags |= D3D10_SHADER_DEBUG;
 		shaderFlags |= D3D10_SHADER_SKIP_OPTIMIZATION;
 #endif

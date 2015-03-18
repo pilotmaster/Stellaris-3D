@@ -31,7 +31,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	pEngine->SetAmbientColour(DirectX::XMFLOAT3(0.1f, 0.2f, 0.25f));
 
 	// Model loading
-	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 20.0f, -40.0f), {0.0f, DirectX::XMConvertToRadians(25.0f), 0.0f});
+	sge::CCamera* camMain = pEngine->CreateCamera(DirectX::XMFLOAT3(-15.0f, 35.0f, -70.0f), { DirectX::XMConvertToRadians(10.0f), DirectX::XMConvertToRadians(18.0f), 0.0f });
 
 	sge::CMesh* mshFloor = pEngine->LoadMesh("Media\\Hills.x", sge::FX_PARALLAX);
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor, DirectX::XMFLOAT3(-30.0f, 0.0f, 0.0f));

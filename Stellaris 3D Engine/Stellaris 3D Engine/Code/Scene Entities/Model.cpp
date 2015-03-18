@@ -105,7 +105,7 @@ namespace sge
 				}
 				else
 				{
-					mpMesh->Render(pDevice);
+					mpMesh->Render(pDevice, mpMesh->GetRenderTechnique());
 				}
 			}
 		}

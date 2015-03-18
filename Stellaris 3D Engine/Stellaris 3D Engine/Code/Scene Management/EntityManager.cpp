@@ -125,7 +125,23 @@ namespace sge
 
 	void CEntityManager::RenderMirror(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader)
 	{
-		SetShaderVariables(pCamera, pShader);
+		// Pass camera's data over to the shader
+		DirectX::XMFLOAT4X4 viewMat;
+		pCamera->GetViewMatrix(viewMat);
+
+		pShader->GetFXViewVar()->SetMatrix((float*)&viewMat);
+		pShader->GetFXProjVar()->SetMatrix((float*)&pCamera->GetProjectionMatrix());
+
+		DirectX::XMFLOAT3 cameraPos;
+		pCamera->GetPosition(cameraPos);
+		pShader->GetFXCameraPositionVar()->SetRawValue(&cameraPos, 0U, 12U);
+		pShader->GetFXLightTypeVar()->SetIntArray((int*)mpLightTypes, 0U, mNextLightNum);
+		pShader->GetFXLightColoursVar()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
+		pShader->GetFXLightPositionsVar()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
+		pShader->GetFXLightFacingsVar()->SetFloatVectorArray((float*)mpLightFacings, 0U, mNextLightNum);
+		pShader->GetFXCosHalfAngleVar()->SetFloatArray((float*)mpCosHalfAngles, 0U, mNextLightNum);
+
+		pShader->GetFXSpecularPowerVar()->SetFloat(100.0f);
 		
 		// Render just the mirror with the clear surface technique
 		mpMirror->Render(pDevice, pShader->GetMirrorClearTechnique(), pShader);
@@ -138,15 +154,15 @@ namespace sge
 		DirectX::XMVECTOR vecMirrorPlane = DirectX::XMPlaneFromPointNormal(DirectX::XMLoadFloat3(&mirrorPoint), DirectX::XMLoadFloat3(&mirrorNormal));
 
 		// Reflect camera's view matrix in the mirror plane
-		DirectX::XMMATRIX reflectViewMat = DirectX::XMMatrixReflect(vecMirrorPlane);
+		DirectX::XMMATRIX reflectMat = DirectX::XMMatrixReflect(vecMirrorPlane);
 		DirectX::XMFLOAT4X4 camViewMat;
 		pCamera->GetViewMatrix(camViewMat);
-		reflectViewMat *= DirectX::XMLoadFloat4x4(&camViewMat);
+		DirectX::XMMATRIX reflectViewMat = reflectMat * DirectX::XMLoadFloat4x4(&camViewMat);
 
 		// Reflect camera's position in the mirror plane
 		DirectX::XMFLOAT3 camPos;
 		pCamera->GetPosition(camPos);
-		DirectX::XMVECTOR reflectCamPosVec = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&camPos),reflectViewMat);
+		DirectX::XMVECTOR reflectCamPosVec = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&camPos), reflectMat);
 		DirectX::XMFLOAT3 reflectCamPos;
 		DirectX::XMStoreFloat3(&reflectCamPos, reflectCamPosVec);
 		DirectX::XMFLOAT4X4 finalReflectViewMat;
@@ -179,6 +195,9 @@ namespace sge
 		// Reset values in shader
 		DirectX::XMFLOAT4 nullVec{0.0f, 0.0f, 0.0f, 0.0f};
 		pShader->GetFXClipPlaneVar()->SetRawValue(&nullVec, 0U, 16U);
+		pShader->GetFXViewVar()->SetMatrix((float*)&viewMat);
+		pCamera->GetPosition(cameraPos);
+		pShader->GetFXCameraPositionVar()->SetRawValue(&cameraPos, 0U, 12U);
 	}
 
 	void CEntityManager::RenderShadows(ID3D10Device* pDevice, CShader* pShader)
@@ -194,7 +213,10 @@ namespace sge
 				// Render shadows for this light
 				for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
 				{
-					miterEntityMap->second->Render(pDevice, pShader, false, true);
+					if (mpMirror != miterEntityMap->second)
+					{
+						miterEntityMap->second->Render(pDevice, pShader, false, true);
+					}
 				}
 			}
 		}
@@ -203,7 +225,7 @@ namespace sge
 	void CEntityManager::Render(ID3D10Device* pDevice, CCamera* pCamera, CShader* pShader)
 	{
 		SetShaderVariables(pCamera, pShader);
-		
+
 		// Render mirror
 		mpMirror->Render(pDevice, pShader);
 

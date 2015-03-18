@@ -105,19 +105,18 @@ namespace sge
 		mpDevice->RSSetViewports(1, &mViewport);
 
 		mpDevice->OMSetRenderTargets(0, 0, mpShadowMapDepthView);
-		mpDevice->ClearDepthStencilView(mpShadowMapDepthView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0.0f);
+		mpDevice->ClearDepthStencilView(mpShadowMapDepthView, D3D10_CLEAR_DEPTH, 1.0f, 0.0f);
 		mpEntityManager->RenderShadows(mpDevice, mpBasicShader);
 
 
 		// CLEAR CURRENT SCENE
 		//---------------------------------
-		mpBasicShader->GetFXShadowMapVar()->SetResource(mpShadowMap);
-		mViewport.Width = mpWindow->GetWindowWidth();
-		mViewport.Height = mpWindow->GetWindowHeight();
+		mViewport.Width = static_cast<float>(mpWindow->GetWindowWidth());
+		mViewport.Height = static_cast<float>(mpWindow->GetWindowHeight());
+		mViewport.TopLeftX = 0.0f;
+		mViewport.TopLeftY = 0.0f;
 		mViewport.MinDepth = 0.0f;
 		mViewport.MaxDepth = 1.0f;
-		mViewport.TopLeftX = 0;
-		mViewport.TopLeftY = 0;
 		mpDevice->RSSetViewports(1, &mViewport);
 
 		mpDevice->OMSetRenderTargets(1, &mpRenderTarget, mpDepthStencilView);
@@ -180,7 +179,7 @@ namespace sge
 			break;
 
 		case FX_MIRROR:
-			pTechnique = mpBasicShader->GetMirrorSurfaceTechnique();
+			pTechnique = mpBasicShader->GetMirrorClearTechnique();
 			break;
 		}
 

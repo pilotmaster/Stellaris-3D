@@ -116,10 +116,7 @@ namespace sge
 		swapDesc.BufferDesc.RefreshRate.Numerator = 60;
 		swapDesc.BufferDesc.RefreshRate.Numerator = 1;
 		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-		swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		swapDesc.OutputWindow = mpWindow->GetWindowHandle();
-		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		swapDesc.Windowed = true;
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.SampleDesc.Quality = 0;
@@ -127,10 +124,6 @@ namespace sge
 
 		// Create swap chain
 		D3D_FEATURE_LEVEL fl = D3D_FEATURE_LEVEL_10_1;
-
-		DXGI_SWAP_CHAIN_DESC* pDesc = &swapDesc;
-		IDXGISwapChain** ppChain = &mpSwapChain;
-		ID3D10Device** ppDevice = &mpDevice;
 
 		HRESULT result = D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0,
 			D3D10_SDK_VERSION, &swapDesc, &mpSwapChain, &mpDevice);
@@ -162,7 +155,7 @@ namespace sge
 		descDepth.Height = mpWindow->GetWindowHeight();
 		descDepth.MipLevels = 1;
 		descDepth.ArraySize = 1;
-		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		descDepth.SampleDesc.Count = 1;
 		descDepth.SampleDesc.Quality = 0;
 		descDepth.Usage = D3D10_USAGE_DEFAULT;
@@ -184,7 +177,7 @@ namespace sge
 		D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
 		ZeroMemory(&descDSV, sizeof(descDSV));
 
-		descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+		descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
 		descDSV.Texture2D.MipSlice = 0;
 
