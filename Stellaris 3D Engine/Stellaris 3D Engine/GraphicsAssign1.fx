@@ -1023,7 +1023,7 @@ technique10 VertexLitTexMirrorTech
 		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
 
 		// Reverse culling - the mirror will reverse the clockwise/anti-clockwise ordering of the polygons
-		SetRasterizerState(CullNone);
+		SetRasterizerState(CullFront);
 
 		// Only render in stencil area (the mirror surface)
 		SetDepthStencilState(AffectStencilArea, 1);

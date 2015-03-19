@@ -29,6 +29,19 @@ namespace sge
 		~CEntityManager();
 
 
+		// GETTERS
+		//---------------------------------
+		inline bool HasMirror()
+		{
+			return hasMirror;
+		}
+
+		inline bool HasPortal()
+		{
+			return hasPortal;
+		}
+
+
 		// FACTORY FUNCTIONS
 		//---------------------------------
 		// Creates an entity of type camera and returns the created camera

@@ -29,7 +29,7 @@ namespace sge
 		//---------------------------------
 		bool InitialiseEngine(HINSTANCE hInstance);
 		void Update();
-		void Render(CCamera* pCamera, CCamera* pPortalCamera);
+		void Render(CCamera* pCamera, CCamera* pPortalCamera = nullptr);
 
 
 		// METHODS
@@ -50,6 +50,9 @@ namespace sge
 		CLight* CreateLight(CMesh* pMesh, ELightTypes lightType, DirectX::XMFLOAT3 colour = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
 			DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 			DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+		// Uses the entity manager to remove a given model
+		CModel* RemoveModel(CModel* pModel);
 
 
 		// MUTATORS

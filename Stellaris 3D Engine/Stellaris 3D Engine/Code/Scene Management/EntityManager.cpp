@@ -84,7 +84,7 @@ namespace sge
 
 			mNextEID++;
 			hasPortal = true;
-			return mpMirror;
+			return mpPortal;
 		}
 
 		return nullptr;
@@ -115,7 +115,7 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	void CEntityManager::SetPortalTexture(ID3D10ShaderResourceView* pTexture)
 	{
-		if (mpPortal)
+		if (hasPortal)
 		{
 			mpPortal->SetTexture(pTexture);
 		}
@@ -124,7 +124,7 @@ namespace sge
 	void CEntityManager::Update()
 	{		
 		// Update mirror modle
-		mpMirror->Update();
+		if (hasMirror) mpMirror->Update();
 		
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
@@ -254,7 +254,7 @@ namespace sge
 		SetShaderVariables(pCamera, pShader);
 
 		// Render mirror
-		mpMirror->Render(pDevice, pShader);
+		if (hasMirror) mpMirror->Render(pDevice, pShader);
 
 		// Call the update function for each stored entity
 		for (miterEntityMap = mEntityMap.begin(); miterEntityMap != mEntityMap.end(); miterEntityMap++)
@@ -305,6 +305,17 @@ namespace sge
 		if (miterEntityMap != mEntityMap.end())
 		{
 			// Entity was found - deallocate & erase from map
+			// Check if it was a portal or mirror
+			if (miterEntityMap->second == mpMirror)
+			{
+				hasMirror = false;
+			}
+
+			if (miterEntityMap->second == mpPortal)
+			{
+				hasPortal = false;
+			}
+
 			delete miterEntityMap->second;
 			mEntityMap.erase(miterEntityMap);
 			return true;

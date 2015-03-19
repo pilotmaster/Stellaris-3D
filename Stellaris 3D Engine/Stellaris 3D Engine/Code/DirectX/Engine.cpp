@@ -169,7 +169,12 @@ namespace sge
 		mpDevice->OMSetRenderTargets(1, &mpPortalRenderTarget, mpPortalDepthStencilView);
 		mpDevice->ClearRenderTargetView(mpPortalRenderTarget, ambientColour);
 		mpDevice->ClearDepthStencilView(mpPortalDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
-		mpEntityManager->Render(mpDevice, pPortalCamera, mpBasicShader);
+
+		// Only if there is an active portal, render from the portal's camera's perspective
+		if (mpEntityManager->HasPortal() && pPortalCamera != nullptr)
+		{
+			mpEntityManager->Render(mpDevice, pPortalCamera, mpBasicShader);
+		}
 
 
 		// CLEAR CURRENT SCENE
@@ -190,7 +195,11 @@ namespace sge
 
 		// RENDER ENTITIES IN THE SCENE
 		//---------------------------------
-		mpEntityManager->RenderMirror(mpDevice, pCamera, mpBasicShader);
+		// Only if there is a mirror active, render the mirror
+		if (mpEntityManager->HasMirror())
+		{
+			mpEntityManager->RenderMirror(mpDevice, pCamera, mpBasicShader);
+		}
 		mpEntityManager->Render(mpDevice, pCamera, mpBasicShader);
 
 
@@ -285,5 +294,11 @@ namespace sge
 		DirectX::XMFLOAT3 scale)
 	{		
 		return mpEntityManager->CreateLightEntity(pMesh, pos, rot, scale, colour, static_cast<int>(lightType));
+	}
+
+	CModel* CStellaris3D::RemoveModel(CModel* pModel)
+	{
+		mpEntityManager->DestroyEntity(pModel->GetID());
+		return nullptr;
 	}
 }

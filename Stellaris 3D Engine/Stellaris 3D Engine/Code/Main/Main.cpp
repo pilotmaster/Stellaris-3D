@@ -38,7 +38,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 	sge::CModel* mdlFloor = pEngine->CreateModel(mshFloor, DirectX::XMFLOAT3(-30.0f, 0.0f, 0.0f));
 
 	sge::CMesh* mshMirror = pEngine->LoadMesh("Media\\Mirror.x", sge::FX_MIRROR);
-	sge::CModel* mdlMirror = pEngine->CreateMirror(mshMirror, { 0.0f, 20.0f, 30.0f }, { 0.0f, DirectX::XMConvertToRadians(-180.0f), 0.0f });
+	sge::CModel* mdlMirror = nullptr;
 
 	sge::CMesh* mshWiggleSphere = pEngine->LoadMesh("Media\\Sphere.x", sge::FX_WIGGLE);
 	sge::CModel* mdlWiggleSphere = pEngine->CreateModel(mshWiggleSphere, DirectX::XMFLOAT3(20.0f, 5.0f, -25.0f));
@@ -86,6 +86,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 	// Currently selected model for movemement
 	sge::CModel* pCurrentlySelected = mdlCube;
+	sge::CCamera* pCamCurrentlySelected = camMain;
 
 
 	// MAIN GAME LOOP
@@ -95,7 +96,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		// UPDATE & RENDER CURRENT SCENE
 		//---------------------------------
 		pEngine->Update();
-		pEngine->Render(camMain, camPortal);
+		pEngine->Render(pCamCurrentlySelected, camPortal);
 
 		// Update delta time & light orbit rotation
 		delta = sge::CTimer::GetTimerInstace()->GetDeltaTime();
@@ -141,6 +142,12 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 		// CHECK FOR KEY PRESSES
 		//---------------------------------
+		// Check for exit key press
+		if (sge::KeyHit(sge::KEY_ESCAPE))
+		{
+			PostQuitMessage(0);
+		}
+
 		// Change currently selected model
 		if (sge::KeyHit(sge::KEY_T))
 		{
@@ -155,46 +162,75 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 			}
 		}
 
+		// Change currently selected camera
+		if (sge::KeyHit(sge::KEY_C))
+		{
+			// Check which model is selected and change it
+			if (pCamCurrentlySelected == camMain)
+			{
+				pCamCurrentlySelected = camPortal;
+			}
+			else
+			{
+				pCamCurrentlySelected = camMain;
+			}
+		}
+
+		// Toggle mirror on and off
+		if (sge::KeyHit(sge::KEY_M))
+		{
+			// Check if a mirror already exists
+			if (mdlMirror)
+			{
+				mdlMirror = pEngine->RemoveModel(mdlMirror);
+			}
+			else
+			{
+				mdlMirror = pEngine->CreateMirror(mshMirror, { 0.0f, 20.0f, 30.0f }, { 0.0f, DirectX::XMConvertToRadians(-180.0f), 0.0f });
+			}
+		}
+
+
 		// Local camera movement
 		if (sge::KeyHeld(sge::KEY_W))
 		{
-			camMain->MoveLocalZ(MOVE_SPEED * delta);
+			pCamCurrentlySelected->MoveLocalZ(MOVE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_S))
 		{
-			camMain->MoveLocalZ(-MOVE_SPEED * delta);
+			pCamCurrentlySelected->MoveLocalZ(-MOVE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_A))
 		{
-			camMain->MoveLocalX(-MOVE_SPEED * delta);
+			pCamCurrentlySelected->MoveLocalX(-MOVE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_D))
 		{
-			camMain->MoveLocalX(MOVE_SPEED * delta);
+			pCamCurrentlySelected->MoveLocalX(MOVE_SPEED * delta);
 		}
 
 		// Camera rotation
 		if (sge::KeyHeld(sge::KEY_UP))
 		{
-			camMain->RotateX(-ROTATE_SPEED * delta);
+			pCamCurrentlySelected->RotateX(-ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_DOWN))
 		{
-			camMain->RotateX(ROTATE_SPEED * delta);
+			pCamCurrentlySelected->RotateX(ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_LEFT))
 		{
-			camMain->RotateY(-ROTATE_SPEED * delta);
+			pCamCurrentlySelected->RotateY(-ROTATE_SPEED * delta);
 		}
 
 		if (sge::KeyHeld(sge::KEY_RIGHT))
 		{
-			camMain->RotateY(ROTATE_SPEED * delta);
+			pCamCurrentlySelected->RotateY(ROTATE_SPEED * delta);
 		}
 
 		// Currently selected model local movement

@@ -41,6 +41,11 @@ namespace sge
 
 		// ACCESSORS
 		//---------------------------------
+		inline UINT GetID()
+		{
+			return mEID;
+		}
+
 		inline void GetPosition(DirectX::XMFLOAT3& outPosition)
 		{
 			outPosition = mPosition;
