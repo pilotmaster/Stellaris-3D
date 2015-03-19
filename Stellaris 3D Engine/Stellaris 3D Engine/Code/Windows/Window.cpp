@@ -61,8 +61,10 @@ namespace sge
 	//====================================================================================
 	// INITIALISATION
 	//------------------------------------------------------------------------------------
-	bool CWindow::InitialiseWindow(HINSTANCE hInstance, UINT wndWidth, UINT wndHeight, std::wstring wndTitle)
+	bool CWindow::InitialiseWindow(HINSTANCE hInstance, UINT wndWidth, UINT wndHeight, std::wstring wndTitle, CUserInput* pUserInput)
 	{
+		mpUserInput = pUserInput;
+		
 		// Create a window class
 		WNDCLASS wc;
 		mHanInstance = hInstance;
@@ -226,11 +228,11 @@ namespace sge
 			// KEY PRESSES
 			//------------------------------
 		case WM_KEYDOWN:
-			KeyDownEvent(static_cast<EKeyCode>(wParam));
+			mpUserInput->KeyDownEvent(static_cast<EKeyCode>(wParam));
 			break;
 
 		case WM_KEYUP:
-			KeyUpEvent(static_cast<EKeyCode>(wParam));
+			mpUserInput->KeyUpEvent(static_cast<EKeyCode>(wParam));
 			break;
 
 		case WM_LBUTTONDOWN:

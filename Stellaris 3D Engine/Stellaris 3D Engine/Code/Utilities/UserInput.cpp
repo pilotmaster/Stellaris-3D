@@ -8,65 +8,64 @@
 namespace sge
 {
 	//====================================================================================
-	// GLOBALS ---------------------------------------------------------------------------
+	// USER INPUT CLASS CONSTRUCTOR & DESTRUCTOR
 	//------------------------------------------------------------------------------------
-	EKeyState garrKeyStates[MAX_KEY_CODES];
-
-
-	//====================================================================================
-	// INITIALISATION --------------------------------------------------------------------
-	//------------------------------------------------------------------------------------
-	void InitialiseInput()
+	CUserInput::CUserInput()
 	{
 		// Initialise the input data
 		for (int i = 0; i < MAX_KEY_CODES; ++i)
 		{
-			garrKeyStates[i] = KEY_NOT_PRESSED;
+			mKeyStates[i] = KEY_NOT_PRESSED;
 		}
+	}
+
+	CUserInput::~CUserInput()
+	{
+
 	}
 
 
 	//====================================================================================
-	// KEY PRESS EVENTS ------------------------------------------------------------------
+	// USER INPUT CLASS KEY PRESS EVENTS
 	//------------------------------------------------------------------------------------
-	void KeyDownEvent(EKeyCode Key)
+	void CUserInput::KeyDownEvent(EKeyCode Key)
 	{
-		if (garrKeyStates[Key] == KEY_NOT_PRESSED)
+		if (mKeyStates[Key] == KEY_NOT_PRESSED)
 		{
-			garrKeyStates[Key] = KEY_PRESSED;
+			mKeyStates[Key] = KEY_PRESSED;
 		}
 		else
 		{
-			garrKeyStates[Key] = KEY_HELD;
+			mKeyStates[Key] = KEY_HELD;
 		}
 	}
 
-	void KeyUpEvent(EKeyCode Key)
+	void CUserInput::KeyUpEvent(EKeyCode Key)
 	{
-		garrKeyStates[Key] = KEY_NOT_PRESSED;
+		mKeyStates[Key] = KEY_NOT_PRESSED;
 	}
 
 
 	//====================================================================================
-	// INPUT FUNCTIONS -------------------------------------------------------------------
+	// USER INPUT CLASS METHODS
 	//------------------------------------------------------------------------------------
-	bool KeyHit(EKeyCode eKeyCode)
+	bool CUserInput::KeyHit(EKeyCode eKeyCode)
 	{
-		if (garrKeyStates[eKeyCode] == KEY_PRESSED)
+		if (mKeyStates[eKeyCode] == KEY_PRESSED)
 		{
-			garrKeyStates[eKeyCode] = KEY_HELD;
+			mKeyStates[eKeyCode] = KEY_HELD;
 			return true;
 		}
 		return false;
 	}
 
-	bool KeyHeld(EKeyCode eKeyCode)
+	bool CUserInput::KeyHeld(EKeyCode eKeyCode)
 	{
-		if (garrKeyStates[eKeyCode] == KEY_NOT_PRESSED)
+		if (mKeyStates[eKeyCode] == KEY_NOT_PRESSED)
 		{
 			return false;
 		}
-		garrKeyStates[eKeyCode] = KEY_HELD;
+		mKeyStates[eKeyCode] = KEY_HELD;
 		return true;
 	}
 }

@@ -9,11 +9,8 @@
 namespace sge
 {
 	//====================================================================================
-	// ENUMERATIONS ----------------------------------------------------------------------
+	// ENUMERATIONS
 	//------------------------------------------------------------------------------------
-
-	// KEY STATES -------------------------
-	//-------------------------------------
 	enum EKeyState
 	{
 		KEY_NOT_PRESSED,
@@ -21,8 +18,6 @@ namespace sge
 		KEY_HELD
 	};
 
-	// KEY LIST ---------------------------
-	//-------------------------------------
 	enum EKeyCode
 	{
 		MOUSE_LBTN = 0x01,  // Left mouse button
@@ -166,30 +161,30 @@ namespace sge
 
 
 	//====================================================================================
-	// INITIALISATION --------------------------------------------------------------------
+	// USER INPUT CLASS
 	//------------------------------------------------------------------------------------
-	// Initialise the input system
-	void InitialiseInput();
+	class CUserInput
+	{
+	public:
+		CUserInput();
+		~CUserInput();
+
+		// Event called to indicate that a key has been pressed down
+		void KeyDownEvent(EKeyCode Key);
+		// Event called to indicate that a kay has been released
+		void KeyUpEvent(EKeyCode Key);
+
+		// Returns true if a key is pressed down
+		bool KeyHit(EKeyCode eKeyCode);
+
+		// Returns true if a key is held down for an extended amount of time
+		bool KeyHeld(EKeyCode eKeyCode);
 
 
-	//====================================================================================
-	// KEY EVENTS ------------------------------------------------------------------------
-	//------------------------------------------------------------------------------------
-	// Event called to indicate that a key has been pressed down
-	void KeyDownEvent(EKeyCode Key);
+	private:
+		EKeyState mKeyStates[MAX_KEY_CODES];
 
-	// Event called to indicate that a kay has been released
-	void KeyUpEvent(EKeyCode Key);
-
-
-	//====================================================================================
-	// KEY INPUT FUNCTIONS ---------------------------------------------------------------
-	//------------------------------------------------------------------------------------
-	// Returns true if a key is pressed down
-	bool KeyHit(EKeyCode eKeyCode);
-
-	// Returns true if a key is held down for an extended amount of time
-	bool KeyHeld(EKeyCode eKeyCode);
+	};
 }
 
 

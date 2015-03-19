@@ -76,6 +76,11 @@ namespace sge
 			return mpWindow->GetWindowHeight();
 		}
 
+		inline CUserInput* GetInputManager()
+		{
+			return mpInput;
+		}
+
 
 		// MUTATORS
 		//---------------------------------
@@ -103,6 +108,11 @@ namespace sge
 		// ORTHOGRAPHIC MATRIX
 		//---------------------------------
 		DirectX::XMFLOAT4X4 mOrthoMatrix;
+
+
+		// USER INPUT
+		//---------------------------------
+		CUserInput* mpInput = nullptr;
 
 
 	private:

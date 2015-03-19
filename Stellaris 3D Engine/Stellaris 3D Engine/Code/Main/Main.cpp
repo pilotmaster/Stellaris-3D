@@ -18,6 +18,8 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		return 0;
 	}
 
+	sge::CUserInput* pInputManager = pEngine->GetInputManager();
+
 	
 	// SCENE SET UP
 	//---------------------------------
@@ -143,13 +145,13 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		// CHECK FOR KEY PRESSES
 		//---------------------------------
 		// Check for exit key press
-		if (sge::KeyHit(sge::KEY_ESCAPE))
+		if (pInputManager->KeyHit(sge::KEY_ESCAPE))
 		{
 			PostQuitMessage(0);
 		}
 
 		// Change currently selected model
-		if (sge::KeyHit(sge::KEY_T))
+		if (pInputManager->KeyHit(sge::KEY_T))
 		{
 			// Check which model is selected and change it
 			if (pCurrentlySelected == mdlCube)
@@ -163,7 +165,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		}
 
 		// Change currently selected camera
-		if (sge::KeyHit(sge::KEY_C))
+		if (pInputManager->KeyHit(sge::KEY_C))
 		{
 			// Check which model is selected and change it
 			if (pCamCurrentlySelected == camMain)
@@ -177,7 +179,7 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		}
 
 		// Toggle mirror on and off
-		if (sge::KeyHit(sge::KEY_M))
+		if (pInputManager->KeyHit(sge::KEY_M))
 		{
 			// Check if a mirror already exists
 			if (mdlMirror)
@@ -192,85 +194,85 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 
 
 		// Local camera movement
-		if (sge::KeyHeld(sge::KEY_W))
+		if (pInputManager->KeyHeld(sge::KEY_W))
 		{
 			pCamCurrentlySelected->MoveLocalZ(MOVE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_S))
+		if (pInputManager->KeyHeld(sge::KEY_S))
 		{
 			pCamCurrentlySelected->MoveLocalZ(-MOVE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_A))
+		if (pInputManager->KeyHeld(sge::KEY_A))
 		{
 			pCamCurrentlySelected->MoveLocalX(-MOVE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_D))
+		if (pInputManager->KeyHeld(sge::KEY_D))
 		{
 			pCamCurrentlySelected->MoveLocalX(MOVE_SPEED * delta);
 		}
 
 		// Camera rotation
-		if (sge::KeyHeld(sge::KEY_UP))
+		if (pInputManager->KeyHeld(sge::KEY_UP))
 		{
 			pCamCurrentlySelected->RotateX(-ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_DOWN))
+		if (pInputManager->KeyHeld(sge::KEY_DOWN))
 		{
 			pCamCurrentlySelected->RotateX(ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_LEFT))
+		if (pInputManager->KeyHeld(sge::KEY_LEFT))
 		{
 			pCamCurrentlySelected->RotateY(-ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_RIGHT))
+		if (pInputManager->KeyHeld(sge::KEY_RIGHT))
 		{
 			pCamCurrentlySelected->RotateY(ROTATE_SPEED * delta);
 		}
 
 		// Currently selected model local movement
-		if (sge::KeyHeld(sge::KEY_PERIOD))
+		if (pInputManager->KeyHeld(sge::KEY_PERIOD))
 		{
 			pCurrentlySelected->MoveLocalZ(MOVE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_COMMA))
+		if (pInputManager->KeyHeld(sge::KEY_COMMA))
 		{
 			pCurrentlySelected->MoveLocalZ(-MOVE_SPEED * delta);
 		}
 
 		// Currently selected model rotation
-		if (sge::KeyHeld(sge::KEY_I))
+		if (pInputManager->KeyHeld(sge::KEY_I))
 		{
 			pCurrentlySelected->RotateX(-ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_K))
+		if (pInputManager->KeyHeld(sge::KEY_K))
 		{
 			pCurrentlySelected->RotateX(ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_J))
+		if (pInputManager->KeyHeld(sge::KEY_J))
 		{
 			pCurrentlySelected->RotateY(-ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_L))
+		if (pInputManager->KeyHeld(sge::KEY_L))
 		{
 			pCurrentlySelected->RotateY(ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_U))
+		if (pInputManager->KeyHeld(sge::KEY_U))
 		{
 			pCurrentlySelected->RotateZ(ROTATE_SPEED * delta);
 		}
 
-		if (sge::KeyHeld(sge::KEY_O))
+		if (pInputManager->KeyHeld(sge::KEY_O))
 		{
 			pCurrentlySelected->RotateZ(-ROTATE_SPEED * delta);
 		}

@@ -29,7 +29,7 @@ namespace sge
 
 		// WINDOWS MESSAGE PROCEDURE
 		//---------------------------------
-		bool InitialiseWindow(HINSTANCE hInstance, UINT wndWidth, UINT wndHeight, std::wstring wndTitle);
+		bool InitialiseWindow(HINSTANCE hInstance, UINT wndWidth, UINT wndHeight, std::wstring wndTitle, CUserInput* pUserInput);
 
 
 		// WINDOWS MESSAGE PROCEDURE
@@ -126,6 +126,8 @@ namespace sge
 		UINT mClientHeight;
 		std::wstring mWndTitle;
 		DWORD mWndStyle;
+
+		CUserInput* mpUserInput = nullptr;
 	};
 }
 

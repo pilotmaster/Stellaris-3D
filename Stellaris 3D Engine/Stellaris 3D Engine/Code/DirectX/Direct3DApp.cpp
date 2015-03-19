@@ -12,12 +12,12 @@ namespace sge
 	//------------------------------------------------------------------------------------
 	CD3DApp::CD3DApp()
 	{
-
+		mpInput = new CUserInput();
 	}
 
 	CD3DApp::~CD3DApp()
 	{
-
+		if (mpInput) delete mpInput;
 	}
 
 
@@ -74,7 +74,7 @@ namespace sge
 		mpWindow = CWindow::GetInstance();
 		
 		// Create the window
-		if (!mpWindow->InitialiseWindow(hInstance, 1280, 960, L"Stellaris-3D"))
+		if (!mpWindow->InitialiseWindow(hInstance, 1280, 960, L"Stellaris-3D", mpInput))
 		{
 			// Failed to create window - show message & return false
 			MessageBox(mpWindow->GetWindowHandle(), L"Failed to initialise window!", L"WINDOW ERROR", MB_OK);
@@ -87,9 +87,6 @@ namespace sge
 			MessageBox(mpWindow->GetWindowHandle(), L"Failed to initialise Direct3D", L"D3D ERROR", MB_OK);
 			return false;
 		}
-
-		// Initialise input
-		InitialiseInput();
 
 		return true;
 	}
