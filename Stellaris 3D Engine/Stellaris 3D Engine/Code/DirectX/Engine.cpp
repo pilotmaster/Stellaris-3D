@@ -138,7 +138,7 @@ namespace sge
 	void CStellaris3D::Render(CCamera* pCamera, CCamera* pPortalCamera)
 	{
 		// Use the basic shader to set the required variables
-		mpBasicShader->GetFXAmbientColourVar()->SetRawValue(&mAmbientColour, 0U, 12U);
+		mpBasicShader->GetFXAmbientColourVar()->SetFloatVector((float*)&mAmbientColour);
 		mpBasicShader->GetFXShadowMapVar()->SetResource(mpShadowMap);
 
 		// Clear show depth view & render to shadow map
@@ -257,7 +257,7 @@ namespace sge
 		
 		// Create new mesh & load it
 		CMesh* pMesh = new CMesh();
-		if (pMesh->LoadMesh(mpDevice, fileName, pTechnique, renderType, needsTangents))
+		if (pMesh->LoadMesh(mpDevice, fileName, pTechnique, mpBasicShader->GetVertexLitTexMirrorTechnique(), renderType, needsTangents))
 		{
 			// Succeeded in creating the mesh - return the new mesh
 			return pMesh;

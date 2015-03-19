@@ -905,6 +905,16 @@ technique10 LitTextureTech
 		SetRasterizerState(CullBack);
 		SetDepthStencilState(DepthWritesOn, 0);
 	}
+	pass P1
+	{
+		SetVertexShader(CompileShader(vs_4_0, VSLightingTransform()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PSLitTexture()));
+
+		SetBlendState(NoBlending, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(CullNone);
+		SetDepthStencilState(AffectStencilArea, 1);
+	}
 }
 
 // Custom technique for doing the wiggle effect & scrolling UVs

@@ -43,7 +43,8 @@ namespace sge
 		if (mpInputLayout) mpInputLayout->Release();
 	}
 
-	bool CMesh::LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, ERenderTypes renderType, bool tangents)
+	bool CMesh::LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, ID3D10EffectTechnique* pMirrorTech, 
+		ERenderTypes renderType, bool tangents)
 	{
 		// Release any existing geometry in this object
 		ReleaseResources();

@@ -60,7 +60,7 @@ namespace sge
 			}
 
 			// Set model colour & wiggle values
-			pShader->GetFXModelColourVar()->SetRawValue(&mModelColour, 0U, 12U);
+			pShader->GetFXModelColourVar()->SetFloatVector((float*)&mModelColour);
 
 			mpMesh->Render(pDevice, pTech);
 		}
@@ -94,7 +94,7 @@ namespace sge
 
 				// Set model colour & wiggle values
 				pShader->GetFXWiggleVar()->SetFloat(mWiggle);
-				pShader->GetFXModelColourVar()->SetRawValue(&mModelColour, 0U, 12U);
+				pShader->GetFXModelColourVar()->SetFloatVector((float*)&mModelColour);
 				pShader->GetFXParallaxDepthVar()->SetFloat(mParallaxDepth);
 				pShader->GetFXOutlineThicknessVar()->SetFloat(mOutlineThickness);
 

@@ -161,7 +161,7 @@ namespace sge
 
 		DirectX::XMFLOAT3 cameraPos;
 		pCamera->GetPosition(cameraPos);
-		pShader->GetFXCameraPositionVar()->SetRawValue(&cameraPos, 0U, 12U);
+		pShader->GetFXCameraPositionVar()->SetFloatVector((float*)&cameraPos);
 		pShader->GetFXLightTypeVar()->SetIntArray((int*)mpLightTypes, 0U, mNextLightNum);
 		pShader->GetFXLightColoursVar()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
 		pShader->GetFXLightPositionsVar()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);
@@ -200,8 +200,8 @@ namespace sge
 
 		// Render models within the mirror
 		pShader->GetFXViewVar()->SetMatrix((float*)&finalReflectViewMat);
-		pShader->GetFXCameraPositionVar()->SetRawValue(&reflectCamPos, 0U, 12U);
-		pShader->GetFXClipPlaneVar()->SetRawValue(&finalMirrorPlane, 0U, 16U);
+		pShader->GetFXCameraPositionVar()->SetFloatVector((float*)&reflectCamPos);
+		pShader->GetFXClipPlaneVar()->SetFloatVector((float*)&finalMirrorPlane);
 		
 
 		// Render all models and lights with the mirror technique
@@ -221,10 +221,10 @@ namespace sge
 
 		// Reset values in shader
 		DirectX::XMFLOAT4 nullVec{0.0f, 0.0f, 0.0f, 0.0f};
-		pShader->GetFXClipPlaneVar()->SetRawValue(&nullVec, 0U, 16U);
+		pShader->GetFXClipPlaneVar()->SetFloatVector((float*)&nullVec);
 		pShader->GetFXViewVar()->SetMatrix((float*)&viewMat);
 		pCamera->GetPosition(cameraPos);
-		pShader->GetFXCameraPositionVar()->SetRawValue(&cameraPos, 0U, 12U);
+		pShader->GetFXCameraPositionVar()->SetFloatVector((float*)&cameraPos);
 	}
 
 	void CEntityManager::RenderShadows(ID3D10Device* pDevice, CShader* pShader)
@@ -283,7 +283,7 @@ namespace sge
 
 		DirectX::XMFLOAT3 cameraPos;
 		pCamera->GetPosition(cameraPos);
-		pShader->GetFXCameraPositionVar()->SetRawValue(&cameraPos, 0U, 12U);
+		pShader->GetFXCameraPositionVar()->SetFloatVector((float*)&cameraPos);
 		pShader->GetFXLightTypeVar()->SetIntArray((int*)mpLightTypes, 0U, mNextLightNum);
 		pShader->GetFXLightColoursVar()->SetFloatVectorArray((float*)mpLightColours, 0U, mNextLightNum);
 		pShader->GetFXLightPositionsVar()->SetFloatVectorArray((float*)mpLightPositions, 0U, mNextLightNum);

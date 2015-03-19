@@ -41,7 +41,8 @@ namespace sge
 		// Release all of the resources used by the mesh
 		void ReleaseResources();
 		// Load in a mesh for use as a model
-		bool LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, ERenderTypes renderType, bool tangents = false);
+		bool LoadMesh(ID3D10Device* pDevice, std::string& fileName, ID3D10EffectTechnique* pTech, ID3D10EffectTechnique* pMirrorTech, ERenderTypes renderType,
+			bool tangents = false);
 
 		// Render the model using its mesh data & matrix data
 		void Render(ID3D10Device* pDevice, ID3D10EffectTechnique* pTech);
